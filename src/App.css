@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-VariableFont_slnt\,wght.ttf');
+  font-weight: regular;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-VariableFont_slnt\,wght.ttf');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'FC-Subject';
+  src: url('./assets/fonts/FC\ Subject\ [Non-commercial\ use]\ Regular\ ver\ 1.00.ttf');
+  font-weight: regular;
+}
+
+@font-face{
+  font-family: 'FC-Subject';
+  src: url('./assets/fonts/FC\ Subject\ [Non-commercial\ use]\ Bold\ ver\ 1.00.ttf');
+  font-weight: bold;
+} 
+
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', 'FC-Subject';
+  margin: 0;
+  /* background-color: '#F6F8FA'; */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.App {
+  text-align: center;
+  font-family: 'Inter', 'FC-Subject';
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
