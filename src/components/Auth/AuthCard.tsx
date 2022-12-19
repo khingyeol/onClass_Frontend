@@ -132,6 +132,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
       if (registerTF?.username.length < 1 || 
         registerTF?.name.firstname.length < 1 || 
         registerTF?.name.lastname.length < 1 || 
+        registerTF?.email.length < 1 || 
         registerTF.password.length < 1 || 
         isPwError === true) {
           return true
