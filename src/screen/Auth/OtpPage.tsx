@@ -121,7 +121,7 @@ const OtpPage: FC = () => {
             />
             <div style={{ textAlign: "center" }}>
               <Typography fontSize="18px" color={onClassColorTheme.grey}>
-                Enter a verification code we've sent to
+                Enter a verification code we've sent to your account!
               </Typography>
               <Typography fontSize="18px" color={onClassColorTheme.green}>
                 {email}
