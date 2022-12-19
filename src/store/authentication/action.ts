@@ -13,7 +13,7 @@ export interface UpdateAuthenticationAction {
 
 export type AuthenticationAction = UpdateAuthenticationAction;
 
-export const updateClassDetail = (
+export const updateAuthentication = (
   isAuthenticate: boolean
 ): UpdateAuthenticationAction => {
   return {

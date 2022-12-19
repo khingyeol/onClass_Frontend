@@ -9,7 +9,7 @@ export const classDetailReducer: Reducer<ClassDetail, ClassDetailAction> = (
 ): ClassDetail => {
     switch (action.type) {
         case ClassDetailActionType.UpdateClassId: {
-            return { ...state, classId: action.payload.classId };
+            return { ...state, class_code: action.payload.class_code };
         }
         default: {
             return state;

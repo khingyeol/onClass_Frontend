@@ -1,8 +1,15 @@
 export interface ClassDetail {
-    classId?: string;
-    className?: string;
-    classTeacher?: string;
-}
+    class_code?: string;
+    class_name?: string;
+    class_section?: string;
+    teacher?: {
+      profile_pic?: string;
+      name: {
+        firstname: string;
+        lastname: string;
+      };
+    };
+  }
 
 export enum ClassDetailActionType {
     UpdateClassId = "UPDATE_CLASS_ID",
