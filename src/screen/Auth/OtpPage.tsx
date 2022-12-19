@@ -4,6 +4,10 @@ import OtpInput from "react18-input-otp";
 import React, { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCButton from "../../common/OCButton";
+import { useSelector } from "react-redux";
+import { getUserEmail } from "../../store/userdata/selector";
+import { confirmOTP } from "../../services/auth/api_auth";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const OtpPage: FC = () => {
   const classes = useStyles();
-  const email = "test-user@g.swu.ac.th";
+  const navigate = useNavigate();
+  const email = useSelector(getUserEmail);
   const [code, setCode] = useState<any>("");
   const [isError, setIsError] = useState(false);
 
@@ -60,6 +65,19 @@ const OtpPage: FC = () => {
     }
     setCode(value);
   };
+
+  const onSubmit = async () => {
+    try {
+      await confirmOTP(email!, code);
+      alert("confirm otp!");
+      navigate("/login");
+    } catch (err: any) {
+      console.log("otp error");
+      alert(err.message);
+    }
+    console.log("on submit w/ code", code);
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.box}>
@@ -114,7 +132,7 @@ const OtpPage: FC = () => {
             disabled={isError || code.length < 6}
             sx={{ width: "190px" }}
             label={"submit"}
-            // onClick={() => onTappedLogin()}
+            onClick={() => onSubmit()}
           />
         </Box>
       </Box>
