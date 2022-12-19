@@ -3,13 +3,17 @@ export interface UserNameModel {
   lastname: string;
 }
 
+export interface UserClassModel {
+  role: string;
+  class_code: string;
+}
+
 export interface UserModel {
   username?: string;
   email?: string;
   profile_pic?: string;
   name?: UserNameModel;
-  device_id?: string;
-  state?: string;
+  class?: [UserClassModel]
 }
 
 export enum UserDataActionType {
