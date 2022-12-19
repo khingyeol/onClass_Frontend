@@ -4,11 +4,16 @@ import React, { FC, memo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
 import OCTextfield from "../../common/OCTextfield";
-import { login, register } from "../../services/auth/api_auth";
+import { login, register, signIn, signUp } from "../../services/auth/api_auth";
 import {
   cognitoUserDataModel,
   onClassRegisterModel,
 } from "../../services/auth/api_auth";
+import { updateUserEmail } from "../../store/userdata/action";
+import { useDispatch } from "react-redux";
+import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
+import UserPool from "../../cognito/UserPool";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -22,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     justifyContent: "center",
     boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    backgroundColor: "white",
     [theme.breakpoints.down("sm")]: {
       padding: "0 20px",
       margin: "10px 40px",
@@ -47,6 +53,8 @@ interface AuthCardProps {
 
 const AuthCard: FC<AuthCardProps> = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loginTF, setLoginTF] = useState<cognitoUserDataModel>();
   const [registerTF, setRegisterTF] = useState<onClassRegisterModel>({
     username: "",
@@ -93,21 +101,33 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   };
 
   const onTappedLogin = async () => {
-    // e.preventDefault();
+    console.log("ontap loggin");
     if (type === "login") {
-      const res = await login(loginTF!);
-      console.log("[onTappedLogin] login", loginTF);
+      dispatch(updateUserEmail(loginTF?.username!));
+      try {
+        await signIn(loginTF!.username, loginTF!.password);
+        console.log("[onTappedLogin] login pass!");
+        window.location.reload();
+      } catch (err: any) {
+        if (err.code === "UserNotConfirmedException") {
+          console.log("[onTappedLogin] need to confirm code");
+          navigate("/otp");
+        } else {
+          alert(err.message);
+        }
+      }
     } else {
-      const res = await register(registerTF!);
-      console.log("[onTappedLogin] regis", loginTF);
+      dispatch(updateUserEmail(registerTF?.email));
+      try {
+        await signUp(registerTF!);
+        navigate("/otp");
+        console.log("[onTappedLogin] regis");
+      } catch (err) {
+        if (err) {
+          console.log("error regis", err);
+        }
+      }
     }
-    // if (res.auth) {
-    //   //res.auth ว่ามี tokenมั้ย
-    //   console.log("[onTappedLogin] pass", res.data);
-    //   // window.location.reload();
-    // } else {
-    //   console.log("[onTappedLogin] err", res.data);
-    // }
   };
 
   return (
@@ -126,6 +146,9 @@ const AuthCard: FC<AuthCardProps> = (props) => {
                 onChange={(e) => handleChange(e)}
                 label={"Username"}
                 fullWidth
+                inputProps={{
+                  style: { textTransform: "lowercase" },
+                }}
               />
               <OCTextfield
                 name="password"
@@ -147,6 +170,9 @@ const AuthCard: FC<AuthCardProps> = (props) => {
                   value={registerTF?.username}
                   onChange={(e) => handleChange(e)}
                   label={"Username"}
+                  inputProps={{
+                    style: { textTransform: "lowercase" },
+                  }}
                 />
                 <Box display={{ xs: "none", sm: "block" }} width="90%"></Box>
               </div>
@@ -211,7 +237,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
           <OCButton
             sx={{ width: "190px" }}
             label={"submit"}
-            onClick={() => onTappedLogin()}
+            onClick={onTappedLogin}
           />
           <Link onClick={onClick} sx={{ "&:hover": { cursor: "pointer" } }}>
             {type === "login" ? "Register" : "back to Login"}
