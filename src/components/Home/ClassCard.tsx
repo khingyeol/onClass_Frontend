@@ -1,17 +1,18 @@
 import { Box, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { FC } from "react";
+import React, { FC } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { ClassDetail, updateClassDetail } from "../../store/classsdetail/action";
+import dummyTeacher from "../../assets/image/dummy-teacher.png";
 
 interface getAllClassResponse {
   class_code: string;
   class_name: string;
   class_section: string;
   teacher: {
-    profile_pic: string;
+    profile_pic?: string;
     name: {
       firstname: string;
       lastname: string;
@@ -66,15 +67,9 @@ const ClassCard: FC<{ item: getAllClassResponse }> = (props) => {
   const classes = useStyles();
   const { item } = props;
 
-  const dataClassDetail: ClassDetail = {
-    classId: item.class_code,
-    className: item.class_name,
-  }
-
   const onClickCard = () => {
     navigate("/" + item.class_code);
-    dispatch(updateClassDetail(dataClassDetail));
-    console.log('onClickCard', dataClassDetail.classId);
+    dispatch(updateClassDetail(item));
   };
 
   return (
@@ -102,7 +97,9 @@ const ClassCard: FC<{ item: getAllClassResponse }> = (props) => {
               {item.teacher.name.firstname + " " + item.teacher.name.lastname}
             </Typography>
             <img
-              src={item.teacher.profile_pic}
+            // Actually this one should return null instead of ''
+            // So this condition should be item.teacher.profile_pic ?? dummyTeacher
+              src={item.teacher.profile_pic! ? item.teacher.profile_pic : dummyTeacher}
               className={classes.teacherImg}
               alt="teacher-pic"
             />

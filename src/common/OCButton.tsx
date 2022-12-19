@@ -33,11 +33,11 @@ const outline = {
 };
 
 const OCButton: FC<OCButtonProps> = (props) => {
-  const { label, variant = "primary", sx, ...otherProps } = props;
+  const { label, variant = "primary", color, sx, ...otherProps } = props;
 
   return (
     <Button
-      onClick={props.onClick}
+      // onClick={props.onClick}
       sx={{
         height: "43px",
         borderRadius: "21.5px",
@@ -58,6 +58,7 @@ const OCButton: FC<OCButtonProps> = (props) => {
           textTransform: "none",
           paddingY: "14px",
           color:
+          color ? color :
             variant === "primary"
               ? onClassColorTheme.white
               : variant === "outline"

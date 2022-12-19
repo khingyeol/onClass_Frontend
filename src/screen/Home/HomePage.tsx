@@ -1,10 +1,13 @@
 import { Box, Theme, Typography, useMediaQuery } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import ClassCard from "../../components/Home/ClassCard";
 import NavAddBtn from "../../components/Main/Navigation/NavAddBtn";
 import { mockedData } from "../../mocked/mockedData";
+import { getAllClass } from "../../services/class/api_class";
+import { getClassId } from "../../store/classsdetail/selector";
 
-interface getAllClassResponse {
+export interface getAllClassResponse {
   class_code: string;
   class_name: string;
   class_section: string;
@@ -20,23 +23,29 @@ interface getAllClassResponse {
 const HomePage: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<getAllClassResponse[]>([]);
+  const classid = useSelector(getClassId);
 
   const fetchGetAllClass = async () => {
-    setContent(mockedData.mockedAllClass);
-    // const res = await getAllClass();
-    // console.log(res)
-    // if (res.data.result == 'OK') {
-    //     setContent(res.data.data)
-    //     console.log("eiei",res.data.data)
-    // }
-    // else {
-    //     setContent([])
-    // }
+    console.log(classid)
+    const res = await getAllClass();
+    console.log(res)
+    if (res.data.result === 'OK') {
+        setContent(res.data.data)
+        console.log("eiei",content.length)
+    }
+    else {
+        setContent([])
+        console.log("eieieeeeee")
+    }
   };
 
   useEffect(() => {
     fetchGetAllClass();
   }, []);
+
+  const classItem = content.map((item: getAllClassResponse) => (
+    <ClassCard key={item.class_code} item={item} />
+  ))
 
   return (
     <>
@@ -56,9 +65,7 @@ const HomePage: FC = () => {
           alignItems={{ xs: "center", sm: "" }}
           flexGrow={1}
         >
-          {content.map((item: getAllClassResponse) => (
-            <ClassCard key={item.class_code} item={item} />
-          ))}
+          {content.length > 0 ? classItem : <Typography>ไม่พบชั้นเรียน</Typography>}
         </Box>
       </Box>
     </>

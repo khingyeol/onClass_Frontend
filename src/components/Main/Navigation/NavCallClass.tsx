@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import { mockedData } from "../../../mocked/mockedData";
+import { getAllClass } from "../../../services/class/api_class";
+import { useDispatch } from "react-redux";
+import { updateClassDetail } from "../../../store/classsdetail/action";
 
 interface getAllClassResponse {
   class_code: string;
@@ -40,19 +43,26 @@ const useStyles = makeStyles((theme: Theme) => ({
 const NavCallClass: FC = () => {
   const [content, setContent] = useState<getAllClassResponse[]>([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   const fetchGetAllClass = async () => {
-    setContent(mockedData.mockedAllClass);
-    // const res = await getAllClass();
-    // console.log(res)
-    // if (res.data.result == 'OK') {
-    //     setContent(res.data.data)
-    //     console.log("eiei",res.data.data)
-    // }
-    // else {
-    //     setContent([])
-    // }
+    // setContent(mockedData.mockedAllClass);
+    const res = await getAllClass();
+    console.log(res)
+    if (res.data.result == 'OK') {
+        setContent(res.data.data)
+        console.log("eiei",res.data.data)
+    }
+    else {
+        setContent([])
+    }
+  };
+
+  const onClickClass = (item: getAllClassResponse) => {
+    navigate("/" + item.class_code);
+    dispatch(updateClassDetail(item));
+    console.log('onClickCard', item.class_code);
   };
 
   useEffect(() => {
@@ -64,7 +74,7 @@ const NavCallClass: FC = () => {
       // <Link to={'/'+item.class_code} style={{ textDecoration: 'none' }}>
       <Box
         key={item.class_code}
-        onClick={() => navigate("/" + item.class_code)}
+        onClick={() => onClickClass(item)}
         className={classes.class_list}
       >
         <Box>

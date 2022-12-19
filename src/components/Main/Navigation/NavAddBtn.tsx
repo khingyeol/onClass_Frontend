@@ -12,15 +12,21 @@ import React, { FC, useState } from "react";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { alpha, Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
+import JoinClassDialog from "./JoinClassDialog";
+import CreateClassDialog from "./CreateClassDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogJoin: {
     // borderRadius: "50px",
     width: "100%",
     height: "50%",
-  }
+  },
+  dialogCreate: {
+    // borderRadius: "50px",
+    width: "100%",
+    height: "50%",
+  },
 }));
-
 
 const NavAddBtn: FC = () => {
   const classes = useStyles();
@@ -29,13 +35,13 @@ const NavAddBtn: FC = () => {
   const [openJoinDialog, setOpenJoinDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-  const handleJoinDialog = () => {
-    setOpenJoinDialog(!openJoinDialog);
-  };
+  // const handleJoinDialog = () => {
+  //   setOpenJoinDialog(!openJoinDialog);
+  // };
 
-  const handleCreateDialog = () => {
-    setOpenCreateDialog(!openCreateDialog);
-  };
+  // const handleCreateDialog = () => {
+  //   setOpenCreateDialog(!openCreateDialog);
+  // };
 
   const handleAddBtn = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -45,23 +51,8 @@ const NavAddBtn: FC = () => {
 
   return (
     <>
-    <Dialog
-    open={openJoinDialog}
-    onClose={handleJoinDialog}
-    PaperProps={{
-      className: classes.dialogJoin,
-      style: {
-        borderRadius: "35px"
-      }
-    }}
-    >
-      <Box padding="20px">
-      <Box display="flex">
-
-      </Box>
-      </Box>
-      
-    </Dialog>
+    <JoinClassDialog open={openJoinDialog} onClose={() => setOpenJoinDialog(!openJoinDialog)} />
+    <CreateClassDialog open={openCreateDialog} onClose={() => setOpenCreateDialog(!openCreateDialog)} />
       <Button
         variant="outlined"
         onClick={(e) => handleAddBtn(e)}
@@ -102,10 +93,10 @@ const NavAddBtn: FC = () => {
         open={Boolean(menuAddBtn)}
         onClose={() => setMenuAddBtn(null)}
       >
-        <MenuItem key="join-class" onClick={handleJoinDialog}>
+        <MenuItem key="join-class" onClick={() => setOpenJoinDialog(!openJoinDialog)}>
           Join Class
         </MenuItem>
-        <MenuItem key="create-class" onClick={handleCreateDialog}>
+        <MenuItem key="create-class" onClick={() => setOpenCreateDialog(!openCreateDialog)}>
           Create Class
         </MenuItem>
       </Menu>

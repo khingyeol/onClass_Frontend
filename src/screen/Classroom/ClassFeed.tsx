@@ -1,7 +1,7 @@
 import { Box, Theme, Typography } from "@mui/material";
 import React, { FC, useEffect } from "react";
 import ClassCard from "../../components/Home/ClassCard";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PostBox from "../../components/Class/PostBox";
 import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";
@@ -31,11 +31,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ClassFeed: FC = () => {
-  // const { classid } = useParams();
+  const navigate = useNavigate();
   const classes = useStyles();
   const classid = useSelector(getClassId);
 
   useEffect(() => {
+    if (!classid) {
+      navigate('/home');
+    }
     console.log('id redux', classid)
   },[])
 
