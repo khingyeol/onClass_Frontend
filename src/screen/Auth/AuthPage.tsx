@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F6F8FA",
-    height: "100%",
+    minHeight: "100%",
     backgroundImage: `url(${backgroundImg})`,
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',

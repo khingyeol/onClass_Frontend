@@ -52,7 +52,7 @@ const NavCallClass: FC = () => {
     console.log(res)
     if (res.data.result == 'OK') {
         setContent(res.data.data)
-        console.log("eiei",res.data.data)
+        // console.log("eiei",res.data.data)
     }
     else {
         setContent([])

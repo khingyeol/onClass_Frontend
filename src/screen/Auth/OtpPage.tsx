@@ -70,7 +70,7 @@ const OtpPage: FC = () => {
     try {
       await confirmOTP(email!, code);
       alert("confirm otp!");
-      navigate("/login");
+      navigate("/home");
     } catch (err: any) {
       console.log("otp error");
       alert(err.message);
