@@ -31,11 +31,11 @@ const HomePage: FC = () => {
     console.log(res)
     if (res.data.result === 'OK') {
         setContent(res.data.data)
-        console.log("eiei",content.length)
+        // console.log("eiei",content.length)
     }
     else {
         setContent([])
-        console.log("eieieeeeee")
+        // console.log("eieieeeeee")
     }
   };
 

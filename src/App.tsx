@@ -33,8 +33,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               {/* This path to /login need to be changed to somewhere the homepage(index) is */}
-              <Route path="*" element={<Navigate to="/login" />} />
-              <Route path="/login" element={<AuthPage />} />
+              <Route path="*" element={<Navigate to="/auth" />} />
+              <Route path="/auth" element={<AuthPage />} />
               <Route path="/otp" element={<OtpPage />} />
             </Routes>
           </BrowserRouter>

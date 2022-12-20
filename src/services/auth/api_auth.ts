@@ -237,7 +237,7 @@ export const login = async (values: cognitoUserDataModel) => {
       console.log("cognitoUser onFailure", err.code);
 
       if (err.code === "UserNotConfirmedException") {
-        console.log("EIEI");
+        // console.log("EIEI");
         cognitoUser.resendConfirmationCode((error) => {
           if (error) throw error;
         });
