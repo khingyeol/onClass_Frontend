@@ -23,6 +23,9 @@ const rootReducer = (state: RootState | undefined, action: AnyAction) => {
   return appReducer(action.type === 'LOGOUT' ? undefined : state, action);
 };
 
+export const clearStore = () => {
+  return { type: 'LOGOUT'}
+}
 
 const persistedReducer = persistReducer(
     {

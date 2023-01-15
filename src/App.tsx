@@ -15,10 +15,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
 import { isLoggedIn } from "./services/auth/api_auth";
 import OtpPage from "./screen/Auth/OtpPage";
+import { useSelector } from "react-redux";
+import { getIsAuthenticate } from "./store/authentication/selector";
 
 function App() {
-
-  const isLogin: boolean = useMemo(() => isLoggedIn(), []);
+  const isLogin: boolean = useSelector(getIsAuthenticate);
 
   useEffect(() => {
     console.log("isLoggedIn", isLogin);

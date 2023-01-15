@@ -3,7 +3,7 @@ import httpClient from "../httpClient";
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import UserPool from "../../cognito/UserPool";
 import { updateAuthentication } from "../../store/authentication/action";
-import { store } from "../../store";
+import { clearStore, store } from "../../store";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -100,6 +100,7 @@ export const logout = () => {
   store.dispatch(updateAuthentication(false));
   window.localStorage.clear();
   localStorage.removeItem(server.TOKEN_KEY);
+  store.dispatch(clearStore())
   window.location.reload();
 };
 
@@ -122,6 +123,7 @@ export async function signIn(username: string, password: string) {
         const res = await httpClient.get(server.AUTH_URL + api_auth.LOGIN_URL);
         if (res.data.result === "OK") {
           console.log("[Login] Success", res);
+          store.dispatch(updateAuthentication(true));
           resolve(result);
         } else {
           console.log("[Login] fail", res);
