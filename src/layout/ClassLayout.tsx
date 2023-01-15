@@ -40,10 +40,6 @@ const ClassLayout: FC = (props) => {
           <Box width="100%" maxWidth="1060px">
             <Outlet />
           </Box>
-          {/* <Routes>
-            <Route path="/" element={<ClassFeed />} />
-            <Route path="/assignments" element={<HomeAssignments />} />
-          </Routes> */}
         </Box>
         {isDesktop ? <ClassDetail /> : null}
       </Box>

@@ -25,7 +25,7 @@ export interface AssignmentModel {
   comment: number;
   assignment_start_date: Date;
   assignment_end_date: Date;
-  moment_sort: number;
+  moment_sort: Date;
 }
 
 export interface NicknameModel {
@@ -50,7 +50,7 @@ export interface PostModel {
   poll?: PollModel[];
   comment: number;
   created: Date;
-  moment_sort: number; //moment
+  moment_sort: string; //moment
 }
 
 export interface ClassExamModel {
@@ -74,12 +74,12 @@ export interface GetClassResponseData {
   class_assignment: AssignmentModel[];
   class_post: PostModel[];
   class_exam: ClassExamModel[];
-  class_feed: [{ type: string; date: AssignmentModel | PostModel }];
+  class_feed: [{ type: string; data: AssignmentModel | PostModel }];
   nickname: NicknameModel[];
 }
 
 export interface GetClassResponse {
-    result: string;
-    message: string;
-    data: GetClassResponseData;
+  result: string;
+  message: string;
+  data: GetClassResponseData;
 }

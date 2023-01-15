@@ -26,10 +26,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
     return (
-      <div>
-        PostLayout
-      </div>
+      <>
+      <Box
+        className={classes.navBox}
+        marginTop={`${isDesktop ? appBarHeightSm : appBarHeightXs}px`}
+      >
+        {/* Header + NavBar */}
+        <HomeNavigation type={"class"} />
+        {/* Content */}
+        <Box component="main" className={classes.mainComponent}>
+          <Box width="100%" maxWidth="1060px">
+            <Outlet />
+          </Box>
+        </Box>
+        {/* If type = asignment -> show asmbox */}
+        {/* {isDesktop ? <ClassDetail /> : null} */}
+      </Box>
+    </>
     )
-    // const 
   }
   export default memo(PostLayout);

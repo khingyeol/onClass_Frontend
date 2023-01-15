@@ -70,8 +70,11 @@ const ClassFeed: FC = () => {
       <Box display="grid" gap={{ xs: "10px", sm: "30px" }}>
         {/* Re-render problem */}
         <PostBox />
-        <FeedPost />
-        <FeedPost />
+        {
+          content && content.class_feed.map((item) => (
+            <FeedPost type={item.type} data={item.data} />
+          ))
+        }
       </Box>
     </>
   );

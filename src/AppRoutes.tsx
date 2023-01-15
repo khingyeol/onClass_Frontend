@@ -10,8 +10,8 @@ import ClassLayout from "./layout/ClassLayout";
 import { useSelector } from "react-redux";
 import { getCurrentStage } from "./store/stage/selector";
 import { AllStageType } from "./store/stage/action";
-import FeedPost from "./components/Class/FeedPost";
 import PostLayout from "./layout/PostLayout";
+import Content from "./components/Post/Content";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
@@ -50,7 +50,7 @@ function AppRoutes() {
         return (
           <>
             <Route path="/:classid/post" element={<PostLayout />}>
-              <Route path="/:classid/post/:id" element={<></>}></Route>
+              <Route path="/:classid/post/:id" element={<Content />}></Route>
             </Route>
           </>
         );

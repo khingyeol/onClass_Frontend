@@ -8,18 +8,26 @@ import {
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
-import ClassCard from "../../components/Home/ClassCard";
-import NavAddBtn from "../Main/Navigation/NavAddBtn";
-import { mockedData } from "../../mocked/mockedData";
 import { makeStyles } from "@mui/styles";
 import dummyTeacher from "../../assets/image/dummy-teacher.png";
 import IconComment from "../../assets/svg/icon_comment.svg";
 import IconSend from "../../assets/svg/icon_send.svg";
 import OCIconButton from "../../common/OCIconButton";
 import OCTextField from "../../common/OCTextfield";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
+import {
+  AllStageType,
+  updateCurrentStage,
+  updateSelectedId,
+  updateSelectedType,
+} from "../../store/stage/action";
+import {
+  AssignmentModel,
+  PostModel,
+} from "../../services/types/getClassResponse";
+import { formatDate, formatTime } from "../../utils/formatDate";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -36,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignContent: "center",
     display: "flex",
     gap: "20px",
-    cursor: 'pointer',
+    cursor: "pointer",
   },
   contents: {
     wordBreak: "break-word",
@@ -59,17 +67,61 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const FeedPost: FC = () => {
+interface FeedPostProps {
+  type: string;
+  data: any;
+}
+
+const FeedPost: FC<FeedPostProps> = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const classid = useSelector(getClassId);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const { type, data } = props;
+
+  const renderTitle = () => {
+    switch (type) {
+      case "post": {
+        return (
+          <Typography
+            variant="h3"
+            fontSize="21px"
+            color={onClassColorTheme.green}
+          >
+            {data.post_author.optional_name ??
+              `${data.post_author.firstname} ${data.post_author.lastname}`}
+          </Typography>
+        );
+      }
+
+      case "assignment": {
+        return (
+          <Typography
+            variant="h3"
+            fontSize="21px"
+            color={onClassColorTheme.green}
+          >
+            {data.assignment_name}
+          </Typography>
+        );
+      }
+    }
+  };
 
   return (
     <>
       <Box className={classes.postbox}>
         {/* Headline */}
-        <Box className={classes.headline} onClick={() => navigate(`/${classid}/post/1234`)}>
+        <Box
+          className={classes.headline}
+          onClick={() => {
+            navigate(`/${classid}/post/${data.id}`);
+            dispatch(updateCurrentStage(AllStageType.POST));
+            dispatch(updateSelectedType(type.toUpperCase()));
+            dispatch(updateSelectedId(data.id));
+          }}
+        >
           <Avatar
             sx={{
               width: isDesktop ? 60 : 50,
@@ -82,34 +134,24 @@ const FeedPost: FC = () => {
             src={dummyTeacher}
           />
           <Box style={{ alignSelf: "center" }}>
-            <Typography
-              variant="h3"
-              fontSize="21px"
-              color={onClassColorTheme.green}
-            >
-              Teacher's Name
-            </Typography>
+            {renderTitle()}
             <Typography variant="body1" color={onClassColorTheme.grey}>
-              21 Jun. 2020
+              {`${formatDate(data.moment_sort)} | ${formatTime(
+                data.moment_sort
+              )}`}
             </Typography>
           </Box>
         </Box>
 
         {/* Content */}
-        <Box
-          className={classes.contents}
-          sx={{ borderTop: "1px solid #BFBFBF" }}
-        >
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using 'Content here, content here', making it
-          look like readable English. Many desktop publishing packages and web
-          page editors now use Lorem Ipsum as their default model text, and a
-          search for 'lorem ipsum' will uncover many web sites still in their
-          infancy. Various versions have evolved over the years, sometimes by
-          accident, sometimes on purpose (injected humour and the like).
-        </Box>
+        {type === "post" && (
+          <Box
+            className={classes.contents}
+            sx={{ borderTop: "1px solid #BFBFBF" }}
+          >
+            {data.post_content}
+          </Box>
+        )}
 
         {/* Comment */}
         <Box className={classes.comments} display={{ xs: "none", sm: "flex" }}>

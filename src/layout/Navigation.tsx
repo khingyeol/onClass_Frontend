@@ -28,8 +28,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import ChevronRight from "../assets/svg/chevron-right.svg";
 import ChevronLeft from "../assets/svg/chevron-left.svg";
 import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentStage, AllStageType } from "../store/stage/action";
+import { getClassDetail } from "../store/classsdetail/selector";
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawerBox: {
@@ -90,16 +91,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Navigation: FC<{ type: "home" | "class" }> = (props) => {
-  // const Navigation: FC<{ children: any }> = (props: { children: any }) => {
   const { type } = props;
-  const theme = useTheme();
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
   const { classid } = useParams();
   const [openDesktop, setOpenDesktop] = useState(true);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const classDetail = useSelector(getClassDetail);
 
   const drawerManage = isDesktop ? openDesktop : true;
 
@@ -224,7 +223,7 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
               alt="chevron-right"
             />
 
-            <Typography variant="h3" paddingLeft="12px" noWrap>Cyber-Communication</Typography>
+            <Typography variant="h3" paddingLeft="12px" noWrap>{classDetail.class_name}</Typography>
           </Box>
 
           <NavClassMenu />
