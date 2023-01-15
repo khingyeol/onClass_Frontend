@@ -32,3 +32,4 @@ const useStyles = makeStyles((theme: Theme) => ({
     )
     // const 
   }
+  export default memo(PostLayout);

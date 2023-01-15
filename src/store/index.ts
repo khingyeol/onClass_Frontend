@@ -10,11 +10,13 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { authenticationReducer } from "./authentication/store";
 import { userDataReducer } from "./userdata/store";
+import { stageReducer } from "./stage/store";
 
 const appReducer = combineReducers({
   authentication: authenticationReducer,
   classDetail: classDetailReducer,
   userData: userDataReducer,
+  stage: stageReducer,
 });
 
 const rootReducer = (state: RootState | undefined, action: AnyAction) => {
