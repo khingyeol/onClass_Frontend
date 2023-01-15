@@ -2,10 +2,8 @@ import {
   AnyAction,
   combineReducers,
   configureStore,
-  Reducer,
 } from "@reduxjs/toolkit";
 import { classDetailReducer } from "./classsdetail/store";
-import thunk, { ThunkDispatch } from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { authenticationReducer } from "./authentication/store";

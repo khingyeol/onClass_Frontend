@@ -1,9 +1,8 @@
 import { alpha, Box, Theme, Typography } from "@mui/material";
-import React, { FC, memo, useEffect, useState } from "react";
+import { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
-import { mockedData } from "../../../mocked/mockedData";
 
 const useStyles = makeStyles((theme: Theme) => ({
   class_list: {
@@ -34,14 +33,14 @@ const NavClassMenu: FC = () => {
   );
   const { classid } = useParams();
 
-  const menu = [
-    {
-      name: "feed",
-      path: "/",
-    },
-    { name: "assignments", path: "/assignments" },
-    { name: "examination", path: "/exam" },
-  ];
+  // const menu = [
+  //   {
+  //     name: "feed",
+  //     path: "/",
+  //   },
+  //   { name: "assignments", path: "/assignments" },
+  //   { name: "examination", path: "/exam" },
+  // ];
 
   return (
     <>

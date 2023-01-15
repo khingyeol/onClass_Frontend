@@ -1,10 +1,8 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { FC, memo, useEffect, useMemo } from "react";
-import { useParams } from "react-router";
+import { FC, memo } from "react";
 import { makeStyles } from "@mui/styles";
-import { alpha, Theme, useTheme } from "@mui/material/styles";
-import ClassDetail from "../components/Class/ClassDetail";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Theme } from "@mui/material/styles";
+import { Outlet } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 

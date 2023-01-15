@@ -1,6 +1,6 @@
 import { Box, Theme, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PostBox from "../../components/Class/PostBox";
 import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";

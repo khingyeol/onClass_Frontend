@@ -1,5 +1,5 @@
 import { Avatar, Box, Theme, Typography, useMediaQuery } from "@mui/material";
-import { FC, memo } from "react";
+import { FC } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import dummyTeacher from "../../assets/image/dummy-teacher.png";
@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const mockedSocial = {
-  mail: "sitthichai_1999@swu.com",
-  phone: "+66 123 456 789",
-  facebook: "Sitthichai Vachi",
-  line: "ginger_khing",
-};
+// const mockedSocial = {
+//   mail: "sitthichai_1999@swu.com",
+//   phone: "+66 123 456 789",
+//   facebook: "Sitthichai Vachi",
+//   line: "ginger_khing",
+// };
 
 const ClassDetail: FC = () => {
   const classes = useStyles();

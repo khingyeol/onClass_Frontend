@@ -1,6 +1,6 @@
 import { Link, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { FC, memo, useEffect, useState } from "react";
+import React, { FC, memo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
 import OCTextfield from "../../common/OCTextfield";
@@ -12,7 +12,6 @@ import {
 import { updateUserEmail } from "../../store/userdata/action";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import UserPool from "../../cognito/UserPool";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

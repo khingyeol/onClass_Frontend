@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import NavListClass from "../assets/svg/icon_class.svg";
 import NavListAsm from "../assets/svg/icon_asm.svg";
 import NavInfo from "../assets/svg/icon_info.svg";
@@ -21,10 +21,9 @@ import {
   appBarHeightSm,
   appBarHeightXs,
 } from "./HomeLayout";
-import { alpha, Theme, useTheme } from "@mui/material/styles";
+import { alpha, Theme } from "@mui/material/styles";
 import Header from "./Header";
 import { makeStyles } from "@mui/styles";
-import { useNavigate, useParams } from "react-router-dom";
 import ChevronRight from "../assets/svg/chevron-right.svg";
 import ChevronLeft from "../assets/svg/chevron-left.svg";
 import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
@@ -95,7 +94,6 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
-  const { classid } = useParams();
   const [openDesktop, setOpenDesktop] = useState(true);
   const dispatch = useDispatch();
   const classDetail = useSelector(getClassDetail);

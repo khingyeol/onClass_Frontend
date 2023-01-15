@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import dummyTeacher from "../../assets/image/dummy-teacher.png";
@@ -23,10 +23,6 @@ import {
   updateSelectedId,
   updateSelectedType,
 } from "../../store/stage/action";
-import {
-  AssignmentModel,
-  PostModel,
-} from "../../services/types/getClassResponse";
 import { formatDate, formatTime } from "../../utils/formatDate";
 
 const useStyles = makeStyles((theme: Theme) => ({
