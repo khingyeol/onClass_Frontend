@@ -1,8 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "..";
-import { ClassDetail } from "./action";
+import { GetAllClassResponseData } from "../../services/types/getAllClassResponse";
 
-const getState = (state: RootState): ClassDetail => state.classDetail;
+const getState = (state: RootState): GetAllClassResponseData => state.classDetail;
 
-export const getClassDetail = createSelector([getState], (state: ClassDetail) => state)
-export const getClassId = createSelector([getState], (state: ClassDetail) => state.class_code);
+export const getClassDetail = createSelector([getState], (state: GetAllClassResponseData) => state)
+export const getClassId = createSelector([getState], (state: GetAllClassResponseData) => state.class_code);

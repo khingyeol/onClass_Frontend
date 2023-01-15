@@ -1,32 +1,21 @@
-export interface ClassDetail {
-    class_code?: string;
-    class_name?: string;
-    class_section?: string;
-    teacher?: {
-      profile_pic?: string;
-      name: {
-        firstname: string;
-        lastname: string;
-      };
-    };
-  }
+import { GetAllClassResponseData } from "../../services/types/getAllClassResponse";
 
 export enum ClassDetailActionType {
-    UpdateClassId = "UPDATE_CLASS_ID",
+    UpdateClassDetail = "UPDATE_CLASS_DETAIL",
 }
 
 export interface UpdateClassDetailAction {
-    type: ClassDetailActionType.UpdateClassId;
-    payload: ClassDetail;
+    type: ClassDetailActionType.UpdateClassDetail;
+    payload: GetAllClassResponseData;
 }
 
 export type ClassDetailAction = UpdateClassDetailAction;
 
 export const updateClassDetail = (
-    classDetail: ClassDetail
+    classDetail: GetAllClassResponseData
 ): UpdateClassDetailAction => {
     return {
-        type: ClassDetailActionType.UpdateClassId,
+        type: ClassDetailActionType.UpdateClassDetail,
         payload: classDetail,
     };
 };

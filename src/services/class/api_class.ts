@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import { server, api_class } from '../constants';
 import httpClient from '../httpClient';
 import { GetAllClassResponse } from '../types/getAllClassResponse';
+import { GetClassResponse } from '../types/getClassResponse';
 
 // class/get/all
 export const getAllClass = async (): Promise<AxiosResponse<GetAllClassResponse>> => {
@@ -9,8 +10,9 @@ export const getAllClass = async (): Promise<AxiosResponse<GetAllClassResponse>>
 };
 
 // class/get/:classid
-export const getfromClass = async (id: string) => {
-    return await httpClient.get(server.CLASS_URL+api_class.GET+`/${id}`)
+export const getfromClass = async (id: string): Promise<AxiosResponse<GetClassResponse>> => {
+    const response = await httpClient.get(server.CLASS_URL+api_class.GET+`/${id}`)
+    return response;
 }
 
 // class/assignment/get

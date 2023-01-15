@@ -7,6 +7,7 @@ import { makeStyles } from "@mui/styles";
 import { getClassId } from "../../store/classsdetail/selector";
 import { useSelector } from "react-redux";
 import { getfromClass } from "../../services/class/api_class";
+import { GetClassResponseData } from "../../services/types/getClassResponse";
 
 const useStyles = makeStyles((theme: Theme) => ({
   classCard: {
@@ -34,18 +35,23 @@ const ClassFeed: FC = () => {
   const navigate = useNavigate();
   const classes = useStyles();
   const classid = useSelector(getClassId);
-  const [content, setContent] = useState([])
+  const [content, setContent] = useState<GetClassResponseData | null>()
+
+  const fetchGetFromClass = async (id: string) => {
+    const res = await getfromClass(id);
+    if (res.data.result === 'OK') {
+      setContent(res.data.data);
+      console.log('content', content);
+    } else {
+      setContent(null)
+    }
+  }
 
   useEffect(() => {
      if (!classid) {
       navigate('/home');
     } else {
-      // const res = getfromClass(classid);
-      // if (res.data.result === 'OK') {
-      //   setContent(res.data.data);
-      // } else {
-      //   setContent([])
-      // }
+      fetchGetFromClass(classid);
     }
     console.log('id redux', classid)
   },[])
