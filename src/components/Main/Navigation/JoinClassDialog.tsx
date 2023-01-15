@@ -1,20 +1,13 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  Menu,
-  MenuItem,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Dialog, Typography } from "@mui/material";
 import React, { FC, useState } from "react";
-import { alpha, Theme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { joinClass } from "../../../services/class/api_class";
 import OCTextField from "../../../common/OCTextfield";
 import OCTextfield from "../../../common/OCTextfield";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import OCButton from "../../../common/OCButton";
+import { JoinClassRequest } from "../../../services/types/patchClassJoinRequest";
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogJoin: {
@@ -32,7 +25,12 @@ interface JoinClassDialogProps {
 const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
   const { open, onClose } = props;
   const classes = useStyles();
-  const [classCode, setClassCode] = useState("");
+  const [content, setContent] = useState<JoinClassRequest>({
+    class_code: "",
+    firstname: "",
+    lastname: "",
+  });
+  // const [classCode, setClassCode] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [nameTF, setNameTF] = useState({
     firstname: "",
@@ -43,21 +41,21 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setNameTF({
-      ...nameTF,
+    setContent({
+      ...content,
       [e.target.name]: e.target.value,
     });
   };
 
   const onTappedJoin = async () => {
-    console.log('!!!!!!!',classCode);
-    const res = await joinClass(classCode);
+    console.log("!!!!!!!", content);
+    const res = await joinClass(content!);
     if (res.status === 200) {
-        window.location.reload();
-        console.log('success join class')
+      window.location.reload();
+      console.log("success join class");
     } else if (res.status === 404) {
-        setErrMsg("Class Code Not Found !")
-        console.log('classcode not found!')
+      setErrMsg("Class Code Not Found !");
+      console.log("classcode not found!");
     }
   };
 
@@ -81,10 +79,11 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
             <Box width="50%">
               <Typography variant="body1">Enter Class Code :</Typography>
               <OCTextField
-                value={classCode}
-                onChange={(e) => setClassCode(e.target.value)}  
+                name="class_code"
+                value={content?.class_code}
+                onChange={(e) => handleChange(e)}
                 // error={errMsg.length > 1}
-                // helperText={errMsg}            
+                // helperText={errMsg}
               />
               {errMsg.length > 1 && <Typography>{errMsg}</Typography>}
             </Box>
@@ -95,13 +94,13 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
             >
               <OCTextfield
                 name="firstname"
-                value={nameTF.firstname}
+                value={content.firstname}
                 onChange={(e) => handleChange(e)}
                 label={"Firstname"}
               />
               <OCTextfield
                 name="lastname"
-                value={nameTF.lastname}
+                value={content.lastname}
                 onChange={(e) => handleChange(e)}
                 label={"Lastname"}
               />
@@ -111,8 +110,8 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
                 nickname (Optional)
               </Typography>
               <OCTextfield
-                name="nickname"
-                value={nameTF.nickname}
+                name="optional_name"
+                value={content.optional_name}
                 onChange={(e) => handleChange(e)}
                 //   sx={{width: "50%"}}
               />

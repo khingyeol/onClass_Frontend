@@ -3,6 +3,8 @@ import { server, api_class } from '../constants';
 import httpClient from '../httpClient';
 import { GetAllClassResponse } from '../types/getAllClassResponse';
 import { GetClassResponse } from '../types/getClassResponse';
+import { JoinClassRequest } from '../types/patchClassJoinRequest';
+import { ClassCreateRequest } from '../types/postClassCreateRequest';
 
 // class/get/all
 export const getAllClass = async (): Promise<AxiosResponse<GetAllClassResponse>> => {
@@ -61,8 +63,8 @@ export const getTodo = async (class_code: string) => {
 // }
 
 // // class/join
-export const joinClass = async (class_code: string) => {
-    return await httpClient.patch(server.CLASS_URL+api_class.JOIN, {class_code});
+export const joinClass = async (body: JoinClassRequest) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.JOIN, body);
 }
 
 // // class/leave
