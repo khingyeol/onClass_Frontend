@@ -4,7 +4,7 @@ import httpClient from '../httpClient';
 import { GetAllClassResponse } from '../types/getAllClassResponse';
 import { GetClassResponse } from '../types/getClassResponse';
 import { JoinClassRequest } from '../types/patchClassJoinRequest';
-import { ClassCreateRequest } from '../types/postClassCreateRequest';
+import { CreateClassRequest } from '../types/postClassCreateRequest';
 
 // class/get/all
 export const getAllClass = async (): Promise<AxiosResponse<GetAllClassResponse>> => {
@@ -58,9 +58,9 @@ export const getTodo = async (class_code: string) => {
 // }
 
 // // class/create
-// export const createClass = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.CREATE, values);
-// }
+export const createClass = async (body: CreateClassRequest) => {
+    return await httpClient.post(server.CLASS_URL+api_class.CREATE, body);
+}
 
 // // class/join
 export const joinClass = async (body: JoinClassRequest) => {

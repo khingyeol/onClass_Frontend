@@ -30,13 +30,7 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
     firstname: "",
     lastname: "",
   });
-  // const [classCode, setClassCode] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [nameTF, setNameTF] = useState({
-    firstname: "",
-    lastname: "",
-    nickname: "",
-  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -55,7 +49,6 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
       console.log("success join class");
     } else if (res.status === 404) {
       setErrMsg("Class Code Not Found !");
-      console.log("classcode not found!");
     }
   };
 
@@ -71,7 +64,6 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
       }}
     >
       <Box padding="20px">
-        <Box>
           <Box sx={{ borderBottom: 1, padding: 1 }}>
             <Typography variant="h3">Join Class</Typography>
           </Box>
@@ -82,8 +74,8 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
                 name="class_code"
                 value={content?.class_code}
                 onChange={(e) => handleChange(e)}
-                // error={errMsg.length > 1}
-                // helperText={errMsg}
+                error={errMsg.length > 1}
+                helperText={errMsg}
               />
               {errMsg.length > 1 && <Typography>{errMsg}</Typography>}
             </Box>
@@ -124,7 +116,6 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
               <OCButton label="CLOSE" variant="outline" onClick={onClose} />
               <OCButton label="JOIN" onClick={onTappedJoin} />
             </Box>
-          </Box>
         </Box>
       </Box>
     </Dialog>
