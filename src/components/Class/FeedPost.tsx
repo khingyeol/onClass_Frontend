@@ -21,19 +21,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 
-interface getAllClassResponse {
-  class_code: string;
-  class_name: string;
-  class_section: string;
-  teacher: {
-    profile_pic: string;
-    name: {
-      firstname: string;
-      lastname: string;
-    };
-  };
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
     gap: "10px",

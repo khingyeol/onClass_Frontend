@@ -43,8 +43,6 @@ const NavClassMenu: FC = () => {
     { name: "examination", path: "/exam" },
   ];
 
-  console.log("currentPath", currentPath);
-
   return (
     <>
       {/* {menu.map((item: any) => (

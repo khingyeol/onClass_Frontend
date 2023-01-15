@@ -148,7 +148,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
           await signIn(loginTF!.username, loginTF!.password);
           console.log("[onTappedLogin] login pass!");
           window.location.reload();
-          navigate("/home");
+          // navigate("/home");
         } catch (err: any) {
           if (err.code === "UserNotConfirmedException") {
             console.log("[onTappedLogin] need to confirm code");

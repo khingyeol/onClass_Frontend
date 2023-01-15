@@ -4,21 +4,10 @@ import React, { FC } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
-import { ClassDetail, updateClassDetail } from "../../store/classsdetail/action";
+import { updateClassDetail } from "../../store/classsdetail/action";
 import dummyTeacher from "../../assets/image/dummy-teacher.png";
-
-interface getAllClassResponse {
-  class_code: string;
-  class_name: string;
-  class_section: string;
-  teacher: {
-    profile_pic?: string;
-    name: {
-      firstname: string;
-      lastname: string;
-    };
-  };
-}
+import { updateCurrentStage, AllStageType } from "../../store/stage/action";
+import { GetAllClassResponseData } from "../../services/types/getAllClassResponse";
 
 const useStyles = makeStyles((theme: Theme) => ({
   class_list: {
@@ -61,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ClassCard: FC<{ item: getAllClassResponse }> = (props) => {
+const ClassCard: FC<{ item: GetAllClassResponseData }> = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
@@ -70,6 +59,7 @@ const ClassCard: FC<{ item: getAllClassResponse }> = (props) => {
   const onClickCard = () => {
     navigate("/" + item.class_code);
     dispatch(updateClassDetail(item));
+    dispatch(updateCurrentStage(AllStageType.CLASS))
   };
 
   return (

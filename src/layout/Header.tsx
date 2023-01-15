@@ -17,16 +17,14 @@ import { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import dummyPic from "../assets/image/dummypic.png";
 import NavAddBtn from "../components/Main/Navigation/NavAddBtn";
-import { useNavigate } from "react-router-dom";
 import { logout } from "../services/auth/api_auth";
 import { useDispatch } from "react-redux";
-import { updateAuthentication } from "../store/authentication/action";
+import { AllStageType, updateCurrentStage } from "../store/stage/action";
 
 const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { handleDrawer } = props;
   const [menuUserProfile, setMenuUserProfile] = useState<Element | null>(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleUserProfile = (
@@ -37,7 +35,6 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
 
   const onTappedLogout = () => {
     logout();
-    dispatch({type: 'LOGOUT'})
   };
 
   return (
@@ -70,7 +67,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
             }}
           >
             <img
-              onClick={() => navigate("/")}
+              onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               src={AppLogo}
               style={{ height: isDesktop ? 31 : 20, cursor: "pointer" }}
               alt="app-logo"

@@ -4,6 +4,13 @@ export interface StageModel {
   selectedId?: string;
 }
 
+export enum AllStageType {
+    HOME = 'HOME',
+    CLASS = 'CLASS',
+    POST = 'POST',
+    EXAM = 'EXAM'
+}
+
 export enum StageActionType {
   UpdateCurrentStage = "STAGE/UPDATE_STAGE",
   UpdateSelectedType = "STAGE/UPDATE_SELECTED_TYPE",
@@ -60,11 +67,5 @@ export const updateSelectedId = (
   return {
     type: StageActionType.UpdateSelectedId,
     payload: { selectedId },
-  };
-};
-
-export const clearStage = (): ClearStageAction => {
-  return {
-    type: StageActionType.ClearStage,
   };
 };

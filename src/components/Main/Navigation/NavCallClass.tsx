@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import { getAllClass } from "../../../services/class/api_class";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateClassDetail } from "../../../store/classsdetail/action";
 import { GetAllClassResponseData } from "../../../services/types/getAllClassResponse";
+import { AllStageType, updateCurrentStage } from "../../../store/stage/action";
+import { getCurrentStage } from "../../../store/stage/selector";
 
 const useStyles = makeStyles((theme: Theme) => ({
   class_list: {
@@ -31,6 +33,7 @@ const NavCallClass: FC = () => {
   const [content, setContent] = useState<GetAllClassResponseData[]>([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const currState = useSelector(getCurrentStage);
   const classes = useStyles();
 
   const fetchGetAllClass = async () => {
@@ -49,6 +52,7 @@ const NavCallClass: FC = () => {
   const onClickClass = (item: GetAllClassResponseData) => {
     navigate("/" + item.class_code);
     dispatch(updateClassDetail(item));
+    dispatch(updateCurrentStage(AllStageType.CLASS));
     console.log('onClickCard', item.class_code);
   };
 

@@ -24,11 +24,12 @@ import {
 import { alpha, Theme, useTheme } from "@mui/material/styles";
 import Header from "./Header";
 import { makeStyles } from "@mui/styles";
-import { matchPath, Navigate, useNavigate, useParams } from "react-router-dom";
-import ClassDetail from "../components/Class/ClassDetail";
+import { useNavigate, useParams } from "react-router-dom";
 import ChevronRight from "../assets/svg/chevron-right.svg";
 import ChevronLeft from "../assets/svg/chevron-left.svg";
 import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
+import { useDispatch } from "react-redux";
+import { updateCurrentStage, AllStageType } from "../store/stage/action";
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawerBox: {
@@ -98,6 +99,7 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const { classid } = useParams();
   const [openDesktop, setOpenDesktop] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const drawerManage = isDesktop ? openDesktop : true;
 
@@ -190,9 +192,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           }}
         >
           <Box display="flex" alignItems="center">
-            {/* <OCIconButton href={"/home"} icon={NavListAsm} color={onClassColorTheme.grey} size={"45px"} /> */}
             <Button
-              onClick={() => navigate("/home")}
+              onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               sx={{
                 // width: "40px",
                 // height: "40px",
@@ -263,10 +264,6 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
       </Box>
     </>
   );
-
-  useEffect(() => {
-    console.log(classid);
-  });
 
   return (
     <>
