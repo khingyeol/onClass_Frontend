@@ -1,19 +1,18 @@
-import { Button, Link, TextField, Theme, Typography } from "@mui/material";
+import { Link, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { FC, memo, useState } from "react";
+import React, { FC, memo, useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
 import OCTextfield from "../../common/OCTextfield";
-import { login, register, signIn, signUp } from "../../services/auth/api_auth";
+import { signIn, signUp } from "../../services/auth/api_auth";
 import {
   cognitoUserDataModel,
   onClassRegisterModel,
 } from "../../services/auth/api_auth";
 import { updateUserEmail } from "../../store/userdata/action";
 import { useDispatch } from "react-redux";
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
-import UserPool from "../../cognito/UserPool";
 import { useNavigate } from "react-router-dom";
+import UserPool from "../../cognito/UserPool";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

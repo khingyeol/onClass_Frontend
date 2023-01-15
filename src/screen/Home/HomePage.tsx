@@ -3,26 +3,13 @@ import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ClassCard from "../../components/Home/ClassCard";
 import NavAddBtn from "../../components/Main/Navigation/NavAddBtn";
-import { mockedData } from "../../mocked/mockedData";
 import { getAllClass } from "../../services/class/api_class";
+import { GetAllClassResponseData } from "../../services/types/getAllClassResponse";
 import { getClassId } from "../../store/classsdetail/selector";
-
-export interface getAllClassResponse {
-  class_code: string;
-  class_name: string;
-  class_section: string;
-  teacher: {
-    profile_pic: string;
-    name: {
-      firstname: string;
-      lastname: string;
-    };
-  };
-}
 
 const HomePage: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
-  const [content, setContent] = useState<getAllClassResponse[]>([]);
+  const [content, setContent] = useState<GetAllClassResponseData[]>([]);
   const classid = useSelector(getClassId);
 
   const fetchGetAllClass = async () => {
@@ -43,7 +30,7 @@ const HomePage: FC = () => {
     fetchGetAllClass();
   }, []);
 
-  const classItem = content.map((item: getAllClassResponse) => (
+  const classItem = content.map((item: GetAllClassResponseData) => (
     <ClassCard key={item.class_code} item={item} />
   ))
 

@@ -1,12 +1,12 @@
 import { Box, Theme, Typography } from "@mui/material";
-import React, { FC, useEffect } from "react";
-import ClassCard from "../../components/Home/ClassCard";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PostBox from "../../components/Class/PostBox";
 import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";
 import { getClassId } from "../../store/classsdetail/selector";
 import { useSelector } from "react-redux";
+import { getfromClass } from "../../services/class/api_class";
 
 const useStyles = makeStyles((theme: Theme) => ({
   classCard: {
@@ -34,10 +34,18 @@ const ClassFeed: FC = () => {
   const navigate = useNavigate();
   const classes = useStyles();
   const classid = useSelector(getClassId);
+  const [content, setContent] = useState([])
 
   useEffect(() => {
-    if (!classid) {
+     if (!classid) {
       navigate('/home');
+    } else {
+      // const res = getfromClass(classid);
+      // if (res.data.result === 'OK') {
+      //   setContent(res.data.data);
+      // } else {
+      //   setContent([])
+      // }
     }
     console.log('id redux', classid)
   },[])

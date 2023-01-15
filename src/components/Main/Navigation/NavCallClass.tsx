@@ -3,23 +3,10 @@ import React, { FC, memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
-import { mockedData } from "../../../mocked/mockedData";
 import { getAllClass } from "../../../services/class/api_class";
 import { useDispatch } from "react-redux";
 import { updateClassDetail } from "../../../store/classsdetail/action";
-
-interface getAllClassResponse {
-  class_code: string;
-  class_name: string;
-  class_section: string;
-  teacher: {
-    profile_pic: string;
-    name: {
-      firstname: string;
-      lastname: string;
-    };
-  };
-}
+import { GetAllClassResponseData } from "../../../services/types/getAllClassResponse";
 
 const useStyles = makeStyles((theme: Theme) => ({
   class_list: {
@@ -41,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const NavCallClass: FC = () => {
-  const [content, setContent] = useState<getAllClassResponse[]>([]);
+  const [content, setContent] = useState<GetAllClassResponseData[]>([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -50,7 +37,7 @@ const NavCallClass: FC = () => {
     // setContent(mockedData.mockedAllClass);
     const res = await getAllClass();
     console.log(res)
-    if (res.data.result == 'OK') {
+    if (res.data.result === 'OK') {
         setContent(res.data.data)
         // console.log("eiei",res.data.data)
     }
@@ -59,7 +46,7 @@ const NavCallClass: FC = () => {
     }
   };
 
-  const onClickClass = (item: getAllClassResponse) => {
+  const onClickClass = (item: GetAllClassResponseData) => {
     navigate("/" + item.class_code);
     dispatch(updateClassDetail(item));
     console.log('onClickCard', item.class_code);
@@ -70,7 +57,7 @@ const NavCallClass: FC = () => {
   }, []);
 
   const classlist = content.map(
-    (item: getAllClassResponse) => (
+    (item: GetAllClassResponseData) => (
       // <Link to={'/'+item.class_code} style={{ textDecoration: 'none' }}>
       <Box
         key={item.class_code}

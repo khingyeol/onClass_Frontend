@@ -122,15 +122,16 @@ export async function signIn(username: string, password: string) {
         const res = await httpClient.get(server.AUTH_URL + api_auth.LOGIN_URL);
         if (res.data.result === "OK") {
           console.log("[Login] Success", res);
-          window.location.reload();
           resolve(result);
         } else {
           console.log("[Login] fail", res);
-          console.log("Login fail");
+          localStorage.removeItem(server.TOKEN_KEY);
           reject(`Login fail ${res.statusText}`);
         }
       },
       onFailure: (err) => {
+        console.log("Login fail 2");
+        localStorage.removeItem(server.TOKEN_KEY);
         reject(err);
       },
     });

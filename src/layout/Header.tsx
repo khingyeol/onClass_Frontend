@@ -37,6 +37,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
 
   const onTappedLogout = () => {
     logout();
+    dispatch({type: 'LOGOUT'})
   };
 
   return (

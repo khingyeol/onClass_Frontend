@@ -21,3 +21,4 @@ export const updateAuthentication = (
     payload: { isAuthenticate },
   };
 };
+

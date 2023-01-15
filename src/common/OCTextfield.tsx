@@ -10,38 +10,65 @@ interface OCTextFieldProps extends Omit<TextFieldProps, "label"> {
 const OCTextField: FC<OCTextFieldProps> = (props) => {
   const { label, placeholder, ...otherProps } = props;
   return (
-    <Box flex={"flex"} gap={3} width='100%'>
-      <Typography fontSize='18px' fontFamily='FC-Subject' fontWeight='regular' color={onClassColorTheme.grey}>{label}</Typography>
+    <Box flex={"flex"} gap={3} width="100%">
+      <Typography
+        fontSize="18px"
+        fontFamily="FC-Subject"
+        fontWeight="regular"
+        color={onClassColorTheme.grey}
+      >
+        {label}
+      </Typography>
       <TextField
-      fullWidth
-      // name={props.name}
-      // onChange={props.onChange}
-      // value={props.value}
-      placeholder={placeholder}
+        fullWidth
+        // name={props.name}
+        // onChange={props.onChange}
+        // value={props.value}
+        // inputProps={{ sx: {
+        //   ''
+        // }}}
+        placeholder={placeholder}
         sx={{
-          height: "43px",
-          '& .MuiOutlinedInput-root': {
-            color: onClassColorTheme.black,
-            height: "43px",
-            borderRadius: '23px',
-            padding: '5px',
-            backgroundColor: onClassColorTheme.lightgrey,  
-            '& fieldset': {
-                border: 0,
-                borderWidth: 0,
-                height: "43px",
-                borderRadius: '23px',
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              border: 0,
+              borderWidth: 0,
             },
-            '&.Mui-focused fieldset': {
-                borderColor: onClassColorTheme.primary,
-                height: "43px",
-                borderRadius: '23px',
-              },      
-          }
+          },
+          "& .MuiInputBase-root": {
+            borderRadius: "23px",
+            backgroundColor: onClassColorTheme.lightgrey,
+            "& input": {
+              height: "33px",
+              padding: "5px 20px",
+              borderRadius: "23px",
+              backgroundColor: onClassColorTheme.lightgrey,
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: onClassColorTheme.primary,
+            },
+          },
+          // "& .MuiOutlinedInput-root": {
+          //   color: onClassColorTheme.black,
+          //   // height: "43px",
+          //   borderRadius: "23px",
+          //   padding: "5px",
+          //   backgroundColor: onClassColorTheme.lightgrey,
+          //   "& fieldset": {
+          //     border: 0,
+          //     borderWidth: 0,
+          //     // height: "43px",
+          //     borderRadius: "23px",
+          //   },
+          //   "&.Mui-focused fieldset": {
+          //     borderColor: onClassColorTheme.primary,
+          //     // height: "43px",
+          //     borderRadius: "23px",
+          //   },
+          // },
         }}
         {...otherProps}
-      >
-      </TextField>
+      ></TextField>
     </Box>
   );
 };

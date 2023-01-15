@@ -17,6 +17,9 @@ import IconComment from "../../assets/svg/icon_comment.svg";
 import IconSend from "../../assets/svg/icon_send.svg";
 import OCIconButton from "../../common/OCIconButton";
 import OCTextField from "../../common/OCTextfield";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getClassId } from "../../store/classsdetail/selector";
 
 interface getAllClassResponse {
   class_code: string;
@@ -46,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignContent: "center",
     display: "flex",
     gap: "20px",
+    cursor: 'pointer',
   },
   contents: {
     wordBreak: "break-word",
@@ -70,13 +74,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FeedPost: FC = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const classid = useSelector(getClassId);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
   return (
     <>
       <Box className={classes.postbox}>
         {/* Headline */}
-        <Box className={classes.headline}>
+        <Box className={classes.headline} onClick={() => navigate(`/${classid}/post/1234`)}>
           <Avatar
             sx={{
               width: isDesktop ? 60 : 50,
@@ -88,10 +94,18 @@ const FeedPost: FC = () => {
             alt="profile-image"
             src={dummyTeacher}
           />
-          <div style={{alignSelf:"center"}}>
-            <Typography variant="h3" fontSize="21px" color={onClassColorTheme.green}>Teacher's Name</Typography>
-            <Typography variant="body1" color={onClassColorTheme.grey}>21 Jun. 2020</Typography>
-          </div>
+          <Box style={{ alignSelf: "center" }}>
+            <Typography
+              variant="h3"
+              fontSize="21px"
+              color={onClassColorTheme.green}
+            >
+              Teacher's Name
+            </Typography>
+            <Typography variant="body1" color={onClassColorTheme.grey}>
+              21 Jun. 2020
+            </Typography>
+          </Box>
         </Box>
 
         {/* Content */}
@@ -111,12 +125,11 @@ const FeedPost: FC = () => {
         </Box>
 
         {/* Comment */}
-        <Box className={classes.comments} display={{xs: "none", sm: "flex"}}>
+        <Box className={classes.comments} display={{ xs: "none", sm: "flex" }}>
           <OCIconButton
             icon={IconComment}
             color={onClassColorTheme.grey}
             size={"50px"}
-            
           />
           <OCTextField placeholder="Comments…" />
           {/* <img

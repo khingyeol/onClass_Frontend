@@ -1,12 +1,14 @@
 import { AxiosResponse } from 'axios';
-import { getAllClassResponse } from '../../screen/Home/HomePage';
 import { server, api_class } from '../constants';
 import httpClient from '../httpClient';
+import { GetAllClassResponse } from '../types/getAllClassResponse';
 
-export const getAllClass = async (): Promise<AxiosResponse<any>> => {
+// class/get/all
+export const getAllClass = async (): Promise<AxiosResponse<GetAllClassResponse>> => {
     return await httpClient.get(server.CLASS_URL+api_class.GET_ALL);
 };
 
+// class/get/:classid
 export const getfromClass = async (id: string) => {
     return await httpClient.get(server.CLASS_URL+api_class.GET+`/${id}`)
 }
