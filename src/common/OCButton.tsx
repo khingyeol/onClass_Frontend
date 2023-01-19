@@ -4,66 +4,99 @@ import { onClassColorTheme } from "./theme/onClassColorTheme";
 
 interface OCButtonProps extends Omit<ButtonProps, "variant"> {
   label: string;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "error";
+  btnStyle?: "round" | "corner";
+  cornerRadius?: string;
+  height?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  disabled?: boolean;
 }
 
 const primary = {
   backgroundColor: onClassColorTheme.primary,
   color: onClassColorTheme.white,
+  " .MuiTypography-root": {
+    color: onClassColorTheme.white,
+  },
   ":hover": {
     backgroundColor: alpha(onClassColorTheme.primary, 0.8),
   },
-  '&:disabled': {
+  "&:disabled": {
     backgroundColor: alpha(onClassColorTheme.primary, 0.5),
   },
 };
 
 const outline = {
+  border: `solid ${onClassColorTheme.primary}`,
   backgroundColor: onClassColorTheme.white,
   color: onClassColorTheme.primary,
+  " .MuiTypography-root": {
+    color: onClassColorTheme.primary,
+  },
   ":hover": {
     backgroundColor: alpha(onClassColorTheme.primary, 0.2),
   },
-  "& .MuiButtonBase-root": {
-    "& fieldset": {
-      borderWidth: "2px",
-      borderColor: onClassColorTheme.primary,
-    },
+  "&:disabled": {
+    border: `2px solid rgba(65, 176, 148, 0.5)`,
+    " .MuiTypography-root": {
+      color: alpha(onClassColorTheme.primary, 0.5),
+    },  
+  },
+};
+
+const error = {
+  backgroundColor: onClassColorTheme.white,
+  color: onClassColorTheme.error,
+  ":hover": {
+    backgroundColor: alpha(onClassColorTheme.error, 0.2),
+  },
+  " .MuiTypography-root": {
+    color: onClassColorTheme.error,
+  },
+  "&:disabled": {
+    " .MuiTypography-root": {
+      color: alpha(onClassColorTheme.error, 0.5),
+    },  
   },
 };
 
 const OCButton: FC<OCButtonProps> = (props) => {
-  const { label, variant = "primary", color, sx, ...otherProps } = props;
+  const {
+    label,
+    variant = "primary",
+    color,
+    cornerRadius,
+    height,
+    btnStyle = "round",
+    fontSize = "18px",
+    fontWeight = "bold",
+    disabled = false,
+    sx,
+    ...otherProps
+  } = props;
 
   return (
     <Button
-      // onClick={props.onClick}
+      disabled={disabled}
       sx={{
-        height: "43px",
-        borderRadius: "21.5px",
-        fontWeight: "bold",
+        height: `${height ? height : "43px"}`,
+        borderRadius: `${cornerRadius ? cornerRadius : "21.5px"}`,
         paddingX: "30px",
-        borderWidth: 1,
-        borderColor: onClassColorTheme.darkGrey,
         ...sx,
         ...(variant === "primary" && primary),
         ...(variant === "outline" && outline),
+        ...(variant === "error" && error),
+        ...(btnStyle === "corner" && { height: "28px", borderRadius: "8px" }),
       }}
       {...otherProps}
     >
       <Typography
         sx={{
-          fontsize: "18px",
-          fontWeight: "bold",
+          fontSize: fontSize,
+          fontWeight: fontWeight,
           textTransform: "none",
           paddingY: "14px",
-          color:
-          color ? color :
-            variant === "primary"
-              ? onClassColorTheme.white
-              : variant === "outline"
-              ? onClassColorTheme.primary
-              : onClassColorTheme.primary,
         }}
       >
         {label}
