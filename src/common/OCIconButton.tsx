@@ -1,6 +1,5 @@
 import { alpha, Box } from "@mui/material";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "./theme/onClassColorTheme";
 
 interface OCIconButtonProps {
@@ -42,13 +41,11 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
       bgcolor={alpha(color, 0.1)}
       position="relative"
       onClick={onClick}
-      // onClick={() => href && navigate(href)}
       sx={{
         cursor: `${onClick && "pointer"}`,
         ...(onClick && hoverStyle),
         ...(disabled && disabledStyle)
       }}
-      // flex="initial"
     >
       <img
         width="50%"

@@ -4,13 +4,14 @@ import { onClassColorTheme } from "./theme/onClassColorTheme";
 
 interface OCButtonProps extends Omit<ButtonProps, "variant"> {
   label: string;
-  variant?: "primary" | "outline" | "error";
+  variant?: "primary" | "outline" | "error" | "black";
   btnStyle?: "round" | "corner";
   cornerRadius?: string;
   height?: string;
   fontSize?: string;
   fontWeight?: string;
   disabled?: boolean;
+  leadingIcon?: any;
 }
 
 const primary = {
@@ -61,6 +62,23 @@ const error = {
   },
 };
 
+const black = {
+  border: `1.5px solid ${onClassColorTheme.black}`,
+  backgroundColor: onClassColorTheme.white,
+  color: onClassColorTheme.black,
+  ":hover": {
+    backgroundColor: alpha(onClassColorTheme.black, 0.2),
+  },
+  " .MuiTypography-root": {
+      color: onClassColorTheme.black,
+  },
+  "&:disabled": {
+    " .MuiTypography-root": {
+      color: alpha(onClassColorTheme.black, 0.1),
+    },  
+  },
+};
+
 const OCButton: FC<OCButtonProps> = (props) => {
   const {
     label,
@@ -68,6 +86,7 @@ const OCButton: FC<OCButtonProps> = (props) => {
     color,
     cornerRadius,
     height,
+    leadingIcon,
     btnStyle = "round",
     fontSize = "18px",
     fontWeight = "bold",
@@ -87,7 +106,8 @@ const OCButton: FC<OCButtonProps> = (props) => {
         ...(variant === "primary" && primary),
         ...(variant === "outline" && outline),
         ...(variant === "error" && error),
-        ...(btnStyle === "corner" && { height: "28px", borderRadius: "8px" }),
+        ...(variant === "black" && black),
+        // ...(btnStyle === "corner" && {  }),
       }}
       {...otherProps}
     >
@@ -97,8 +117,13 @@ const OCButton: FC<OCButtonProps> = (props) => {
           fontWeight: fontWeight,
           textTransform: "none",
           paddingY: "14px",
+          display: 'flex',
+          alignContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
         }}
       >
+        {leadingIcon}
         {label}
       </Typography>
     </Button>

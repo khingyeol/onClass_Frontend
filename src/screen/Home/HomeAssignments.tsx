@@ -4,26 +4,27 @@ import AsmCard from "../../components/Home/AsmCard";
 import ClassCard from "../../components/Home/ClassCard";
 import NavAddBtn from "../../components/Main/Navigation/NavAddBtn";
 import { mockedData } from "../../mocked/mockedData";
+import { getTodo } from "../../services/class/api_class";
 
 interface Comment {
-  comment_author_id: String;
-  content: String;
-  created: String; //Date,
+  comment_author_id: string;
+  content: string;
+  created: string; //Date,
 }
 
 interface getAllAssignmentsResponse {
-  class_code: String;
-  class_name: String;
-  assignment_name: String;
-  assignment_description: String;
-  turnin_late: Boolean;
+  class_code: string;
+  class_name: string;
+  assignment_name: string;
+  assignment_description: string;
+  turnin_late: boolean;
   score: Number;
   assignment_optional_file: string[];
   comment: Comment[];
-  assignment_start_date: String; //Date,
-  assignment_end_date: String; //Date,
-  created: String; //Date,
-  status: String;
+  assignment_start_date: string; //Date,
+  assignment_end_date: string; //Date,
+  created: string; //Date,
+  status: string;
 }
 
 const HomeAssignments: FC = () => {
@@ -31,6 +32,7 @@ const HomeAssignments: FC = () => {
   const [content, setContent] = useState<getAllAssignmentsResponse[]>([]);
 
   const fetchGetAllAsm = async () => {
+    // getNoti?
     setContent(mockedData.mockedAllAssignments);
   };
 
@@ -50,7 +52,12 @@ const HomeAssignments: FC = () => {
         </Box>
         <Box>
           {content.map((item: getAllAssignmentsResponse) => (
-              <AsmCard item={item} />
+            <AsmCard
+              title={item.assignment_name}
+              desc={item.class_name}
+              midText={item.assignment_end_date}
+              trailText={item.status}
+            />
           ))}
         </Box>
       </Box>
