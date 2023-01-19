@@ -63,7 +63,7 @@ const error = {
 };
 
 const black = {
-  border: `1.5px solid ${onClassColorTheme.black}`,
+  border: `1px solid ${onClassColorTheme.darkGrey}`,
   backgroundColor: onClassColorTheme.white,
   color: onClassColorTheme.black,
   ":hover": {
@@ -120,7 +120,7 @@ const OCButton: FC<OCButtonProps> = (props) => {
           display: 'flex',
           alignContent: 'center',
           alignItems: 'center',
-          gap: '8px',
+          gap: '16px',
         }}
       >
         {leadingIcon}
