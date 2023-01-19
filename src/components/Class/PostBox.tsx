@@ -9,12 +9,13 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { FC, memo, useState } from "react";
-import { useParams } from "react-router";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import dummyPic from "../../assets/image/dummypic.png";
 import IconSend from "../../assets/svg/icon_send.svg";
 import IconClose from "../../assets/svg/icon_close.svg";
+import { useSelector } from "react-redux";
+import { getClassId } from "../../store/classsdetail/selector";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const PostBox: FC = () => {
-  const { classid } = useParams();
+  const classid = useSelector(getClassId);
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [openPostBox, setOpenPostBox] = useState(false);

@@ -30,6 +30,7 @@ import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentStage, AllStageType } from "../store/stage/action";
 import { getClassDetail } from "../store/classsdetail/selector";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawerBox: {
@@ -92,10 +93,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const { type } = props;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
   const [openDesktop, setOpenDesktop] = useState(true);
-  const dispatch = useDispatch();
   const classDetail = useSelector(getClassDetail);
 
   const drawerManage = isDesktop ? openDesktop : true;
@@ -158,13 +160,13 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
       >
         <div className={classes.settingItems}>
           <OCIconButton
-            href="/info"
+            onClick={() => navigate("/info")}
             icon={NavInfo}
             color={onClassColorTheme.grey}
             size={"60px"}
           />
           <OCIconButton
-            href="/setting"
+            onClick={() => navigate("/setting")}
             icon={NavSetting}
             color={onClassColorTheme.grey}
             size={"60px"}

@@ -59,6 +59,7 @@ const AsmCard: FC<{ item: getAllAssignmentsResponse }> = (props) => {
     const { item } = props;
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
     const classes = useStyles();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -67,7 +68,7 @@ const AsmCard: FC<{ item: getAllAssignmentsResponse }> = (props) => {
         <Box className={classes.asmBox} >
             {/* LEFT SIDE */}
             <Box display="flex" flexWrap="wrap" alignContent="center" gap={2}>
-            <OCIconButton href="#" icon={AsmIcon} color={onClassColorTheme.green} size="56px" />
+            <OCIconButton onClick={() => navigate("#")} icon={AsmIcon} color={onClassColorTheme.green} size="56px" />
 
             <Box alignSelf="center">
                 <Typography variant="h4">{item.assignment_name}</Typography>

@@ -1,13 +1,9 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { FC, memo, useEffect, useMemo } from "react";
+import { FC, memo } from "react";
 import HomeNavigation from "./Navigation";
-import { useParams } from "react-router";
 import { makeStyles } from "@mui/styles";
-import { alpha, Theme, useTheme } from "@mui/material/styles";
-import ClassDetail from "../components/Class/ClassDetail";
-import HomePage from "../screen/Home/HomePage";
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import HomeAssignments from "../screen/Home/HomeAssignments";
+import { Theme } from "@mui/material/styles";
+import { Outlet } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   navBox: {
@@ -23,8 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const HomeLayout: FC = (props) => {
-  // const HomeLayout: FC<{ children: any }> = (props: { children: any }) => {
-  //   const { children } = props;
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
@@ -39,26 +33,7 @@ const HomeLayout: FC = (props) => {
 
         {/* Content */}
         <Box component="main" className={classes.mainComponent}>
-          {/* <Routes> */}
           <Outlet />
-          {/* <Route path="/" element={<Navigate to="/home" />} />
-            <Route
-              path="/home"
-              element={
-                <Box width="100%">
-                  <HomePage />
-                </Box>
-              }
-            />
-            <Route
-              path="/assignments"
-              element={
-                <Box width="100%" maxWidth={"1060px"}>
-                  <HomeAssignments />
-                </Box>
-              }
-            /> */}
-          {/* </Routes> */}
         </Box>
       </Box>
     </>

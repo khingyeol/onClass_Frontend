@@ -145,7 +145,7 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
             sx={{ borderTop: 1, padding: 1 }}
           >
             <OCButton label="CLOSE" variant="outline" onClick={onClose} />
-            <OCButton label="JOIN" onClick={onTappedCreate} />
+            <OCButton label="CREATE" onClick={onTappedCreate} />
           </Box>
         </Box>
       </Box>
