@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import { server, api_class } from '../constants';
 import httpClient from '../httpClient';
 import { GetAllClassResponse } from '../types/getAllClassResponse';
+import { GetAssignmentResponse } from '../types/getAssignmentResponse';
 import { GetClassResponse } from '../types/getClassResponse';
 import { JoinClassRequest } from '../types/patchClassJoinRequest';
 import { CreateClassRequest } from '../types/postClassCreateRequest';
@@ -18,9 +19,9 @@ export const getfromClass = async (id: string): Promise<AxiosResponse<GetClassRe
 }
 
 // class/assignment/get
-// export const assignmentGet = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, values);
-// }
+export const assignmentGet = async (class_code: string, assignment_id: string): Promise<AxiosResponse<GetAssignmentResponse>> => {
+    return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, {class_code, assignment_id});
+}
 
 // // class/assignment/get/all
 export const getTodo = async (class_code: string) => {
@@ -48,9 +49,17 @@ export const getTodo = async (class_code: string) => {
 // }
 
 // // class/assignment/comment
-// export const assignmentComment = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.ASM_COMMENT, values);
-// }
+export const assignmentComment = async (
+  class_code: string,
+  id: string,
+  comment: string
+) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.ASM_COMMENT, {
+    class_code,
+    id,
+    data: { content: comment },
+  });
+};
 
 // // class/nickname
 // export const setClassNickname = async (values) => {
@@ -94,6 +103,6 @@ export const joinClass = async (body: JoinClassRequest) => {
 // }
 
 // // class/post/get
-// export const postGet = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.GET_POST, values);
-// }
+export const postGet = async (class_code: string, post_id: string) => {
+    return await httpClient.post(server.CLASS_URL+api_class.GET_POST, {class_code, post_id});
+}
