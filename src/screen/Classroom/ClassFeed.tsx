@@ -35,30 +35,30 @@ const ClassFeed: FC = () => {
   const navigate = useNavigate();
   const classes = useStyles();
   const classid = useSelector(getClassId);
-  const [content, setContent] = useState<GetClassResponseData | null>()
+  const [content, setContent] = useState<GetClassResponseData | null>();
 
   const fetchGetFromClass = async (id: string) => {
     const res = await getfromClass(id);
-    if (res.data.result === 'OK') {
+    if (res.data.result === "OK") {
       setContent(res.data.data);
-      console.log('content', content);
+      console.log("content", res.data.data);
     } else {
-      setContent(null)
+      setContent(null);
     }
-  }
+  };
 
   useEffect(() => {
-     if (!classid) {
-      navigate('/home');
+    if (!classid) {
+      navigate("/home");
     } else {
       fetchGetFromClass(classid);
     }
-    console.log('id redux', classid)
-  },[])
+    console.log("id redux", classid);
+  }, []);
 
   return (
     <>
-    {/* Mobile Class Detail */}
+      {/* Mobile Class Detail */}
       <Box className={classes.classCard}>
         <div className={classes.coverImg}>
           <Box position="absolute" padding="1.2em">
@@ -70,11 +70,12 @@ const ClassFeed: FC = () => {
       <Box display="grid" gap={{ xs: "10px", sm: "30px" }}>
         {/* Re-render problem */}
         <PostBox />
-        {
-          content && content.class_feed.map((item) => (
-            <FeedPost type={item.type} data={item.data} />
-          ))
-        }
+        {content &&
+          content.class_feed.map((item) => (
+            <div key={item.data.id}>
+              <FeedPost type={item.type} data={item.data} />
+            </div>
+          ))}
       </Box>
     </>
   );

@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Dialog,
+  TextareaAutosize,
   TextField,
   Theme,
   useMediaQuery,
@@ -16,6 +17,9 @@ import IconSend from "../../assets/svg/icon_send.svg";
 import IconClose from "../../assets/svg/icon_close.svg";
 import { useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
+import OCIconButton from "../../common/OCIconButton";
+import IconPoll from "../../assets/svg/icon_poll.svg";
+import IconFile from "../../assets/svg/icon_clip.svg";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -45,20 +49,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     justifySelf: "stretch",
-    height: "100%",
     width: "100%",
     "& .MuiOutlinedInput-root": {
       color: onClassColorTheme.black,
       backgroundColor: onClassColorTheme.white,
       "& fieldset": {
-        border: 0,
-        borderWidth: 0,
-        height: "43px",
+        borderColor: "white",
+        // border: 0,
+        // borderWidth: 0,
         borderRadius: "23px",
       },
       "&.Mui-focused fieldset": {
         borderColor: onClassColorTheme.primary,
-        height: "43px",
         borderRadius: "23px",
       },
     },
@@ -79,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: "10px",
       },
       "&.Mui-focused fieldset": {
-        borderColor: '#DADADA',
+        borderColor: "#DADADA",
         // height: "43px",
         borderRadius: "10px",
       },
@@ -185,21 +187,24 @@ const PostBox: FC = () => {
         }}
       >
         <Box className={classes.dialog}>
-          <Box display="flex" justifyContent="space-between" marginBottom="10px">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            marginBottom="10px"
+          >
             <CloseButton />
             <PostButton />
           </Box>
-          <Box flexGrow={1} >
-          <TextField
-          className={classes.inputXS}
-          type="normal"
-          id="post_content"
-          placeholder="say something..."
-          rows={14}
-          // fullWidth
-          multiline
-        />
-
+          <Box flexGrow={1}>
+            <TextField
+              className={classes.inputXS}
+              type="normal"
+              id="post_content"
+              placeholder="say something..."
+              rows={14}
+              // fullWidth
+              multiline
+            />
           </Box>
         </Box>
       </Dialog>
@@ -233,15 +238,45 @@ const PostBox: FC = () => {
           alt="profile-image"
           src={dummyPic}
         />
-
-        <TextField
+        {/* <textarea className={classes.input} placeholder="say something..."></textarea> */}
+        <Box width="100%">
+          <TextField
+            className={classes.input}
+            type="normal"
+            id="post_content"
+            placeholder="say something..."
+            // rows={3}
+            // minRows={3}
+            // maxRows={10}
+            multiline
+          />
+          <Box display="flex" gap="12px" paddingTop={1}>
+            <OCIconButton
+              icon={IconPoll}
+              color={onClassColorTheme.grey}
+              size={"39px"}
+              type="square"
+              onClick={() => {}}
+            />
+            <OCIconButton
+              icon={IconFile}
+              color={onClassColorTheme.grey}
+              size={"39px"}
+              type="square"
+              onClick={() => {}}
+            />
+          </Box>
+        </Box>
+        {/* <TextareaAutosize
           className={classes.input}
-          type="normal"
-          id="post_content"
           placeholder="say something..."
-          // rows={1}
-          multiline
-        />
+          style={{
+            justifySelf: "stretch",
+            // height: "100%",
+            // width: "100%",
+
+          }}
+        /> */}
         <PostButton />
       </Box>
     );

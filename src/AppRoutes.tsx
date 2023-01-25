@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { getCurrentStage } from "./store/stage/selector";
 import { AllStageType } from "./store/stage/action";
 import PostLayout from "./layout/PostLayout";
-import Content from "./components/Post/Content";
+import Content from "./screen/Post/Content";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);

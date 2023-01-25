@@ -52,10 +52,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   comments: {
     // position: "sticky",
     // height: "50px",
+    marginTop: "10px",
+    paddingTop: "10px",
     borderTop: "1px solid #BFBFBF",
     display: "flex",
     // whiteSpace: "nowrap",
-    paddingTop: "10px",
     gap: "15px",
     // width: "90%",
     bottom: "0",
@@ -151,24 +152,21 @@ const FeedPost: FC<FeedPostProps> = (props) => {
 
         {/* Comment */}
         <Box className={classes.comments} display={{ xs: "none", sm: "flex" }}>
-          <OCIconButton
-            icon={IconComment}
-            color={onClassColorTheme.grey}
-            size={"50px"}
-          />
+          <Box>
+            <OCIconButton
+              icon={IconComment}
+              color={onClassColorTheme.grey}
+              size={"50px"}
+            />
+          </Box>
           <OCTextField placeholder="Comments…" />
-          {/* <img
-              width="35px"
-              height="35px"
-              src={IconSend}
-              alt="chevron-right"
-            /> */}
-
-          <OCIconButton
-            icon={IconSend}
-            color={onClassColorTheme.grey}
-            size={"50px"}
-          />
+          <Box>
+            <OCIconButton
+              icon={IconSend}
+              color={onClassColorTheme.grey}
+              size={"50px"}
+            />
+          </Box>
         </Box>
       </Box>
     </>

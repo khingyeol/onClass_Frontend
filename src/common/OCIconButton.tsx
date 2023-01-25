@@ -6,7 +6,6 @@ interface OCIconButtonProps {
   icon: any;
   color: string; // Color Code/onClassColorTheme
   size: string; // px
-  // href?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   type?: "square" | "circle";
   disabled?: boolean;

@@ -23,9 +23,9 @@ export interface AssignmentModel {
   score: number;
   assignment_optional_file?: FileModel[];
   comment: number;
-  assignment_start_date: Date;
-  assignment_end_date: Date;
-  moment_sort: Date;
+  assignment_start_date: string;
+  assignment_end_date: string;
+  moment_sort: string;
 }
 
 export interface NicknameModel {
@@ -49,7 +49,7 @@ export interface PostModel {
   post_optional_file?: FileModel[];
   poll?: PollModel[];
   comment: number;
-  created: Date;
+  created: string;
   moment_sort: string; //moment
 }
 
@@ -57,8 +57,8 @@ export interface ClassExamModel {
   id: string;
   name: string;
   description: string;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
 }
 
 export interface GetClassResponseData {

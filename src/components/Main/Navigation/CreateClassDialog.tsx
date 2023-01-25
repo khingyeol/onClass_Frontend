@@ -88,7 +88,7 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
             name="class_subject"
             value={content?.class_subject}
             onChange={(e) => handleChange(e)}
-            label="Class Subjet :"
+            label="Class Subject :"
           />
           <Box
             display="flex"
