@@ -94,11 +94,12 @@ function AppRoutes() {
             <Route path="/:classid/post/:id" element={<Content />}></Route>
           </Route>
 
-        <Route path="/:classid/exam" element={<> EXAM LAYOUT </>}>
+        <Route path="/:classid/exam" element={<ClassLayout />}>
           <Route path="/:classid/exam" element={<> EXAM CONTENT </>}></Route>
         </Route>
 
         <Route path="/playground" element={<Playground />} />
+        {/* <Route path="/playground" element={<NotFoundPage />} /> */}
       </Routes>
     </Router>
   );

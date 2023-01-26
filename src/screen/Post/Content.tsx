@@ -12,6 +12,7 @@ import { AssignmentModel } from "../../services/types/getAssignmentResponse";
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { formatDate } from "../../utils/formatDate";
 import CommentSection from "../../components/Post/Comment";
+import NotFoundPage from "../common/NotFoundPage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -65,76 +66,84 @@ const Content: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<AssignmentModel>();
   const { classid, id } = useParams();
+  const [error, setError] = useState<boolean | null>();
 
   const fetchGetPost = async () => {
     if (type === "ASSIGNMENT") {
-      const response = await assignmentGet(classid!, id!);
-      setContent(response.data.data);
-      console.log(response.data.data);
+      assignmentGet(classid!, id!)
+        .then((response) => {
+          setContent(response.data.data);
+        })
+        .catch((error) => {
+          setError(true);
+        });
     }
   };
 
   useEffect(() => {
-    console.log("classid", classid);
-    console.log("id", id);
-
     fetchGetPost();
   }, []);
 
   return (
     <>
-      <Box className={classes.postbox}>
-        {/* Headline */}
-        <Box className={classes.boxhead}>
-          <Box className={classes.headline}>
-            <OCIconButton
-              icon={IconASM}
-              color={onClassColorTheme.green}
-              size={isDesktop ? "60px" : "50px"}
-            />
-            {/* <Avatar
-            sx={{
-              width: isDesktop ? 60 : 50,
-              height: isDesktop ? 60 : 50,
-              boxSizing: "border-box",
-              border: "1px solid #707070",
-              alignSelf: "center",
-            }}
-            alt="profile-image"
-            src={dummyTeacher}
-          /> */}
-            <Box style={{ alignSelf: "center" }}>
+      {error === true ? (
+        <NotFoundPage />
+      ) : (
+        <>
+          <Box className={classes.postbox}>
+            {/* Headline */}
+            <Box className={classes.boxhead}>
+              <Box className={classes.headline}>
+                <OCIconButton
+                  icon={IconASM}
+                  color={onClassColorTheme.green}
+                  size={isDesktop ? "60px" : "50px"}
+                />
+                {/* <Avatar
+        sx={{
+          width: isDesktop ? 60 : 50,
+          height: isDesktop ? 60 : 50,
+          boxSizing: "border-box",
+          border: "1px solid #707070",
+          alignSelf: "center",
+        }}
+        alt="profile-image"
+        src={dummyTeacher}
+      /> */}
+                <Box style={{ alignSelf: "center" }}>
+                  <Typography
+                    variant="h3"
+                    fontSize="21px"
+                    color={onClassColorTheme.green}
+                  >
+                    {content?.assignment_name}
+                  </Typography>
+
+                  <Typography variant="body1" color={onClassColorTheme.grey}>
+                    {`${formatDate(content?.assignment_start_date ?? "")}`}
+                  </Typography>
+                </Box>
+              </Box>
               <Typography
                 variant="h3"
                 fontSize="21px"
-                color={onClassColorTheme.green}
+                color={onClassColorTheme.black}
               >
-                {content?.assignment_name}
-              </Typography>
-
-              <Typography variant="body1" color={onClassColorTheme.grey}>
-                {`${formatDate(content?.assignment_start_date ?? "")}`}
+                {`${content?.score} pts.`}
               </Typography>
             </Box>
+            {/* Content */}
+            <Box
+              className={classes.contents}
+              sx={{ borderTop: "1px solid rgba(139, 139,139, 0.2)" }}
+            >
+              {content?.assignment_description}
+            </Box>
           </Box>
-          <Typography
-            variant="h3"
-            fontSize="21px"
-            color={onClassColorTheme.black}
-          >
-            {`${content?.score} pts.`}
-          </Typography>
-        </Box>
-        {/* Content */}
-        <Box
-          className={classes.contents}
-          sx={{ borderTop: "1px solid rgba(139, 139,139, 0.2)" }}
-        >
-          {content?.assignment_description}
-        </Box>
-      </Box>
-      <Box padding={1.5} />
-      <CommentSection comment_data={content?.comment!} />
+          <Box padding={1.5} />
+          <CommentSection comment_data={content?.comment!} />
+        </>
+      )}
     </>
   );
 };

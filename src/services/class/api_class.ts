@@ -19,7 +19,10 @@ export const getfromClass = async (id: string): Promise<AxiosResponse<GetClassRe
 }
 
 // class/assignment/get
-export const assignmentGet = async (class_code: string, assignment_id: string): Promise<AxiosResponse<GetAssignmentResponse>> => {
+// export const assignmentGet = async (class_code: string, assignment_id: string): Promise<AxiosResponse<GetAssignmentResponse>> => {
+//     return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, {class_code, assignment_id});
+// }
+export const assignmentGet = async (class_code: string, assignment_id: string) => {
     return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, {class_code, assignment_id});
 }
 

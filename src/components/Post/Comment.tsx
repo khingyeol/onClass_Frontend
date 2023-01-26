@@ -90,8 +90,7 @@ const { classid, id } = useParams();
   const commentMapped =
     comment_data &&
     comment_data.map((item) => (
-      <>
-        <Box className={classes.commentbox}>
+        <Box className={classes.commentbox} key={item.create}>
           <Avatar
             sx={{
               width: isDesktop ? 60 : 50,
@@ -121,7 +120,6 @@ const { classid, id } = useParams();
             <Box className={classes.contents}>{item.content}</Box>
           </Box>
         </Box>
-      </>
     ));
 
   return (
