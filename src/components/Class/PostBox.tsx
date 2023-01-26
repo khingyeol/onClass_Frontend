@@ -20,6 +20,7 @@ import { getClassId } from "../../store/classsdetail/selector";
 import OCIconButton from "../../common/OCIconButton";
 import IconPoll from "../../assets/svg/icon_poll.svg";
 import IconFile from "../../assets/svg/icon_clip.svg";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -98,7 +99,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const PostBox: FC = () => {
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
+  const { classid } = useParams();
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [openPostBox, setOpenPostBox] = useState(false);

@@ -1,6 +1,7 @@
 import { Box, Theme, Typography, useMediaQuery } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import ClassCard from "../../components/Home/ClassCard";
 import NavAddBtn from "../../components/Main/Navigation/NavAddBtn";
 import { getAllClass } from "../../services/class/api_class";
@@ -10,7 +11,8 @@ import { getClassId } from "../../store/classsdetail/selector";
 const HomePage: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<GetAllClassResponseData[]>([]);
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
+  const { classid } = useParams();
 
   const fetchGetAllClass = async () => {
     console.log(classid)

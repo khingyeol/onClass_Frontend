@@ -19,6 +19,7 @@ import { assignmentComment } from "../../services/class/api_class";
 import { getSelectedId, getSelectedType } from "../../store/stage/selector";
 import { CommentModel } from "../../services/types/getAssignmentResponse";
 import { formatDate, formatTime } from "../../utils/formatDate";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -65,15 +66,16 @@ const CommentSection: FC<CommentProps> = (props) => {
   const { comment_data } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const classid = useSelector(getClassId);
+//   const classid = useSelector(getClassId);
+const { classid, id } = useParams();
   const type = useSelector(getSelectedType);
-  const postid = useSelector(getSelectedId);
+//   const postid = useSelector(getSelectedId);
   const [comment, setComment] = useState("");
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
   const onClickSend = () => {
     if (type === "ASSIGNMENT") {
-      assignmentComment(classid, postid!, comment);
+      assignmentComment(classid!, id!, comment);
     }
     console.log(comment);
     setComment("");

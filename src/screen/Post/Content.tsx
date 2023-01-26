@@ -1,15 +1,9 @@
-import {
-  alpha,
-  Box,
-  Theme,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { alpha, Box, Theme, Typography, useMediaQuery } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCIconButton from "../../common/OCIconButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 import { assignmentGet } from "../../services/class/api_class";
@@ -65,21 +59,25 @@ const Content: FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
   const type = useSelector(getSelectedType);
-  const postid = useSelector(getSelectedId);
+  // const postid = useSelector(getSelectedId);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<AssignmentModel>();
+  const { classid, id } = useParams();
 
   const fetchGetPost = async () => {
     if (type === "ASSIGNMENT") {
-      const response = await assignmentGet(classid, postid!);
+      const response = await assignmentGet(classid!, id!);
       setContent(response.data.data);
       console.log(response.data.data);
     }
   };
 
   useEffect(() => {
+    console.log("classid", classid);
+    console.log("id", id);
+
     fetchGetPost();
   }, []);
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { AppThemes } from "./common/theme/onClassTheme";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import AuthPage from "./screen/Auth/AuthPage";
@@ -24,14 +24,14 @@ function App() {
         {isLogin ? (
           <AppRoutes />
         ) : (
-          <BrowserRouter>
+          <Router>
             <Routes>
               {/* This path to /login need to be changed to somewhere the homepage(index) is */}
               <Route path="*" element={<Navigate to="/auth" />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/otp" element={<OtpPage />} />
             </Routes>
-          </BrowserRouter>
+          </Router>
         )}
       </PersistGate>
     </MuiThemeProvider>

@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { FC } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import dummyTeacher from "../../assets/image/dummy-teacher.png";
@@ -14,7 +14,7 @@ import IconComment from "../../assets/svg/icon_comment.svg";
 import IconSend from "../../assets/svg/icon_send.svg";
 import OCIconButton from "../../common/OCIconButton";
 import OCTextField from "../../common/OCTextfield";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 import {
@@ -24,6 +24,7 @@ import {
   updateSelectedType,
 } from "../../store/stage/action";
 import { formatDate, formatTime } from "../../utils/formatDate";
+import { assignmentComment } from "../../services/class/api_class";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -73,9 +74,25 @@ const FeedPost: FC<FeedPostProps> = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
+  const { classid } = useParams();
+  const [comment, setComment] = useState("");
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { type, data } = props;
+
+  const onClickSend = () => {
+    if (type === "assignment") {
+      assignmentComment(classid!, data.id, comment);
+    }
+    console.log(comment);
+    setComment("");
+  };
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setComment(e.target.value);
+  };
 
   const renderTitle = () => {
     switch (type) {
@@ -159,12 +176,17 @@ const FeedPost: FC<FeedPostProps> = (props) => {
               size={"50px"}
             />
           </Box>
-          <OCTextField placeholder="Comments…" />
+          <OCTextField
+            value={comment}
+            onChange={(e) => handleChange(e)}
+            placeholder="Comments…"
+          />
           <Box>
             <OCIconButton
               icon={IconSend}
               color={onClassColorTheme.grey}
               size={"50px"}
+              onClick={onClickSend}
             />
           </Box>
         </Box>

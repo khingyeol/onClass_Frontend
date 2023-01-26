@@ -1,6 +1,6 @@
 import { Box, Theme, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PostBox from "../../components/Class/PostBox";
 import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";
@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ClassFeed: FC = () => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
   const [content, setContent] = useState<GetClassResponseData | null>();
+  const { classid } = useParams();
 
   const fetchGetFromClass = async (id: string) => {
     const res = await getfromClass(id);
@@ -48,6 +49,8 @@ const ClassFeed: FC = () => {
   };
 
   useEffect(() => {
+    console.log("classid", classid);
+
     if (!classid) {
       navigate("/home");
     } else {

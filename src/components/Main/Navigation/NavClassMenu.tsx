@@ -1,11 +1,12 @@
 import { alpha, Box, Theme, Typography } from "@mui/material";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../../store/classsdetail/selector";
 import { updateCurrentStage, AllStageType } from "../../../store/stage/action";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   class_list: {
@@ -34,14 +35,16 @@ const NavClassMenu: FC = () => {
   const currentPath = window.location.pathname.substring(
     window.location.pathname.lastIndexOf("/")
   );
-  const classid = useSelector(getClassId);
+  // const classid = useSelector(getClassId);
+  const { classid } = useParams();
 
   return (
     <>
+    <Link to={`/${classid}`}>
       <Box
         className={classes.class_list}
         onClick={() => {
-          navigate(`/${classid}`);
+          // navigate(`/${classid}`);
           dispatch(updateCurrentStage(AllStageType.CLASS));
         }}
         borderLeft={
@@ -57,6 +60,7 @@ const NavClassMenu: FC = () => {
       >
         <Typography variant="body1">feed</Typography>
       </Box>
+      </Link>
       <Box
         className={classes.class_list}
         onClick={() => {

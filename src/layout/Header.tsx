@@ -20,12 +20,14 @@ import NavAddBtn from "../components/Main/Navigation/NavAddBtn";
 import { logout } from "../services/auth/api_auth";
 import { useDispatch } from "react-redux";
 import { AllStageType, updateCurrentStage } from "../store/stage/action";
+import { useNavigate } from "react-router-dom";
 
 const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { handleDrawer } = props;
   const [menuUserProfile, setMenuUserProfile] = useState<Element | null>(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUserProfile = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -58,6 +60,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
           </Box>
 
           {/* AppBar Logo */}
+          {/* <Link > */}
           <Box
             sx={{
               flexGrow: 1,
@@ -65,14 +68,17 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
               display: { xs: "flex", sm: "block" },
               paddingLeft: { sm: "20px" },
             }}
+            onClick={() => navigate("/home")}
           >
             <img
-              onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
+            
+              // onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               src={AppLogo}
               style={{ height: isDesktop ? 31 : 20, cursor: "pointer" }}
               alt="app-logo"
             />
           </Box>
+          {/* </Link> */}
 
           {/* AppBar Add btn */}
           {isDesktop ? <NavAddBtn /> : null}
