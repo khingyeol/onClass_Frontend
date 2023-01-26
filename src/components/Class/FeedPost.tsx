@@ -27,45 +27,6 @@ import { formatDate, formatTime } from "../../utils/formatDate";
 import { assignmentComment } from "../../services/class/api_class";
 import IconASM from "../../assets/svg/icon_asm.svg";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  postbox: {
-    gap: "10px",
-    backgroundColor: onClassColorTheme.white,
-    borderRadius: "35px",
-    border: "1px solid ",
-    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
-    padding: "20px 30px",
-    position: "relative",
-  },
-  headline: {
-    justifyContent: "flex-start",
-    alignContent: "center",
-    display: "flex",
-    gap: "20px",
-    cursor: "pointer",
-  },
-  contents: {
-    wordBreak: "break-word",
-    whiteSpace: "pre-line",
-    padding: "0.75rem 0",
-    margin: "0.75rem 0",
-    // borderTop: 1,
-  },
-  comments: {
-    // position: "sticky",
-    // height: "50px",
-    marginTop: "10px",
-    paddingTop: "10px",
-    borderTop: "1px solid rgba(191, 191,191, 0.3)",
-    display: "flex",
-    // whiteSpace: "nowrap",
-    gap: "15px",
-    // width: "90%",
-    bottom: "0",
-    // overflowX: "auto",
-  },
-}));
-
 interface FeedPostProps {
   type: string;
   data: any;
@@ -234,3 +195,42 @@ const FeedPost: FC<FeedPostProps> = (props) => {
 };
 
 export default FeedPost;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  postbox: {
+    gap: "10px",
+    backgroundColor: onClassColorTheme.white,
+    borderRadius: "35px",
+    border: "1px solid ",
+    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    padding: "20px 30px",
+    position: "relative",
+  },
+  headline: {
+    justifyContent: "flex-start",
+    alignContent: "center",
+    display: "flex",
+    gap: "20px",
+    cursor: "pointer",
+  },
+  contents: {
+    wordBreak: "break-word",
+    whiteSpace: "pre-line",
+    padding: "0.75rem 0",
+    margin: "0.75rem 0",
+    // borderTop: 1,
+  },
+  comments: {
+    // position: "sticky",
+    // height: "50px",
+    marginTop: "10px",
+    paddingTop: "10px",
+    borderTop: "1px solid rgba(191, 191,191, 0.3)",
+    display: "flex",
+    // whiteSpace: "nowrap",
+    gap: "15px",
+    // width: "90%",
+    bottom: "0",
+    // overflowX: "auto",
+  },
+}));

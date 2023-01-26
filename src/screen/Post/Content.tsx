@@ -21,48 +21,6 @@ import CommentSection from "../../components/Post/Comment";
 import NotFoundPage from "../common/NotFoundPage";
 import { AssignmentModel, PostModel } from "../../services/types/ClassModel";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  postbox: {
-    gap: "10px",
-    backgroundColor: onClassColorTheme.white,
-    borderRadius: "35px",
-    border: "1px solid ",
-    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
-    padding: "20px 30px",
-    position: "relative",
-  },
-  boxhead: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  headline: {
-    justifyContent: "flex-start",
-    alignContent: "center",
-    display: "flex",
-    gap: "20px",
-    cursor: "pointer",
-  },
-  contents: {
-    wordBreak: "break-word",
-    whiteSpace: "pre-line",
-    padding: "0.75rem 0",
-    margin: "0.75rem 0",
-    // borderTop: 1,
-  },
-  comments: {
-    // position: "sticky",
-    // height: "50px",
-    borderTop: "1px solid rgba(191, 191,191, 0.2)",
-    display: "flex",
-    // whiteSpace: "nowrap",
-    paddingTop: "10px",
-    gap: "15px",
-    // width: "90%",
-    bottom: "0",
-    // overflowX: "auto",
-  },
-}));
-
 const Content: FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -135,13 +93,27 @@ const Content: FC = () => {
                   <Typography
                     variant="h3"
                     fontSize="21px"
-                    color={type === "POST" ? onClassColorTheme.black : onClassColorTheme.green}
+                    color={
+                      type === "POST"
+                        ? onClassColorTheme.black
+                        : onClassColorTheme.green
+                    }
                   >
-                    {asmContent?.assignment_name ?? `${postContent?.post_author.firstname} ${postContent?.post_author.lastname} ${`(${postContent?.post_author.optional_name ?? ""})` ?? ""}`}
+                    {asmContent?.assignment_name ??
+                      `${postContent?.post_author.firstname} ${
+                        postContent?.post_author.lastname
+                      } ${
+                        `(${postContent?.post_author.optional_name ?? ""})` ??
+                        ""
+                      }`}
                   </Typography>
 
                   <Typography variant="body1" color={onClassColorTheme.grey}>
-                    {`${formatDate(asmContent?.assignment_start_date ?? postContent?.created ?? '')}`}
+                    {`${formatDate(
+                      asmContent?.assignment_start_date ??
+                        postContent?.created ??
+                        ""
+                    )}`}
                   </Typography>
                 </Box>
               </Box>
@@ -162,7 +134,9 @@ const Content: FC = () => {
             </Box>
           </Box>
           <Box padding={1.5} />
-          <CommentSection comment_data={asmContent?.comment ?? postContent?.comment!} />
+          <CommentSection
+            comment_data={asmContent?.comment ?? postContent?.comment!}
+          />
         </>
       )}
     </>
@@ -170,3 +144,45 @@ const Content: FC = () => {
 };
 
 export default Content;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  postbox: {
+    gap: "10px",
+    backgroundColor: onClassColorTheme.white,
+    borderRadius: "35px",
+    border: "1px solid ",
+    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    padding: "20px 30px",
+    position: "relative",
+  },
+  boxhead: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  headline: {
+    justifyContent: "flex-start",
+    alignContent: "center",
+    display: "flex",
+    gap: "20px",
+    cursor: "pointer",
+  },
+  contents: {
+    wordBreak: "break-word",
+    whiteSpace: "pre-line",
+    padding: "0.75rem 0",
+    margin: "0.75rem 0",
+    // borderTop: 1,
+  },
+  comments: {
+    // position: "sticky",
+    // height: "50px",
+    borderTop: "1px solid rgba(191, 191,191, 0.2)",
+    display: "flex",
+    // whiteSpace: "nowrap",
+    paddingTop: "10px",
+    gap: "15px",
+    // width: "90%",
+    bottom: "0",
+    // overflowX: "auto",
+  },
+}));

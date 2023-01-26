@@ -50,7 +50,10 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
           boxShadow: "none",
           backgroundColor: { xs: onClassColorTheme.white, sm: "transparent" },
           paddingTop: { xs: 0, sm: 4 },
-          background: { xs: "white", sm: "-webkit-linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))"}
+          background: {
+            xs: "white",
+            sm: "-webkit-linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+          },
         }}
       >
         <Toolbar>
@@ -71,7 +74,6 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
             onClick={() => navigate("/home")}
           >
             <img
-            
               // onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               src={AppLogo}
               style={{ height: isDesktop ? 31 : 20, cursor: "pointer" }}

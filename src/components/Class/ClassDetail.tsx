@@ -9,35 +9,6 @@ import IconPhone from "../../assets/svg/icon_phone.svg";
 import { useSelector } from "react-redux";
 import { getClassDetail } from "../../store/classsdetail/selector";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  class_list: {
-    display: "inline-block",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    borderRadius: "35px",
-    overflow: "hidden",
-    width: "340px",
-    backgroundColor: onClassColorTheme.white,
-    margin: "0px 50px 0px 10px",
-    transition: "all 0.4s ease",
-    [theme.breakpoints.down("lg")]: {
-      width: "306px",
-      margin: "0px 15px 0px 10px",
-    },
-  },
-  coverImg: {
-    objectFit: "cover",
-    width: "100%",
-    height: "100%",
-  },
-}));
-
-// const mockedSocial = {
-//   mail: "sitthichai_1999@swu.com",
-//   phone: "+66 123 456 789",
-//   facebook: "Sitthichai Vachi",
-//   line: "ginger_khing",
-// };
-
 const ClassDetail: FC = () => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -49,10 +20,15 @@ const ClassDetail: FC = () => {
         <Box height="100%" position="relative">
           <Box position="absolute" padding="1.2rem">
             <Typography variant="h2">{classDetail.class_name}</Typography>
-            <Typography variant="description">{classDetail.class_section}</Typography>
+            <Typography variant="description">
+              {classDetail.class_section}
+            </Typography>
           </Box>
           <img
-            src={classDetail.class_thumbnail ?? "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"}
+            src={
+              classDetail.class_thumbnail ??
+              "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"
+            }
             className={classes.coverImg}
             alt="cover-img"
           />
@@ -77,12 +53,14 @@ const ClassDetail: FC = () => {
             </Typography>
             {classDetail.class_room}
           </div>
-          {classDetail.class_description && <div style={{ wordBreak: "break-all" }}>
-            <Typography variant="h4" display="inline">
-              describe:{" "}
-            </Typography>
-            {classDetail.class_description ?? ''}
-          </div>}
+          {classDetail.class_description && (
+            <div style={{ wordBreak: "break-all" }}>
+              <Typography variant="h4" display="inline">
+                describe:{" "}
+              </Typography>
+              {classDetail.class_description ?? ""}
+            </div>
+          )}
         </Box>
 
         <Box bottom={0} padding="1.2em">
@@ -102,7 +80,7 @@ const ClassDetail: FC = () => {
                 alignSelf: "center",
               }}
               alt="profile-image"
-              src={classDetail.teacher.profile_pic ?? ''}
+              src={classDetail.teacher.profile_pic ?? ""}
             />
             <Typography fontSize="auto">{`${classDetail.teacher.name.firstname} ${classDetail.teacher.name.lastname}`}</Typography>
 
@@ -135,3 +113,25 @@ const ClassDetail: FC = () => {
   );
 };
 export default ClassDetail;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  class_list: {
+    display: "inline-block",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    borderRadius: "35px",
+    overflow: "hidden",
+    width: "340px",
+    backgroundColor: onClassColorTheme.white,
+    margin: "0px 50px 0px 10px",
+    transition: "all 0.4s ease",
+    [theme.breakpoints.down("lg")]: {
+      width: "306px",
+      margin: "0px 15px 0px 10px",
+    },
+  },
+  coverImg: {
+    objectFit: "cover",
+    width: "100%",
+    height: "100%",
+  },
+}));

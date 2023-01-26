@@ -9,45 +9,6 @@ import { getUserEmail } from "../../store/userdata/selector";
 import { confirmOTP } from "../../services/auth/api_auth";
 import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  box: {
-    padding: "0 40px",
-    margin: "0 40px",
-    position: "relative",
-    borderRadius: "35px",
-    width: "80%",
-    maxWidth: "400px",
-    // height: "650px",
-    display: "flex",
-    justifyContent: "center",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 20px",
-      margin: "10px 40px",
-      height: "auto",
-    },
-  },
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    // justifyContent: "center",
-    padding: "50px 0",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "40px",
-    [theme.breakpoints.down("sm")]: {
-      padding: "80px 0",
-    },
-  },
-}));
-
 const OtpPage: FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -141,3 +102,42 @@ const OtpPage: FC = () => {
 };
 
 export default OtpPage;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  box: {
+    padding: "0 40px",
+    margin: "0 40px",
+    position: "relative",
+    borderRadius: "35px",
+    width: "80%",
+    maxWidth: "400px",
+    // height: "650px",
+    display: "flex",
+    justifyContent: "center",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 20px",
+      margin: "10px 40px",
+      height: "auto",
+    },
+  },
+  content: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    // justifyContent: "center",
+    padding: "50px 0",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "40px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "80px 0",
+    },
+  },
+}));

@@ -5,19 +5,6 @@ import { makeStyles } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  navBox: {
-    display: "flex",
-  },
-  mainComponent: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "8px",
-    margin: "6px 14px",
-    flexGrow: 1,
-  },
-}));
-
 const HomeLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -45,3 +32,16 @@ export const navBarWidthSm = 90;
 export const navBarWidthMd = 320;
 export const appBarHeightSm = 127;
 export const appBarHeightXs = 54;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  navBox: {
+    display: "flex",
+  },
+  mainComponent: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "8px",
+    margin: "6px 14px",
+    flexGrow: 1,
+  },
+}));

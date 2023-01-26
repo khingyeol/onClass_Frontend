@@ -8,26 +8,6 @@ import { getClassId } from "../../../store/classsdetail/selector";
 import { updateCurrentStage, AllStageType } from "../../../store/stage/action";
 import { useParams } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  class_list: {
-    width: "73%",
-    height: "55px",
-    fontSize: "18px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    padding: "5px 0px 5px 17%",
-    margin: "0 0 0 10%",
-    "&:hover": {
-      backgroundColor: alpha(onClassColorTheme.green, 0.1),
-    },
-    [theme.breakpoints.down("sm")]: {
-      minHeight: "50px",
-      paddingY: "10px",
-    },
-  },
-}));
-
 const NavClassMenu: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -97,3 +77,23 @@ const NavClassMenu: FC = () => {
 };
 
 export default NavClassMenu;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  class_list: {
+    width: "73%",
+    height: "55px",
+    fontSize: "18px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    padding: "5px 0px 5px 17%",
+    margin: "0 0 0 10%",
+    "&:hover": {
+      backgroundColor: alpha(onClassColorTheme.green, 0.1),
+    },
+    [theme.breakpoints.down("sm")]: {
+      minHeight: "50px",
+      paddingY: "10px",
+    },
+  },
+}));

@@ -24,82 +24,6 @@ import { useParams } from "react-router-dom";
 import { postPublish } from "../../services/class/api_class";
 import OCTextField from "../../common/OCTextfield";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  postbox: {
-    gap: "10px",
-    justifyContent: "space-between",
-    alignContent: "center",
-    backgroundColor: onClassColorTheme.white,
-    borderRadius: "35px",
-    border: "1px solid",
-    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
-    padding: "20px 30px",
-    display: "flex",
-    transition: "all 0.4s ease",
-    "&:hover": {
-      borderColor: alpha(onClassColorTheme.green, 0.3),
-    },
-    [theme.breakpoints.down("md")]: {
-      padding: "20px 15px",
-    },
-    [theme.breakpoints.down("sm")]: {
-      cursor: "pointer",
-      minHeight: "69px",
-      padding: "0px 35px",
-      borderRadius: "35px",
-      color: onClassColorTheme.grey,
-    },
-  },
-  input: {
-    justifySelf: "stretch",
-    width: "100%",
-    "& .MuiOutlinedInput-root": {
-      color: onClassColorTheme.black,
-      backgroundColor: onClassColorTheme.white,
-      "& fieldset": {
-        borderColor: "white",
-        // border: 0,
-        // borderWidth: 0,
-        borderRadius: "23px",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: onClassColorTheme.primary,
-        borderRadius: "23px",
-      },
-    },
-  },
-  inputXS: {
-    justifySelf: "stretch",
-    height: "100%",
-    width: "100%",
-    // margin: "40px",
-    "& .MuiOutlinedInput-root": {
-      color: onClassColorTheme.black,
-      backgroundColor: onClassColorTheme.white,
-      "& fieldset": {
-        padding: "10px",
-        border: "1px solid #DADADA",
-        borderWidth: 1,
-        // height: "43px",
-        borderRadius: "10px",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#DADADA",
-        // height: "43px",
-        borderRadius: "10px",
-      },
-    },
-  },
-  dialog: {
-    // backgroundColor: onClassColorTheme.white,
-    // borderRadius: "35px",
-    // border: "1px solid",
-    // borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
-    padding: "20px",
-    // width: "80%",
-  },
-}));
-
 const PostBox: FC = () => {
   // const classid = useSelector(getClassId);
   const { classid } = useParams();
@@ -298,3 +222,79 @@ const PostBox: FC = () => {
   );
 };
 export default memo(PostBox);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  postbox: {
+    gap: "10px",
+    justifyContent: "space-between",
+    alignContent: "center",
+    backgroundColor: onClassColorTheme.white,
+    borderRadius: "35px",
+    border: "1px solid",
+    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    padding: "20px 30px",
+    display: "flex",
+    transition: "all 0.4s ease",
+    "&:hover": {
+      borderColor: alpha(onClassColorTheme.green, 0.3),
+    },
+    [theme.breakpoints.down("md")]: {
+      padding: "20px 15px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      cursor: "pointer",
+      minHeight: "69px",
+      padding: "0px 35px",
+      borderRadius: "35px",
+      color: onClassColorTheme.grey,
+    },
+  },
+  input: {
+    justifySelf: "stretch",
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      color: onClassColorTheme.black,
+      backgroundColor: onClassColorTheme.white,
+      "& fieldset": {
+        borderColor: "white",
+        // border: 0,
+        // borderWidth: 0,
+        borderRadius: "23px",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: onClassColorTheme.primary,
+        borderRadius: "23px",
+      },
+    },
+  },
+  inputXS: {
+    justifySelf: "stretch",
+    height: "100%",
+    width: "100%",
+    // margin: "40px",
+    "& .MuiOutlinedInput-root": {
+      color: onClassColorTheme.black,
+      backgroundColor: onClassColorTheme.white,
+      "& fieldset": {
+        padding: "10px",
+        border: "1px solid #DADADA",
+        borderWidth: 1,
+        // height: "43px",
+        borderRadius: "10px",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#DADADA",
+        // height: "43px",
+        borderRadius: "10px",
+      },
+    },
+  },
+  dialog: {
+    // backgroundColor: onClassColorTheme.white,
+    // borderRadius: "35px",
+    // border: "1px solid",
+    // borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    padding: "20px",
+    // width: "80%",
+  },
+}));

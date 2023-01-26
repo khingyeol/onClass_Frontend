@@ -67,7 +67,6 @@ const AsmCard: FC<AsmCardProps> = (props) => {
 
 export default AsmCard;
 
-
 const useStyles = makeStyles((theme: Theme) => ({
   asmBox: {
     backgroundColor: onClassColorTheme.white,

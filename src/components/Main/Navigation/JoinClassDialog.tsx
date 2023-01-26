@@ -9,14 +9,6 @@ import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import OCButton from "../../../common/OCButton";
 import { JoinClassRequest } from "../../../services/types/patchClassJoinRequest";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogJoin: {
-    // borderRadius: "50px",
-    width: "100%",
-    // height: "50%",
-  },
-}));
-
 interface JoinClassDialogProps {
   open: boolean;
   onClose: () => void;
@@ -64,58 +56,58 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
       }}
     >
       <Box padding="20px">
-          <Box sx={{ borderBottom: 1, padding: 1 }}>
-            <Typography variant="h3">Join Class</Typography>
+        <Box sx={{ borderBottom: 1, padding: 1 }}>
+          <Typography variant="h3">Join Class</Typography>
+        </Box>
+        <Box paddingY={2} display="flex" flexDirection="column" gap={2}>
+          <Box width="50%">
+            <Typography variant="body1">Enter Class Code :</Typography>
+            <OCTextField
+              name="class_code"
+              value={content?.class_code}
+              onChange={(e) => handleChange(e)}
+              error={errMsg.length > 1}
+              helperText={errMsg}
+            />
+            {errMsg.length > 1 && <Typography>{errMsg}</Typography>}
           </Box>
-          <Box paddingY={2} display="flex" flexDirection="column" gap={2}>
-            <Box width="50%">
-              <Typography variant="body1">Enter Class Code :</Typography>
-              <OCTextField
-                name="class_code"
-                value={content?.class_code}
-                onChange={(e) => handleChange(e)}
-                error={errMsg.length > 1}
-                helperText={errMsg}
-              />
-              {errMsg.length > 1 && <Typography>{errMsg}</Typography>}
-            </Box>
-            <Box
-              display="flex"
-              flexDirection={{ xs: "column", sm: "row" }}
-              gap={{ xs: "12px", sm: "17px" }}
-            >
-              <OCTextfield
-                name="firstname"
-                value={content.firstname}
-                onChange={(e) => handleChange(e)}
-                label={"Firstname"}
-              />
-              <OCTextfield
-                name="lastname"
-                value={content.lastname}
-                onChange={(e) => handleChange(e)}
-                label={"Lastname"}
-              />
-            </Box>
-            <Box display="flex" width="70%">
-              <Typography color={onClassColorTheme.grey}>
-                nickname (Optional)
-              </Typography>
-              <OCTextfield
-                name="optional_name"
-                value={content.optional_name}
-                onChange={(e) => handleChange(e)}
-                //   sx={{width: "50%"}}
-              />
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="flex-end"
-              sx={{ borderTop: 1, padding: 1 }}
-            >
-              <OCButton label="CLOSE" variant="outline" onClick={onClose} />
-              <OCButton label="JOIN" onClick={onTappedJoin} />
-            </Box>
+          <Box
+            display="flex"
+            flexDirection={{ xs: "column", sm: "row" }}
+            gap={{ xs: "12px", sm: "17px" }}
+          >
+            <OCTextfield
+              name="firstname"
+              value={content.firstname}
+              onChange={(e) => handleChange(e)}
+              label={"Firstname"}
+            />
+            <OCTextfield
+              name="lastname"
+              value={content.lastname}
+              onChange={(e) => handleChange(e)}
+              label={"Lastname"}
+            />
+          </Box>
+          <Box display="flex" width="70%">
+            <Typography color={onClassColorTheme.grey}>
+              nickname (Optional)
+            </Typography>
+            <OCTextfield
+              name="optional_name"
+              value={content.optional_name}
+              onChange={(e) => handleChange(e)}
+              //   sx={{width: "50%"}}
+            />
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ borderTop: 1, padding: 1 }}
+          >
+            <OCButton label="CLOSE" variant="outline" onClick={onClose} />
+            <OCButton label="JOIN" onClick={onTappedJoin} />
+          </Box>
         </Box>
       </Box>
     </Dialog>
@@ -123,3 +115,11 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
 };
 
 export default JoinClassDialog;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  dialogJoin: {
+    // borderRadius: "50px",
+    width: "100%",
+    // height: "50%",
+  },
+}));

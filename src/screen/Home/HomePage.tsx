@@ -15,16 +15,13 @@ const HomePage: FC = () => {
   const { classid } = useParams();
 
   const fetchGetAllClass = async () => {
-    console.log(classid)
+    console.log(classid);
     const res = await getAllClass();
-    console.log(res)
-    if (res.data.result === 'OK') {
-        setContent(res.data.data)
-        // console.log("eiei",content.length)
-    }
-    else {
-        setContent([])
-        // console.log("eieieeeeee")
+    console.log(res);
+    if (res.data.result === "OK") {
+      setContent(res.data.data);
+    } else {
+      setContent([]);
     }
   };
 
@@ -34,7 +31,7 @@ const HomePage: FC = () => {
 
   const classItem = content.map((item: GetAllClassResponseData) => (
     <ClassCard key={item.class_code} item={item} />
-  ))
+  ));
 
   return (
     <>
@@ -54,7 +51,11 @@ const HomePage: FC = () => {
           alignItems={{ xs: "center", sm: "" }}
           flexGrow={1}
         >
-          {content.length > 0 ? classItem : <Typography>ไม่พบชั้นเรียน</Typography>}
+          {content.length > 0 ? (
+            classItem
+          ) : (
+            <Typography>ไม่พบชั้นเรียน</Typography>
+          )}
         </Box>
       </Box>
     </>

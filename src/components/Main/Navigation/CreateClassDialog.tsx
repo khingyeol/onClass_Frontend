@@ -15,14 +15,6 @@ import { createClass } from "../../../services/class/api_class";
 import OCTextField from "../../../common/OCTextfield";
 import OCButton from "../../../common/OCButton";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogCreate: {
-    // borderRadius: "50px",
-    width: "100%",
-    height: "auto",
-  },
-}));
-
 interface CreateClassDialogProps {
   open: boolean;
   onClose: () => void;
@@ -40,7 +32,7 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
     firstname: "",
     lastname: "",
     optional_name: "",
-    });
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -154,3 +146,11 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
 };
 
 export default CreateClassDialog;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  dialogCreate: {
+    // borderRadius: "50px",
+    width: "100%",
+    height: "auto",
+  },
+}));

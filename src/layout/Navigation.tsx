@@ -32,64 +32,6 @@ import { updateCurrentStage, AllStageType } from "../store/stage/action";
 import { getClassDetail } from "../store/classsdetail/selector";
 import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  drawerBox: {
-    height: "100%",
-    width: "auto",
-    marginTop: "25px",
-    position: "relative",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: appBarHeightXs,
-    },
-  },
-  drawerContent: {
-    // The Content inside (exclude the Button)
-    overflowX: "hidden",
-    overflowY: "auto",
-  },
-  laptopDrawer: {
-    width: navBarWidthSm,
-    transition: "all 0.4s ease",
-    "& .MuiDrawer-paper": {
-      transition: "all 0.4s ease",
-      width: navBarWidthSm,
-      borderTopRightRadius: "50px",
-      marginTop: `${appBarHeightSm}px`,
-      justifyContent: "flex-start",
-      overflowX: "hidden",
-      backgroundColor: onClassColorTheme.white,
-      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    },
-  },
-  laptopBox: {
-    width: navBarWidthSm,
-    padding: "10px",
-    marginTop: "30px",
-  },
-  desktopDrawer: {
-    // The whole Drawer Box one
-    transition: "all 0.4s ease",
-    "& .MuiDrawer-paper": {
-      transition: "all 0.4s ease",
-      borderTopRightRadius: "50px",
-      marginTop: `${appBarHeightSm}px`,
-      justifyContent: "flex-start",
-      overflowX: "hidden",
-      backgroundColor: onClassColorTheme.white,
-      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    },
-  },
-  settingBox: {
-    position: "absolute",
-    width: "100%",
-  },
-  settingItems: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "25px",
-  },
-}));
-
 const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const { type } = props;
   const classes = useStyles();
@@ -223,7 +165,9 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
               alt="chevron-right"
             />
 
-            <Typography variant="h3" paddingLeft="12px" noWrap>{classDetail.class_name}</Typography>
+            <Typography variant="h3" paddingLeft="12px" noWrap>
+              {classDetail.class_name}
+            </Typography>
           </Box>
 
           <NavClassMenu />
@@ -252,11 +196,7 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           <NavList title={"ชั้นเรียน"} icon={NavListClass} path={"/home"}>
             <NavCallClass />
           </NavList>
-          <NavList
-            title="งานมอบหมาย"
-            icon={NavListAsm}
-            path={"/assignments"}
-          />
+          <NavList title="งานมอบหมาย" icon={NavListAsm} path={"/assignments"} />
         </Box>
 
         <SettingsBar />
@@ -304,3 +244,61 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
 };
 
 export default Navigation;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  drawerBox: {
+    height: "100%",
+    width: "auto",
+    marginTop: "25px",
+    position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: appBarHeightXs,
+    },
+  },
+  drawerContent: {
+    // The Content inside (exclude the Button)
+    overflowX: "hidden",
+    overflowY: "auto",
+  },
+  laptopDrawer: {
+    width: navBarWidthSm,
+    transition: "all 0.4s ease",
+    "& .MuiDrawer-paper": {
+      transition: "all 0.4s ease",
+      width: navBarWidthSm,
+      borderTopRightRadius: "50px",
+      marginTop: `${appBarHeightSm}px`,
+      justifyContent: "flex-start",
+      overflowX: "hidden",
+      backgroundColor: onClassColorTheme.white,
+      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    },
+  },
+  laptopBox: {
+    width: navBarWidthSm,
+    padding: "10px",
+    marginTop: "30px",
+  },
+  desktopDrawer: {
+    // The whole Drawer Box one
+    transition: "all 0.4s ease",
+    "& .MuiDrawer-paper": {
+      transition: "all 0.4s ease",
+      borderTopRightRadius: "50px",
+      marginTop: `${appBarHeightSm}px`,
+      justifyContent: "flex-start",
+      overflowX: "hidden",
+      backgroundColor: onClassColorTheme.white,
+      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    },
+  },
+  settingBox: {
+    position: "absolute",
+    width: "100%",
+  },
+  settingItems: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "25px",
+  },
+}));

@@ -13,37 +13,6 @@ import { updateUserEmail } from "../../store/userdata/action";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: "0 40px",
-    margin: "0 40px",
-    position: "relative",
-    borderRadius: "35px",
-    width: "80%",
-    maxWidth: "400px",
-    height: "650px",
-    display: "flex",
-    justifyContent: "center",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    backgroundColor: "white",
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 20px",
-      margin: "10px 40px",
-      height: "auto",
-    },
-  },
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: "40px",
-    [theme.breakpoints.down("sm")]: {
-      padding: "80px 0",
-    },
-  },
-}));
-
 interface AuthCardProps {
   type: "login" | "register";
   onClick: (event: any) => void;
@@ -78,7 +47,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
         ...loginTF!,
         [e.target.name]: e.target.value,
       });
-  } else {
+    } else {
       switch (e.target.name) {
         case "firstname":
         case "lastname":
@@ -180,7 +149,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   return (
     <Box className={classes.root}>
       <Box className={classes.content}>
-      {/* <form onSubmit={onTappedLogin}> */}
+        {/* <form onSubmit={onTappedLogin}> */}
         <Typography variant="h1">
           {type === "login" ? "Login" : "Register"}
         </Typography>
@@ -188,96 +157,96 @@ const AuthCard: FC<AuthCardProps> = (props) => {
         {type === "login" ? (
           <div style={{ display: "grid", gap: "17px" }}>
             {/* <form onSubmit={onTappedLogin}> */}
-              <OCTextfield
-                name="username"
-                value={loginTF?.username}
-                onChange={(e) => handleChange(e)}
-                label={"Username"}
-                fullWidth
-                inputProps={{
-                  style: { textTransform: "lowercase" },
-                }}
-              />
-              <OCTextfield
-                name="password"
-                type="password"
-                value={loginTF?.password}
-                onChange={(e) => handleChange(e)}
-                label={"Password"}
-                fullWidth
-              />
+            <OCTextfield
+              name="username"
+              value={loginTF?.username}
+              onChange={(e) => handleChange(e)}
+              label={"Username"}
+              fullWidth
+              inputProps={{
+                style: { textTransform: "lowercase" },
+              }}
+            />
+            <OCTextfield
+              name="password"
+              type="password"
+              value={loginTF?.password}
+              onChange={(e) => handleChange(e)}
+              label={"Password"}
+              fullWidth
+            />
             {/* </form> */}
           </div>
         ) : (
           // <Box display={{xs:"flexbox", sm:"grid"}}>
           // <form onSubmit={onTappedLogin}>
-            <Box display="flex" flexDirection="column" gap="12px">
-              <div style={{ display: "flex", gap: "17px" }}>
-                <OCTextfield
-                  name="username"
-                  value={registerTF?.username}
-                  onChange={(e) => handleChange(e)}
-                  label={"Username"}
-                  inputProps={{
-                    style: { textTransform: "lowercase" },
-                  }}
-                />
-                <Box display={{ xs: "none", sm: "block" }} width="90%"></Box>
-              </div>
-
-              <Box
-                display="flex"
-                flexDirection={{ xs: "column", sm: "row" }}
-                gap={{ xs: "12px", sm: "17px" }}
-              >
-                <OCTextfield
-                  name="firstname"
-                  value={registerTF?.name.firstname}
-                  onChange={(e) => handleChange(e)}
-                  label={"Firstname"}
-                />
-                <OCTextfield
-                  name="lastname"
-                  value={registerTF?.name.lastname}
-                  onChange={(e) => handleChange(e)}
-                  label={"Lastname"}
-                />
-              </Box>
-              <Box
-                display="flex"
-                flexDirection={{ xs: "column", sm: "row" }}
-                gap={{ xs: "12px", sm: "17px" }}
-              >
-                <OCTextfield
-                  name="password"
-                  type="password"
-                  value={registerTF?.password}
-                  onChange={(e) => handleChange(e)}
-                  label={"Password"}
-                />
-                <OCTextfield
-                  type="password"
-                  name="cfpassword"
-                  value={cfPassword}
-                  onChange={(e) => handleChange(e)}
-                  label={"Confirm Password"}
-                  error={isPwError}
-                  helperText={isPwError && "Password doesn't match!"}
-                />
-              </Box>
+          <Box display="flex" flexDirection="column" gap="12px">
+            <div style={{ display: "flex", gap: "17px" }}>
               <OCTextfield
-                name="email"
-                value={registerTF?.email}
+                name="username"
+                value={registerTF?.username}
                 onChange={(e) => handleChange(e)}
-                label={"E-mail"}
+                label={"Username"}
+                inputProps={{
+                  style: { textTransform: "lowercase" },
+                }}
+              />
+              <Box display={{ xs: "none", sm: "block" }} width="90%"></Box>
+            </div>
+
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column", sm: "row" }}
+              gap={{ xs: "12px", sm: "17px" }}
+            >
+              <OCTextfield
+                name="firstname"
+                value={registerTF?.name.firstname}
+                onChange={(e) => handleChange(e)}
+                label={"Firstname"}
               />
               <OCTextfield
-                name="optional_contact"
-                value={registerTF?.optional_contact}
+                name="lastname"
+                value={registerTF?.name.lastname}
                 onChange={(e) => handleChange(e)}
-                label={"Contact (optional)"}
+                label={"Lastname"}
               />
             </Box>
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column", sm: "row" }}
+              gap={{ xs: "12px", sm: "17px" }}
+            >
+              <OCTextfield
+                name="password"
+                type="password"
+                value={registerTF?.password}
+                onChange={(e) => handleChange(e)}
+                label={"Password"}
+              />
+              <OCTextfield
+                type="password"
+                name="cfpassword"
+                value={cfPassword}
+                onChange={(e) => handleChange(e)}
+                label={"Confirm Password"}
+                error={isPwError}
+                helperText={isPwError && "Password doesn't match!"}
+              />
+            </Box>
+            <OCTextfield
+              name="email"
+              value={registerTF?.email}
+              onChange={(e) => handleChange(e)}
+              label={"E-mail"}
+            />
+            <OCTextfield
+              name="optional_contact"
+              value={registerTF?.optional_contact}
+              onChange={(e) => handleChange(e)}
+              label={"Contact (optional)"}
+            />
+          </Box>
           // </form>
         )}
 
@@ -307,3 +276,34 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   );
 };
 export default memo(AuthCard);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: "0 40px",
+    margin: "0 40px",
+    position: "relative",
+    borderRadius: "35px",
+    width: "80%",
+    maxWidth: "400px",
+    height: "650px",
+    display: "flex",
+    justifyContent: "center",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    backgroundColor: "white",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 20px",
+      margin: "10px 40px",
+      height: "auto",
+    },
+  },
+  content: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: "40px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "80px 0",
+    },
+  },
+}));

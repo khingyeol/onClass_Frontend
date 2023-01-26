@@ -4,6 +4,36 @@ import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 
+interface NavListProps {
+  title: string;
+  icon: any;
+  children?: any;
+  path: string;
+}
+
+const NavList: FC<NavListProps> = (props) => {
+  const { title, icon, children, path } = props;
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const isActive = window.location.pathname === path;
+
+  return (
+    <Box width="100%">
+      <Box
+        className={classes.nav_list}
+        boxSizing={isActive ? "border-box" : "unset"}
+        onClick={() => navigate(path)}
+      >
+        <img className={classes.img_navlist} alt={title} src={icon} />
+        <Typography variant="h3">{title}</Typography>
+      </Box>
+      {children}
+    </Box>
+  );
+};
+
+export default NavList;
+
 const useStyles = makeStyles((theme: Theme) => ({
   nav_list: {
     width: "100%",
@@ -40,33 +70,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-
-interface NavListProps {
-  title: string;
-  icon: any;
-  children?: any;
-  path: string;
-}
-
-const NavList: FC<NavListProps> = (props) => {
-  const { title, icon, children, path } = props;
-  const classes = useStyles();
-  const navigate = useNavigate();
-  const isActive = window.location.pathname === path;
-
-  return (
-    <Box width="100%">
-      <Box
-        className={classes.nav_list}
-        boxSizing={isActive ? "border-box" : "unset"}
-        onClick={() => navigate(path)}
-      >
-        <img className={classes.img_navlist} alt={title} src={icon} />
-        <Typography variant="h3">{title}</Typography>
-      </Box>
-      {children}
-    </Box>
-  );
-};
-
-export default NavList;

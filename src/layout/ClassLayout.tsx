@@ -7,19 +7,6 @@ import { Outlet } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  navBox: {
-    display: "flex",
-  },
-  mainComponent: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "8px",
-    margin: "6px 14px",
-    flexGrow: 1,
-  },
-}));
-
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -44,3 +31,16 @@ const ClassLayout: FC = (props) => {
   );
 };
 export default memo(ClassLayout);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  navBox: {
+    display: "flex",
+  },
+  mainComponent: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "8px",
+    margin: "6px 14px",
+    flexGrow: 1,
+  },
+}));

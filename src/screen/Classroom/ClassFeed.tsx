@@ -9,28 +9,6 @@ import { useSelector } from "react-redux";
 import { getfromClass } from "../../services/class/api_class";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  classCard: {
-    height: "127px",
-    overflow: "hidden",
-    borderBottomLeftRadius: "35px",
-    borderBottomRightRadius: "35px",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    marginBottom: "25px",
-    cursor: "pointer",
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
-  coverImg: {
-    backgroundImage:
-      "linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)), url('https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg')",
-    objectFit: "cover",
-    width: "100%",
-    height: "100%",
-  },
-}));
-
 const ClassFeed: FC = () => {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -85,3 +63,25 @@ const ClassFeed: FC = () => {
 };
 
 export default ClassFeed;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  classCard: {
+    height: "127px",
+    overflow: "hidden",
+    borderBottomLeftRadius: "35px",
+    borderBottomRightRadius: "35px",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    marginBottom: "25px",
+    cursor: "pointer",
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  coverImg: {
+    backgroundImage:
+      "linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)), url('https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg')",
+    objectFit: "cover",
+    width: "100%",
+    height: "100%",
+  },
+}));

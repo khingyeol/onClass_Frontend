@@ -100,7 +100,7 @@ export const logout = () => {
   store.dispatch(updateAuthentication(false));
   window.localStorage.clear();
   localStorage.removeItem(server.TOKEN_KEY);
-  store.dispatch(clearStore())
+  store.dispatch(clearStore());
   window.location.reload();
 };
 

@@ -118,16 +118,16 @@ export const postPublish = async (body: PostPublishRequest) => {
 
 // // class/post/comment
 export const postComment = async (
-    class_code: string,
-    id: string,
-    comment: string  
+  class_code: string,
+  id: string,
+  comment: string
 ) => {
-    return await httpClient.patch(server.CLASS_URL+api_class.COMMENT_POST, {
-        class_code,
-        id,
-        data: { content: comment },    
-    });
-}
+  return await httpClient.patch(server.CLASS_URL + api_class.COMMENT_POST, {
+    class_code,
+    id,
+    data: { content: comment },
+  });
+};
 
 // // class/post/get
 export const postGet = async (
