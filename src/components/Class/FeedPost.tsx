@@ -25,6 +25,7 @@ import {
 } from "../../store/stage/action";
 import { formatDate, formatTime } from "../../utils/formatDate";
 import { assignmentComment } from "../../services/class/api_class";
+import IconASM from "../../assets/svg/icon_asm.svg";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -137,17 +138,26 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             dispatch(updateSelectedId(data.id));
           }}
         >
-          <Avatar
-            sx={{
-              width: isDesktop ? 60 : 50,
-              height: isDesktop ? 60 : 50,
-              boxSizing: "border-box",
-              border: "1px solid #707070",
-              alignSelf: "center",
-            }}
-            alt="profile-image"
-            src={dummyTeacher}
-          />
+          {data.profile_pic ? (
+            <Avatar
+              sx={{
+                width: isDesktop ? 60 : 50,
+                height: isDesktop ? 60 : 50,
+                boxSizing: "border-box",
+                border: "1px solid #707070",
+                alignSelf: "center",
+              }}
+              alt="profile-image"
+              src={data.profile_pic}
+            />
+          ) : (
+            <OCIconButton
+              icon={IconASM}
+              color={onClassColorTheme.green}
+              size={isDesktop ? "60px" : "50px"}
+            />
+          )}
+
           <Box style={{ alignSelf: "center" }}>
             {renderTitle()}
             <Typography variant="body1" color={onClassColorTheme.grey}>
@@ -162,7 +172,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
         {type === "post" && (
           <Box
             className={classes.contents}
-            sx={{     borderTop: "1px solid rgba(191, 191,191, 0.3)"          }}
+            sx={{ borderTop: "1px solid rgba(191, 191,191, 0.3)" }}
           >
             {data.post_content}
           </Box>
@@ -180,23 +190,27 @@ const FeedPost: FC<FeedPostProps> = (props) => {
               />
             ) : (
               <Box
-              width={"50px"}
-              height={"50px"}
-              borderRadius={"50%"}
-              bgcolor={alpha(onClassColorTheme.grey, 0.1)}
-              position="relative"
+                width={"50px"}
+                height={"50px"}
+                borderRadius={"50%"}
+                bgcolor={alpha(onClassColorTheme.grey, 0.1)}
+                position="relative"
               >
-                <Typography style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            marginLeft: "-25%",
-                            marginTop: "-25%",
-                            verticalAlign: "middle",
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            color: onClassColorTheme.grey,
-                }}>{data.comment}</Typography>
+                <Typography
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginLeft: "-25%",
+                    marginTop: "-25%",
+                    verticalAlign: "middle",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    color: onClassColorTheme.grey,
+                  }}
+                >
+                  {data.comment}
+                </Typography>
               </Box>
             )}
           </Box>

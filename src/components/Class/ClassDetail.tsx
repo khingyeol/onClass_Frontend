@@ -102,7 +102,7 @@ const ClassDetail: FC = () => {
                 alignSelf: "center",
               }}
               alt="profile-image"
-              src={dummyTeacher}
+              src={classDetail.teacher.profile_pic ?? ''}
             />
             <Typography fontSize="auto">{`${classDetail.teacher.name.firstname} ${classDetail.teacher.name.lastname}`}</Typography>
 
