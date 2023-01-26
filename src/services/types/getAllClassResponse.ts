@@ -1,16 +1,4 @@
-export interface Name {
-    firstname: string;
-    lastname: string;
-}
-
-export interface Teacher {
-    user_id: string;
-    username: string;
-    email: string;
-    name: Name;
-    optional_contact: string;
-    profile_pic?: any;
-}
+import { Teacher } from "./ClassModel";
 
 export interface GetAllClassResponseData {
     class_code: string;

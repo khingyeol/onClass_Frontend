@@ -1,21 +1,6 @@
-import { Name } from "./getAllClassResponse";
+import { ClassExamModel, FileModel, NicknameModel, PollModel, UserModel } from "./ClassModel";
 
-export interface FileModel {
-  file_name: string;
-  file_extension: string;
-  file_path: string;
-}
-
-export interface UserModel {
-  user_id: string;
-  username: string;
-  email: string;
-  name: Name;
-  optional_contact?: string;
-  profile_pic?: string;
-}
-
-export interface AssignmentModel {
+interface ClassAssignmentModel {
   id: string;
   assignment_name: string;
   assignment_description: string;
@@ -28,38 +13,18 @@ export interface AssignmentModel {
   moment_sort: string;
 }
 
-export interface NicknameModel {
-  user_id: string;
-  firstname: string;
-  lastname: string;
-  optional_name?: string;
-}
-
-export interface PollModel {
-  choice_name: string;
-  vote: number; // vote count
-}
-
-export interface PostModel {
-  id: string;
-  post_author: NicknameModel[];
-  profile_pic?: string;
-  type: string; // post, poll
-  post_content: string;
-  post_optional_file?: FileModel[];
-  poll?: PollModel[];
-  comment: number;
-  created: string;
-  moment_sort: string; //moment
-}
-
-export interface ClassExamModel {
-  id: string;
-  name: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-}
+  interface ClassPostModel {
+    id: string;
+    post_author: NicknameModel[];
+    profile_pic?: string;
+    type: string; // post, poll
+    post_content: string;
+    post_optional_file?: FileModel[];
+    poll?: PollModel[];
+    comment: number;
+    created: string;
+    moment_sort: string; //moment
+  }
 
 export interface GetClassResponseData {
   class_code: string;
@@ -71,10 +36,10 @@ export interface GetClassResponseData {
   class_thumbnail?: string;
   teacher: UserModel[];
   student: UserModel[];
-  class_assignment: AssignmentModel[];
-  class_post: PostModel[];
+  class_assignment: ClassAssignmentModel[];
+  class_post: ClassPostModel[];
   class_exam: ClassExamModel[];
-  class_feed: [{ type: string; data: AssignmentModel | PostModel }];
+  class_feed: [{ type: string; data: ClassAssignmentModel | ClassPostModel }];
   nickname: NicknameModel[];
 }
 

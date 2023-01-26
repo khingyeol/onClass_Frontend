@@ -9,7 +9,7 @@ import {
   Theme,
   useMediaQuery,
 } from "@mui/material";
-import { FC, memo, useState } from "react";
+import { ChangeEvent, FC, memo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import dummyPic from "../../assets/image/dummypic.png";
@@ -21,6 +21,8 @@ import OCIconButton from "../../common/OCIconButton";
 import IconPoll from "../../assets/svg/icon_poll.svg";
 import IconFile from "../../assets/svg/icon_clip.svg";
 import { useParams } from "react-router-dom";
+import { postPublish } from "../../services/class/api_class";
+import OCTextField from "../../common/OCTextfield";
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
@@ -104,19 +106,32 @@ const PostBox: FC = () => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [openPostBox, setOpenPostBox] = useState(false);
+  const [content, setContent] = useState("");
 
   const handleClickDialog = () => {
     setOpenPostBox(!openPostBox);
   };
 
-  const [inputs, setInputs] = useState({
-    class_code: classid,
-    data: {
-      type: "normal",
-      post_content: "",
-      post_optional_file: [],
-    },
-  });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setContent(e.target.value);
+  };
+
+  const onClickSend = () => {
+    const reqBody = {
+      class_code: classid!,
+      data: {
+        type: "normal",
+        post_content: content,
+        post_optional_file: [],
+        poll: [],
+      },
+    };
+    postPublish(reqBody).then(() => {
+      window.location.reload();
+    });
+  };
 
   const CloseButton = () => {
     return (
@@ -150,7 +165,7 @@ const PostBox: FC = () => {
   const PostButton = () => {
     return (
       <Button
-        onClick={handleClickDialog}
+        onClick={onClickSend}
         sx={{
           width: { xs: "40px", sm: "60px" },
           height: { xs: "40px", sm: "60px" },
@@ -213,63 +228,52 @@ const PostBox: FC = () => {
     );
   };
 
-  const XsPostBox = () => {
-    return (
-      <>
-        <PostBoxDialog />
-        <Box className={classes.postbox} onClick={handleClickDialog}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            say something...
-          </Box>
-        </Box>
-      </>
-    );
-  };
-
-  const SmPostBox = () => {
-    return (
-      <Box className={classes.postbox}>
-        <Avatar
-          sx={{
-            width: isDesktop ? 60 : 28,
-            height: isDesktop ? 60 : 28,
-            boxSizing: "border-box",
-            border: "1px solid #707070",
-            alignSelf: "center",
-          }}
-          alt="profile-image"
-          src={dummyPic}
+  return isDesktop ? (
+    // SM Postbox
+    <Box className={classes.postbox}>
+      <Avatar
+        sx={{
+          width: isDesktop ? 60 : 28,
+          height: isDesktop ? 60 : 28,
+          boxSizing: "border-box",
+          border: "1px solid #707070",
+          alignSelf: "center",
+        }}
+        alt="profile-image"
+        src={dummyPic}
+      />
+      {/* <textarea className={classes.input} placeholder="say something..."></textarea> */}
+      <Box width="100%">
+        <TextField
+          className={classes.input}
+          // type="normal"
+          id="post_content"
+          placeholder="say something..."
+          value={content}
+          onChange={(e) => handleChange(e)}
+          // rows={3}
+          // minRows={3}
+          // maxRows={10}
+          multiline
         />
-        {/* <textarea className={classes.input} placeholder="say something..."></textarea> */}
-        <Box width="100%">
-          <TextField
-            className={classes.input}
-            type="normal"
-            id="post_content"
-            placeholder="say something..."
-            // rows={3}
-            // minRows={3}
-            // maxRows={10}
-            multiline
+        <Box display="flex" gap="12px" paddingTop={1}>
+          <OCIconButton
+            icon={IconPoll}
+            color={onClassColorTheme.grey}
+            size={"39px"}
+            type="square"
+            onClick={() => {}}
           />
-          <Box display="flex" gap="12px" paddingTop={1}>
-            <OCIconButton
-              icon={IconPoll}
-              color={onClassColorTheme.grey}
-              size={"39px"}
-              type="square"
-              onClick={() => {}}
-            />
-            <OCIconButton
-              icon={IconFile}
-              color={onClassColorTheme.grey}
-              size={"39px"}
-              type="square"
-              onClick={() => {}}
-            />
-          </Box>
+          <OCIconButton
+            icon={IconFile}
+            color={onClassColorTheme.grey}
+            size={"39px"}
+            type="square"
+            onClick={() => {}}
+          />
         </Box>
-        {/* <TextareaAutosize
+      </Box>
+      {/* <TextareaAutosize
           className={classes.input}
           placeholder="say something..."
           style={{
@@ -279,11 +283,18 @@ const PostBox: FC = () => {
 
           }}
         /> */}
-        <PostButton />
+      <PostButton />
+    </Box>
+  ) : (
+    // XS Postbox
+    <>
+      <PostBoxDialog />
+      <Box className={classes.postbox} onClick={handleClickDialog}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          say something...
+        </Box>
       </Box>
-    );
-  };
-
-  return isDesktop ? <SmPostBox /> : <XsPostBox />;
+    </>
+  );
 };
 export default memo(PostBox);

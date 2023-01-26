@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // height: "50px",
     marginTop: "10px",
     paddingTop: "10px",
-    borderTop: "1px solid #BFBFBF",
+    borderTop: "1px solid rgba(191, 191,191, 0.3)",
     display: "flex",
     // whiteSpace: "nowrap",
     gap: "15px",
@@ -103,8 +103,9 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             fontSize="21px"
             color={onClassColorTheme.green}
           >
-            {data.post_author.optional_name ??
-              `${data.post_author.firstname} ${data.post_author.lastname}`}
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${
+              `(${data.post_author.optional_name ?? ""})` ?? ""
+            }`}
           </Typography>
         );
       }
@@ -161,7 +162,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
         {type === "post" && (
           <Box
             className={classes.contents}
-            sx={{ borderTop: "1px solid #BFBFBF" }}
+            sx={{     borderTop: "1px solid rgba(191, 191,191, 0.3)"          }}
           >
             {data.post_content}
           </Box>
@@ -170,11 +171,34 @@ const FeedPost: FC<FeedPostProps> = (props) => {
         {/* Comment */}
         <Box className={classes.comments} display={{ xs: "none", sm: "flex" }}>
           <Box>
-            <OCIconButton
-              icon={IconComment}
-              color={onClassColorTheme.grey}
-              size={"50px"}
-            />
+            {" "}
+            {data.comment === 0 ? (
+              <OCIconButton
+                icon={IconComment}
+                color={onClassColorTheme.grey}
+                size={"50px"}
+              />
+            ) : (
+              <Box
+              width={"50px"}
+              height={"50px"}
+              borderRadius={"50%"}
+              bgcolor={alpha(onClassColorTheme.grey, 0.1)}
+              position="relative"
+              >
+                <Typography style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            marginLeft: "-25%",
+                            marginTop: "-25%",
+                            verticalAlign: "middle",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            color: onClassColorTheme.grey,
+                }}>{data.comment}</Typography>
+              </Box>
+            )}
           </Box>
           <OCTextField
             value={comment}

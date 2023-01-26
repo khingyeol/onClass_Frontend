@@ -40,11 +40,10 @@ const NavClassMenu: FC = () => {
 
   return (
     <>
-    <Link to={`/${classid}`}>
       <Box
         className={classes.class_list}
         onClick={() => {
-          // navigate(`/${classid}`);
+          navigate(`/${classid}`);
           dispatch(updateCurrentStage(AllStageType.CLASS));
         }}
         borderLeft={
@@ -60,7 +59,6 @@ const NavClassMenu: FC = () => {
       >
         <Typography variant="body1">feed</Typography>
       </Box>
-      </Link>
       <Box
         className={classes.class_list}
         onClick={() => {
