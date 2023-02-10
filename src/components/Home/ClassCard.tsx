@@ -17,7 +17,7 @@ const ClassCard: FC<{ item: GetAllClassResponseData }> = (props) => {
 
   const onClickCard = () => {
     navigate("/" + item.class_code);
-    dispatch(updateClassDetail(item));
+    // dispatch(updateClassDetail(item));
     dispatch(updateCurrentStage(AllStageType.CLASS));
   };
 

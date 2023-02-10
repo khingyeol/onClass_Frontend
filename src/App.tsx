@@ -1,6 +1,10 @@
-import { useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { AppThemes } from "./common/theme/onClassTheme";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import AuthPage from "./screen/Auth/AuthPage";
@@ -13,10 +17,6 @@ import { getIsAuthenticate } from "./store/authentication/selector";
 
 function App() {
   const isLogin: boolean = useSelector(getIsAuthenticate);
-
-  useEffect(() => {
-    console.log("isLoggedIn", isLogin);
-  });
 
   return (
     <MuiThemeProvider theme={AppThemes}>

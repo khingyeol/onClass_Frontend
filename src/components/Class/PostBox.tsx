@@ -113,45 +113,7 @@ const PostBox: FC = () => {
       </Button>
     );
   };
-
-  const PostBoxDialog = () => {
-    return (
-      <Dialog
-        open={openPostBox}
-        onClose={handleClickDialog}
-        PaperProps={{
-          style: {
-            borderRadius: "35px",
-            width: "100%",
-            height: "50%",
-          },
-        }}
-      >
-        <Box className={classes.dialog}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            marginBottom="10px"
-          >
-            <CloseButton />
-            <PostButton />
-          </Box>
-          <Box flexGrow={1}>
-            <TextField
-              className={classes.inputXS}
-              type="normal"
-              id="post_content"
-              placeholder="say something..."
-              rows={14}
-              // fullWidth
-              multiline
-            />
-          </Box>
-        </Box>
-      </Dialog>
-    );
-  };
-
+  
   return isDesktop ? (
     // SM Postbox
     <Box className={classes.postbox}>
@@ -212,7 +174,41 @@ const PostBox: FC = () => {
   ) : (
     // XS Postbox
     <>
-      <PostBoxDialog />
+      <Dialog
+        open={openPostBox}
+        onClose={handleClickDialog}
+        PaperProps={{
+          style: {
+            borderRadius: "35px",
+            width: "100%",
+            height: "50%",
+          },
+        }}
+      >
+        <Box className={classes.dialog}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            marginBottom="10px"
+          >
+            <CloseButton />
+            <PostButton />
+          </Box>
+          <Box flexGrow={1}>
+            <TextField
+              className={classes.inputXS}
+              type="normal"
+              id="post_content"
+              placeholder="say something..."
+              value={content}
+              onChange={(e) => handleChange(e)}    
+              rows={14}
+              // fullWidth
+              multiline
+            />
+          </Box>
+        </Box>
+      </Dialog>
       <Box className={classes.postbox} onClick={handleClickDialog}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           say something...

@@ -4,14 +4,14 @@ export interface Name {
     lastname: string;
 }
 
-export interface Teacher {
-    user_id: string;
-    username: string;
-    email: string;
-    name: Name;
-    optional_contact: string;
-    profile_pic?: any;
-}
+// export interface Teacher {
+//     user_id: string;
+//     username: string;
+//     email: string;
+//     name: Name;
+//     optional_contact: string;
+//     profile_pic?: any;
+// }
 
 export interface CommentModel {
     comment_author: {

@@ -117,8 +117,8 @@ const AuthCard: FC<AuthCardProps> = (props) => {
       try {
         await signIn(loginTF!.username, loginTF!.password);
         console.log("[onTappedLogin] login pass!");
-        window.location.reload();
-        // navigate("/home");
+        // window.location.reload();
+        navigate("/home");
       } catch (err: any) {
         if (err.code === "UserNotConfirmedException") {
           console.log("[onTappedLogin] need to confirm code");
@@ -173,6 +173,11 @@ const AuthCard: FC<AuthCardProps> = (props) => {
               value={loginTF?.password}
               onChange={(e) => handleChange(e)}
               label={"Password"}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onTappedLogin()
+                }
+              }}
               fullWidth
             />
             {/* </form> */}

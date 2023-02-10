@@ -4,6 +4,7 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import UserPool from "../../cognito/UserPool";
 import { updateAuthentication } from "../../store/authentication/action";
 import { clearStore, store } from "../../store";
+import OCDialog from "../../common/OCDialog";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -249,6 +250,7 @@ export const login = async (values: cognitoUserDataModel) => {
         // return { code: "102" }
         //Navigate to sendcode verify account
       } else {
+        // <OCDialog title={'title'} message={err.message || JSON.stringify(err)} />
         alert(err.message || JSON.stringify(err));
         return { code: "404", auth: false, data: err.message };
       }

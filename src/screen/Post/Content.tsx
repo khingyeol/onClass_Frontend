@@ -46,8 +46,8 @@ const Content: FC = () => {
     } else if (type === "POST") {
       postGet(classid!, id!)
         .then((response) => {
-          setPostContent(response.data.data[0]);
-          console.log(response.data.data[0]);
+          setPostContent(response.data.data);
+          console.log(response.data.data);
         })
         .catch((error) => {
           setError(true);

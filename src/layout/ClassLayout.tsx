@@ -1,15 +1,40 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { FC, memo } from "react";
+import { FC, memo, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import ClassDetail from "../components/Class/ClassDetail";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
+import { getfromClass } from "../services/class/api_class";
+import { updateClassDetail } from "../store/classsdetail/action";
+import { GetAllClassResponseData } from "../services/types/getAllClassResponse";
+import { useDispatch } from "react-redux";
 
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { classid } = useParams();
+
+  const fetchGetFromClass = async (id: string) => {
+    try {
+      const res = await getfromClass(id);
+        const data: GetAllClassResponseData = {
+          ...res.data.data,
+          teacher: res.data.data.teacher[0]          
+        }
+        dispatch(updateClassDetail(data));
+    } catch (err: any) {
+      navigate("/home");
+    }
+  };
+
+  useEffect(() => {
+    console.log("classid", classid);
+    if (classid) fetchGetFromClass(classid);
+  }, []);
 
   return (
     <>
@@ -25,7 +50,7 @@ const ClassLayout: FC = (props) => {
             <Outlet />
           </Box>
         </Box>
-        {isDesktop ? <ClassDetail /> : null}
+        {/* {isDesktop ? <ClassDetail /> : null} */}
       </Box>
     </>
   );

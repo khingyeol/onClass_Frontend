@@ -1,4 +1,4 @@
-import { Teacher } from "./ClassModel";
+import { UserModel } from "./ClassModel";
 
 export interface GetAllClassResponseData {
     class_code: string;
@@ -8,7 +8,7 @@ export interface GetAllClassResponseData {
     class_room: string;
     class_subject: string;
     class_thumbnail?: any;
-    teacher: Teacher;
+    teacher: UserModel;
 }
 
 export interface GetAllClassResponse {

@@ -28,7 +28,7 @@ function AppRoutes() {
       default:
       case AllStageType.HOME: {
         return (
-          <Route path="/" element={<HomeLayout />}>
+          <Route element={<HomeLayout />}>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="*" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
@@ -39,7 +39,7 @@ function AppRoutes() {
 
       case AllStageType.CLASS: {
         return (
-          <Route path="/:classid" element={<ClassLayout />}>
+          <Route element={<ClassLayout />}>
             <Route path="/:classid" element={<ClassFeed />} />
             <Route path="/:classid/assignments" element={<HomeAssignments />} />
             <Route path="/:classid/exam" element={<> </>} />
@@ -50,7 +50,7 @@ function AppRoutes() {
       case AllStageType.POST: {
         return (
           <>
-            <Route path="/:classid/post" element={<PostLayout />}>
+            <Route element={<PostLayout />}>
               <Route path="/:classid/post/:id" element={<Content />}></Route>
             </Route>
           </>

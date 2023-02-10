@@ -17,23 +17,20 @@ const ClassFeed: FC = () => {
   const { classid } = useParams();
 
   const fetchGetFromClass = async (id: string) => {
-    const res = await getfromClass(id);
-    if (res.data.result === "OK") {
-      setContent(res.data.data);
-      console.log("content", res.data.data);
-    } else {
-      setContent(null);
+    try {
+      const res = await getfromClass(id);
+        setContent(res.data.data);
+        console.log("content", res.data.data);
+    } catch (err: any) {
+      console.log("classid 2", classid);
+      navigate("/home");
+      // setContent(null);
     }
   };
 
   useEffect(() => {
     console.log("classid", classid);
-
-    if (!classid) {
-      navigate("/home");
-    } else {
-      fetchGetFromClass(classid);
-    }
+    if (classid) fetchGetFromClass(classid);
     console.log("id redux", classid);
   }, []);
 

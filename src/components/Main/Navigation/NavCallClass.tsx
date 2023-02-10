@@ -29,7 +29,7 @@ const NavCallClass: FC = () => {
 
   const onClickClass = (item: GetAllClassResponseData) => {
     navigate("/" + item.class_code);
-    dispatch(updateClassDetail(item));
+    // dispatch(updateClassDetail(item));
     dispatch(updateCurrentStage(AllStageType.CLASS));
     console.log("onClickCard", item.class_code);
   };
