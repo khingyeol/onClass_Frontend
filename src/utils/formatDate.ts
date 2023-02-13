@@ -7,6 +7,14 @@ export const formatDate = (date: string) => {
   return `${newDate.getDate()} ${month}. ${newDate.getFullYear()}`;
 };
 
+export const formatShortDate = (date: string) => {
+  if (!date) return ''; 
+  const formatter = new Intl.DateTimeFormat("en", { month: "short" });
+  const newDate = new Date(date);
+  const month = formatter.format(newDate);
+  return `${newDate.getDate()} ${month}.`;
+}
+
 // (24hr)
 // 02:48 
 export const formatTime = (date: string) => {
@@ -14,4 +22,8 @@ export const formatTime = (date: string) => {
   return `${newDate
     .toLocaleTimeString("th")
     .replace(/(.*)\D\d+/, "$1")}`;
+};
+
+export const formatDateTime = (date: string, seperator?: string) => {
+  return `${formatDate(date)} ${seperator ?? ''} ${formatTime(date)}`;
 };

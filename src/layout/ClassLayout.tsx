@@ -1,5 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { FC, memo, useEffect } from "react";
+import React, { FC, memo, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import ClassDetail from "../components/Class/ClassDetail";
@@ -8,8 +8,9 @@ import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 import { getfromClass } from "../services/class/api_class";
 import { updateClassDetail } from "../store/classsdetail/action";
-import { GetAllClassResponseData } from "../services/types/getAllClassResponse";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getClassDetail } from "../store/classsdetail/selector";
+import { GetClassResponseData } from "../services/types/getClassResponse";
 
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
@@ -17,15 +18,13 @@ const ClassLayout: FC = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { classid } = useParams();
+  const classDetail = useSelector(getClassDetail);
 
   const fetchGetFromClass = async (id: string) => {
     try {
       const res = await getfromClass(id);
-        const data: GetAllClassResponseData = {
-          ...res.data.data,
-          teacher: res.data.data.teacher[0]          
-        }
-        dispatch(updateClassDetail(data));
+      const data: GetClassResponseData = res.data.data;
+      dispatch(updateClassDetail(data));
     } catch (err: any) {
       navigate("/home");
     }
@@ -50,7 +49,7 @@ const ClassLayout: FC = (props) => {
             <Outlet />
           </Box>
         </Box>
-        {/* {isDesktop ? <ClassDetail /> : null} */}
+        {isDesktop ? <ClassDetail classDetail={classDetail} /> : null}
       </Box>
     </>
   );

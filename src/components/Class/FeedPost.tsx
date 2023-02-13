@@ -93,7 +93,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
         <Box
           className={classes.headline}
           onClick={() => {
-            navigate(`/${classid}/post/${data.id}`);
+            navigate(`/${classid}/${type}/${data.id}`);
             dispatch(updateCurrentStage(AllStageType.POST));
             dispatch(updateSelectedType(type.toUpperCase()));
             dispatch(updateSelectedId(data.id));

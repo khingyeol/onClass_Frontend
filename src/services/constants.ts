@@ -21,6 +21,7 @@ export const server = {
 export const api_auth = {
   LOGIN_URL: `/loginSession`,
   REGISTER_URL: `/register`,
+  JWT_VERIFY: `/`
 }
 
 export const api_class = {

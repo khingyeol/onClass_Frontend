@@ -1,21 +1,23 @@
 import { Box, Theme, Typography, useMediaQuery } from "@mui/material";
 import { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import AsmCard from "../../components/Home/AsmCard";
-import { assignmentAllClass, getTodo } from "../../services/class/api_class";
+import { getTodo } from "../../services/class/api_class";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
 import { formatShortDate } from "../../utils/formatDate";
 
-const HomeAssignments: FC = () => {
+const ClassAssignments: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<getAllAssignmentsResponse[]>([]);
+  const { classid } = useParams();
   const navigate = useNavigate();
 
   const fetchGetAllAsm = async () => {
     try {
-      const res = await assignmentAllClass();
+      const res = await getTodo(classid!);
+      console.log('[assignmentAllClass] ERROR', classid);
       setContent(res.data.data)
     } catch (err) {
       console.log('[assignmentAllClass] ERROR');
@@ -34,8 +36,8 @@ const HomeAssignments: FC = () => {
     }
   }
 
-  const onClickASM = (class_code: string, id: string) => {
-    navigate(`/${class_code}/assignment/${id}`);
+  const onClickASM = (id: string) => {
+    navigate(`/${classid}/assignment/${id}`);
   }
 
   useEffect(() => {
@@ -56,11 +58,10 @@ const HomeAssignments: FC = () => {
           {content.map((item: getAllAssignmentsResponse) => (
             <AsmCard
               title={item.assignment_name}
-              desc={item.class_name}
               midText={formatShortDate(item.assignment_end_date)}
               trailText={item.status}
               trailTextColor={mappedTextColor(item.status)}
-              onClick={() => onClickASM(item.class_code, item.id)}
+              onClick={() => onClickASM(item.id)}
             />
           ))}
         </Box>
@@ -69,4 +70,4 @@ const HomeAssignments: FC = () => {
   );
 };
 
-export default HomeAssignments;
+export default ClassAssignments;

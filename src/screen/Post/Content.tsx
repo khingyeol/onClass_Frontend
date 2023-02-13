@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCIconButton from "../../common/OCIconButton";
@@ -26,7 +26,9 @@ const Content: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const classid = useSelector(getClassId);
-  const type = useSelector(getSelectedType);
+  // const type = useSelector(getSelectedType);
+  const pathname = window.location.pathname;
+  const type = window.location.pathname.split("/")[2].toUpperCase()
   // const postid = useSelector(getSelectedId);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [asmContent, setAsmContent] = useState<AssignmentModel>();
@@ -56,6 +58,7 @@ const Content: FC = () => {
   };
 
   useEffect(() => {
+    console.log('', )
     fetchGetPost();
   }, []);
 

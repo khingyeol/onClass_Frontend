@@ -27,9 +27,6 @@ export const getfromClass = async (
 };
 
 // class/assignment/get
-// export const assignmentGet = async (class_code: string, assignment_id: string): Promise<AxiosResponse<GetAssignmentResponse>> => {
-//     return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, {class_code, assignment_id});
-// }
 export const assignmentGet = async (
   class_code: string,
   assignment_id: string
@@ -42,16 +39,15 @@ export const assignmentGet = async (
 
 // // class/assignment/get/all
 export const getTodo = async (class_code: string) => {
-  return await httpClient.post(
-    server.CLASS_URL + api_class.ASM_ALL,
-    class_code
-  );
+  return await httpClient.post(server.CLASS_URL + api_class.ASM_ALL, {
+    class_code,
+  });
 };
 
 // // class/assignment/get/all/notification
-// export const assignmentAllClass = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.ASM_ALL_CLASS, values);
-// }
+export const assignmentAllClass = async () => {
+  return await httpClient.get(server.CLASS_URL + api_class.ASM_ALL_CLASS);
+};
 
 // // class/assignment/create
 // export const assignmentCreate = async (values) => {

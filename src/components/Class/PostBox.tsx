@@ -89,6 +89,7 @@ const PostBox: FC = () => {
   const PostButton = () => {
     return (
       <Button
+        disabled={!content}
         onClick={onClickSend}
         sx={{
           width: { xs: "40px", sm: "60px" },
@@ -98,6 +99,9 @@ const PostBox: FC = () => {
           alignSelf: "center",
           ":hover": {
             backgroundColor: alpha(onClassColorTheme.grey, 0.2),
+          },
+          ":disabled": {
+            opacity: 0.5
           },
           "&& .MuiTouchRipple-child": {
             backgroundColor: onClassColorTheme.darkGrey,

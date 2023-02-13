@@ -93,3 +93,17 @@ export interface FileModel {
     end_date: string;
   }
   
+  export interface getAllAssignmentsResponse {
+  id: string;
+  class_code: string;
+  class_name: string;
+  assignment_name: string;
+  assignment_description: string;
+  turnin_late: boolean;
+  score: Number;
+  assignment_optional_file: string[];
+  assignment_start_date: string; //Date,
+  assignment_end_date: string; //Date,
+  created: string; //Date,
+  status: string;
+}

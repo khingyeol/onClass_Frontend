@@ -7,6 +7,7 @@ import {
 } from './constants';
 
 import join from "url-join";
+import { logout } from "./auth/api_auth";
 
 const isAbsoluteURLRegex = /^(?:\w+:)\/\//;
 
@@ -31,6 +32,7 @@ axios.interceptors.response.use(
   (error) => {
 
     if(error.response.status === 401) {
+      logout()
       return 401
     }
     else if(error.response.status === 403) {

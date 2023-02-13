@@ -39,7 +39,7 @@ export interface GetClassResponseData {
   class_assignment: ClassAssignmentModel[];
   class_post: ClassPostModel[];
   class_exam: ClassExamModel[];
-  class_feed: [{ type: string; data: ClassAssignmentModel | ClassPostModel }];
+  class_feed?: [{ type: string; data: ClassAssignmentModel | ClassPostModel }];
   nickname: NicknameModel[];
 }
 

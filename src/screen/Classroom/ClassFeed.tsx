@@ -1,38 +1,14 @@
 import { Box, Theme, Typography } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { FC } from "react";
 import PostBox from "../../components/Class/PostBox";
 import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";
-import { getClassId } from "../../store/classsdetail/selector";
+import { getClassDetail } from "../../store/classsdetail/selector";
 import { useSelector } from "react-redux";
-import { getfromClass } from "../../services/class/api_class";
-import { GetClassResponseData } from "../../services/types/getClassResponse";
 
 const ClassFeed: FC = () => {
-  const navigate = useNavigate();
   const classes = useStyles();
-  // const classid = useSelector(getClassId);
-  const [content, setContent] = useState<GetClassResponseData | null>();
-  const { classid } = useParams();
-
-  const fetchGetFromClass = async (id: string) => {
-    try {
-      const res = await getfromClass(id);
-        setContent(res.data.data);
-        console.log("content", res.data.data);
-    } catch (err: any) {
-      console.log("classid 2", classid);
-      navigate("/home");
-      // setContent(null);
-    }
-  };
-
-  useEffect(() => {
-    console.log("classid", classid);
-    if (classid) fetchGetFromClass(classid);
-    console.log("id redux", classid);
-  }, []);
+  const classDetail = useSelector(getClassDetail);
 
   return (
     <>
@@ -48,8 +24,8 @@ const ClassFeed: FC = () => {
       <Box display="grid" gap={{ xs: "10px", sm: "30px" }}>
         {/* Re-render problem */}
         <PostBox />
-        {content &&
-          content.class_feed.map((item) => (
+        {classDetail?.class_feed &&
+          classDetail?.class_feed.map((item) => (
             <div key={item.data.id}>
               <FeedPost type={item.type} data={item.data} />
             </div>

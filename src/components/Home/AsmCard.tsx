@@ -11,11 +11,12 @@ interface AsmCardProps {
   desc?: string;
   midText?: string;
   trailText?: string;
+  trailTextColor?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const AsmCard: FC<AsmCardProps> = (props) => {
-  const { icon, title, desc, midText, trailText, onClick } = props;
+  const { icon, title, desc, midText, trailText, trailTextColor, onClick } = props;
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const classes = useStyles();
 
@@ -46,14 +47,14 @@ const AsmCard: FC<AsmCardProps> = (props) => {
             justifyContent={{ xs: "space-between", sm: "space-around" }}
           >
             {/* MIDDLE */}
-            <Typography variant="description" alignSelf="center">
+            <Typography variant="h4" alignSelf="center" color={trailTextColor ?? onClassColorTheme.green}>
               {midText}
             </Typography>
 
             {/* RIGHT SIDE */}
             <Typography
-              variant="h4"
-              color={onClassColorTheme.green}
+              variant="description"
+              color={trailTextColor ?? onClassColorTheme.green}
               alignSelf="center"
             >
               {trailText}

@@ -5,10 +5,12 @@ import { Theme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
+import UploadBox from "../screen/Post/UploadBox";
 
 const PostLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const type = window.location.pathname.split("/")[2].toUpperCase()
 
   return (
     <>
@@ -25,7 +27,7 @@ const PostLayout: FC = (props) => {
           </Box>
         </Box>
         {/* If type = asignment -> show asmbox */}
-        {/* {isDesktop ? <ClassDetail /> : null} */}
+        {type === "ASSIGNMENT" ? <UploadBox /> : null}
       </Box>
     </>
   );
