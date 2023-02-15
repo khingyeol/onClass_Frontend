@@ -5,6 +5,8 @@ import UserPool from "../../cognito/UserPool";
 import { updateAuthentication } from "../../store/authentication/action";
 import { clearStore, store } from "../../store";
 import OCDialog from "../../common/OCDialog";
+import { useDispatch } from "react-redux";
+import { displayDialog, hideDialog } from "../../store/dialog/action";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -66,8 +68,16 @@ export const register = async (values: onClassRegisterModel) => {
     [],
     async (err, result) => {
       if (err) {
-        //err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-        alert(err.message || JSON.stringify(err));
+        const dispatch = useDispatch();
+        dispatch(displayDialog({
+          id: 'UserPoolSignUp',
+          isShow: true,
+          title: "Sign Up",
+            // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
+          message: err.message || JSON.stringify(err),
+          primaryLabel: 'Close',
+          onPrimaryAction: () => { dispatch(hideDialog()) },
+        }))  
         return;
       }
       var cognitoUser = result?.user;
@@ -175,8 +185,17 @@ export async function signUp(values: onClassRegisterModel) {
       async (err, result) => {
         if (err) {
           //err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-          alert(err.message || JSON.stringify(err));
-          reject(err);
+          const dispatch = useDispatch();
+          dispatch(displayDialog({
+            id: 'UserPoolSignUp',
+            isShow: true,
+            title: "OTP",
+              // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
+            message: err.message || JSON.stringify(err),
+            primaryLabel: 'Close',
+            onPrimaryAction: () => { dispatch(hideDialog()) },
+          }))  
+            reject(err);
         } else {
           var cognitoUser = result?.user;
           console.log("user name is " + cognitoUser?.getUsername());
@@ -241,17 +260,10 @@ export const login = async (values: cognitoUserDataModel) => {
       console.log("cognitoUser onFailure", err.code);
 
       if (err.code === "UserNotConfirmedException") {
-        // console.log("EIEI");
         cognitoUser.resendConfirmationCode((error) => {
           if (error) throw error;
         });
-        // alert("Confirm resendConfirmationCode");
-        // navigate("/otp");
-        // return { code: "102" }
-        //Navigate to sendcode verify account
       } else {
-        // <OCDialog title={'title'} message={err.message || JSON.stringify(err)} />
-        alert(err.message || JSON.stringify(err));
         return { code: "404", auth: false, data: err.message };
       }
     },

@@ -4,14 +4,16 @@ import OtpInput from "react18-input-otp";
 import React, { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCButton from "../../common/OCButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserEmail } from "../../store/userdata/selector";
 import { confirmOTP } from "../../services/auth/api_auth";
 import { useNavigate } from "react-router-dom";
+import { displayDialog, hideDialog } from "../../store/dialog/action";
 
 const OtpPage: FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const email = useSelector(getUserEmail);
   const [code, setCode] = useState<any>("");
   const [isError, setIsError] = useState(false);
@@ -30,11 +32,25 @@ const OtpPage: FC = () => {
   const onSubmit = async () => {
     try {
       await confirmOTP(email!, code);
-      alert("confirm otp!");
+      dispatch(displayDialog({
+        id: 'confirmOTP',
+        isShow: true,
+        title: "Login",
+        message: "Already confirm OTP!",
+        primaryLabel: 'Close',
+        onPrimaryAction: () => { dispatch(hideDialog()) },
+      }))
       navigate("/home");
     } catch (err: any) {
       console.log("otp error");
-      alert(err.message);
+      dispatch(displayDialog({
+        id: 'confirmOTP',
+        isShow: true,
+        title: "OTP",
+        message: err.message,
+        primaryLabel: 'Close',
+        onPrimaryAction: () => { dispatch(hideDialog()) },
+      }))
     }
     console.log("on submit w/ code", code);
   };
@@ -78,7 +94,7 @@ const OtpPage: FC = () => {
               }}
               hasErrored={isError}
               numInputs={6}
-              // onSubmit
+            // onSubmit
             />
             <div style={{ textAlign: "center" }}>
               <Typography fontSize="18px" color={onClassColorTheme.grey}>

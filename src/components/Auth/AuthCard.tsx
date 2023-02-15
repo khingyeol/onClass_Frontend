@@ -38,11 +38,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
     },
     profile_pic: "61a4cb8ecbdaf9c5449507f3",
   });
-  // const [registerTF, setRegisterTF] = useState({});
-
   const { type, onClick } = props;
-  const dialogState = useSelector(getDialogState)
-  const { isShow = false } = dialogState
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -130,13 +126,12 @@ const AuthCard: FC<AuthCardProps> = (props) => {
           navigate("/otp");
         } else {
           dispatch(displayDialog({
-            id: 'aaa',
+            id: 'onTappedLogin',
             isShow: true,
-            title: "ERROR",
+            title: "Login",
             message: err.message,
             primaryLabel: 'Close',
-            onPrimaryAction: () => {dispatch(hideDialog())},
-            secondaryLabel: 'Close but secondary'
+            onPrimaryAction: () => { dispatch(hideDialog()) },
           }))
         }
       }
