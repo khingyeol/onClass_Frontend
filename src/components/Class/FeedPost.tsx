@@ -14,6 +14,7 @@ import IconComment from "../../assets/svg/icon_comment.svg";
 import IconSend from "../../assets/svg/icon_send.svg";
 import OCIconButton from "../../common/OCIconButton";
 import OCTextField from "../../common/OCTextfield";
+import OCPollSection from "../../common/OCPollSection";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
@@ -24,8 +25,9 @@ import {
   updateSelectedType,
 } from "../../store/stage/action";
 import { formatDate, formatTime } from "../../utils/formatDate";
-import { assignmentComment } from "../../services/class/api_class";
+import { assignmentComment, postPollVote } from "../../services/class/api_class";
 import IconASM from "../../assets/svg/icon_asm.svg";
+import { PollModel } from "../../services/types/ClassModel";
 
 interface FeedPostProps {
   type: string;
@@ -56,9 +58,31 @@ const FeedPost: FC<FeedPostProps> = (props) => {
     setComment(e.target.value);
   };
 
+  const handleOnClickVote = async (votedPoll: PollModel) => {
+    const reqBody = {
+      class_code: classid!,
+      post_id: data.id,
+      choice_name: votedPoll.choice_name,
+    };
+    const response = await postPollVote(reqBody.class_code, reqBody.post_id, reqBody.choice_name)
+  };
+
   const renderTitle = () => {
     switch (type) {
       case "post": {
+        return (
+          <Typography
+            variant="h3"
+            fontSize="21px"
+            color={onClassColorTheme.green}
+          >
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${
+              `(${data.post_author.optional_name ?? ""})` ?? ""
+            }`}
+          </Typography>
+        );
+      }
+      case "poll": {
         return (
           <Typography
             variant="h3"
@@ -136,6 +160,21 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             sx={{ borderTop: "1px solid rgba(191, 191,191, 0.3)" }}
           >
             {data.post_content}
+          </Box>
+        )}
+        {type === "poll" && (
+          <Box>
+            <Box
+              className={classes.contents}
+              sx={{ borderTop: "1px solid rgba(191, 191,191, 0.3)" }}
+            >
+              {data.post_content}
+            </Box>
+            <OCPollSection
+              pollItems={data.poll}
+              voteAuthor={data.vote_author}
+              handleOnClickVote={handleOnClickVote}
+            />
           </Box>
         )}
 

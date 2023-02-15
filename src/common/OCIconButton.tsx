@@ -7,12 +7,19 @@ interface OCIconButtonProps {
   color: string; // Color Code/onClassColorTheme
   size: string; // px
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  type?: "square" | "circle";
+  type?: "square" | "circle" | "transparent";
   disabled?: boolean;
 }
 
 const OCIconButton: FC<OCIconButtonProps> = (props) => {
-  const { icon, color, size, onClick, type = "circle", disabled = false } = props;
+  const {
+    icon,
+    color,
+    size,
+    onClick,
+    type = "circle",
+    disabled = false,
+  } = props;
 
   // https://codepen.io/sosuke/pen/Pjoqqp
   const greenFilter =
@@ -26,24 +33,24 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
     ":hover": {
       backgroundColor: alpha(color, 0.3),
     },
-  }
+  };
 
   const disabledStyle = {
-    backgroundColor: alpha(color, 0.05)
-  }
+    backgroundColor: alpha(color, 0.05),
+  };
 
   return (
     <Box
       width={size}
       height={size}
       borderRadius={type === "circle" ? size : "25%"}
-      bgcolor={alpha(color, 0.1)}
+      bgcolor={type !== "transparent" ? alpha(color, 0.1) : alpha(color, 0)}
       position="relative"
       onClick={onClick}
       sx={{
         cursor: `${onClick && "pointer"}`,
         ...(onClick && hoverStyle),
-        ...(disabled && disabledStyle)
+        ...(disabled && disabledStyle),
       }}
     >
       <img
@@ -52,7 +59,7 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
         src={icon}
         alt="icon-button"
         style={{
-          opacity:`${disabled ? "50%" : "100%"}`,
+          opacity: `${disabled ? "50%" : "100%"}`,
           objectFit: "fill",
           position: "absolute",
           top: "50%",

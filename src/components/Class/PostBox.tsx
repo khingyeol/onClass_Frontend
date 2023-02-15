@@ -9,7 +9,7 @@ import {
   Theme,
   useMediaQuery,
 } from "@mui/material";
-import { ChangeEvent, FC, memo, useState } from "react";
+import { ChangeEvent, FC, memo, useState, useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import dummyPic from "../../assets/image/dummypic.png";
@@ -18,6 +18,8 @@ import IconClose from "../../assets/svg/icon_close.svg";
 import { useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 import OCIconButton from "../../common/OCIconButton";
+import { OCPollBuilderFunction } from "../../common/OCPollBuilder";
+import OCPollBuilder from "../../common/OCPollBuilder";
 import IconPoll from "../../assets/svg/icon_poll.svg";
 import IconFile from "../../assets/svg/icon_clip.svg";
 import { useParams } from "react-router-dom";
@@ -31,6 +33,52 @@ const PostBox: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [openPostBox, setOpenPostBox] = useState(false);
   const [content, setContent] = useState("");
+  const [pollItems, setPollItems] = useState<string[]>(["", ""]);
+  const pollBuilderRef = useRef<OCPollBuilderFunction>(null);
+  const [isPollBuilderShow, setIsPollBuilderShow] = useState(false);
+
+  const handlePollItemsChange = (value: string, index: number) => {
+    const temp = [...pollItems];
+    let item = temp[index];
+    item = value;
+    temp[index] = item;
+    setPollItems([...temp]);
+  };
+
+  const handleUpdatePollItem = (type: string) => {
+    let temp = [...pollItems];
+    if (type === "add") {
+      temp = [...temp, ""];
+    } else if (type === "remove") {
+      temp.splice(temp.length - 1, 1);
+    }
+    setPollItems([...temp]);
+  };
+
+  const handleOnPollBuilderShow = () => {
+    pollBuilderRef?.current?.onClickShow();
+    setIsPollBuilderShow(!isPollBuilderShow);
+    if (isPollBuilderShow) {
+      setPollItems(["", ""])
+    }
+  };
+
+  const handleOnPollBuilderCancel = () => {
+    setIsPollBuilderShow(false);
+    setPollItems(["", ""]);
+  };
+
+  const isPollArrayEmpty = () => {
+    let flag = false;
+    pollItems.map((val) => {
+      if (val === "") {
+        return flag = true;
+      }
+      return flag = false;
+    }, {});
+    console.log('MYLOG flag', flag)
+    return flag
+  };
 
   const handleClickDialog = () => {
     setOpenPostBox(!openPostBox);
@@ -46,10 +94,10 @@ const PostBox: FC = () => {
     const reqBody = {
       class_code: classid!,
       data: {
-        type: "normal",
+        type: isPollBuilderShow ? "poll" : "normal",
         post_content: content,
         post_optional_file: [],
-        poll: [],
+        poll: isPollBuilderShow ? pollItems : [],
       },
     };
     postPublish(reqBody).then(() => {
@@ -89,19 +137,19 @@ const PostBox: FC = () => {
   const PostButton = () => {
     return (
       <Button
-        disabled={!content}
+        disabled={isPollBuilderShow ? (!content || isPollArrayEmpty()) : !content}
         onClick={onClickSend}
         sx={{
           width: { xs: "40px", sm: "60px" },
           height: { xs: "40px", sm: "60px" },
           borderRadius: { xs: "10px", sm: "20px" },
           backgroundColor: alpha(onClassColorTheme.grey, 0.1),
-          alignSelf: "center",
+          alignSelf: isPollBuilderShow ? "start" : "center",
           ":hover": {
             backgroundColor: alpha(onClassColorTheme.grey, 0.2),
           },
           ":disabled": {
-            opacity: 0.5
+            opacity: 0.5,
           },
           "&& .MuiTouchRipple-child": {
             backgroundColor: onClassColorTheme.darkGrey,
@@ -117,7 +165,7 @@ const PostBox: FC = () => {
       </Button>
     );
   };
-  
+
   return isDesktop ? (
     // SM Postbox
     <Box className={classes.postbox}>
@@ -127,7 +175,7 @@ const PostBox: FC = () => {
           height: isDesktop ? 60 : 28,
           boxSizing: "border-box",
           border: "1px solid #707070",
-          alignSelf: "center",
+          alignSelf: isPollBuilderShow ? "start" : "center",
         }}
         alt="profile-image"
         src={dummyPic}
@@ -146,15 +194,23 @@ const PostBox: FC = () => {
           // maxRows={10}
           multiline
         />
+        <OCPollBuilder
+          pollItems={pollItems}
+          handleChange={handlePollItemsChange}
+          handleUpdatePollItem={handleUpdatePollItem}
+          handleOnCancel={handleOnPollBuilderCancel}
+          ref={pollBuilderRef}
+        />
         <Box display="flex" gap="12px" paddingTop={1}>
           <OCIconButton
             icon={IconPoll}
             color={onClassColorTheme.grey}
             size={"39px"}
             type="square"
-            onClick={() => {}}
+            onClick={handleOnPollBuilderShow}
           />
           <OCIconButton
+            disabled={isPollBuilderShow}
             icon={IconFile}
             color={onClassColorTheme.grey}
             size={"39px"}
@@ -205,7 +261,7 @@ const PostBox: FC = () => {
               id="post_content"
               placeholder="say something..."
               value={content}
-              onChange={(e) => handleChange(e)}    
+              onChange={(e) => handleChange(e)}
               rows={14}
               // fullWidth
               multiline
