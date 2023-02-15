@@ -1,28 +1,23 @@
-import React, { useEffect, useMemo, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Playground from "./Playground";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { AppThemes } from "./common/theme/onClassTheme";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import AuthPage from "./screen/Auth/AuthPage";
-import HomePage from "./screen/Home/HomePage";
-import Layout from "./layout/HomeLayout";
-import ClassFeed from "./screen/Classroom/ClassFeed";
-import HomeAssignments from "./screen/Home/HomeAssignments";
 import AppRoutes from "./AppRoutes";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
-import { isLoggedIn } from "./services/auth/api_auth";
 import OtpPage from "./screen/Auth/OtpPage";
+import { useSelector } from "react-redux";
+import { getIsAuthenticate } from "./store/authentication/selector";
+import OCDialog from "./common/OCDialog";
 
 function App() {
-
-  const isLogin: boolean = useMemo(() => isLoggedIn(), []);
-
-  useEffect(() => {
-    console.log("isLoggedIn", isLogin);
-  });
+  const isLogin: boolean = useSelector(getIsAuthenticate);
 
   return (
     <MuiThemeProvider theme={AppThemes}>
@@ -30,15 +25,16 @@ function App() {
         {isLogin ? (
           <AppRoutes />
         ) : (
-          <BrowserRouter>
+          <Router>
             <Routes>
               {/* This path to /login need to be changed to somewhere the homepage(index) is */}
               <Route path="*" element={<Navigate to="/auth" />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/otp" element={<OtpPage />} />
             </Routes>
-          </BrowserRouter>
+          </Router>
         )}
+        <OCDialog />
       </PersistGate>
     </MuiThemeProvider>
   );

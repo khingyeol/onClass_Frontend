@@ -1,50 +1,20 @@
-import { Button, Link, TextField, Theme, Typography } from "@mui/material";
+import { Dialog, Link, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { FC, memo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
 import OCTextfield from "../../common/OCTextfield";
-import { login, register, signIn, signUp } from "../../services/auth/api_auth";
+import { signIn, signUp } from "../../services/auth/api_auth";
 import {
   cognitoUserDataModel,
   onClassRegisterModel,
 } from "../../services/auth/api_auth";
 import { updateUserEmail } from "../../store/userdata/action";
-import { useDispatch } from "react-redux";
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
-import UserPool from "../../cognito/UserPool";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: "0 40px",
-    margin: "0 40px",
-    position: "relative",
-    borderRadius: "35px",
-    width: "80%",
-    maxWidth: "400px",
-    height: "650px",
-    display: "flex",
-    justifyContent: "center",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    backgroundColor: "white",
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 20px",
-      margin: "10px 40px",
-      height: "auto",
-    },
-  },
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: "40px",
-    [theme.breakpoints.down("sm")]: {
-      padding: "80px 0",
-    },
-  },
-}));
+import { displayDialog, hideDialog } from "../../store/dialog/action";
+import OCDialog from "../../common/OCDialog";
+import { getDialogState } from "../../store/dialog/selector";
 
 interface AuthCardProps {
   type: "login" | "register";
@@ -68,8 +38,6 @@ const AuthCard: FC<AuthCardProps> = (props) => {
     },
     profile_pic: "61a4cb8ecbdaf9c5449507f3",
   });
-  // const [registerTF, setRegisterTF] = useState({});
-
   const { type, onClick } = props;
 
   const handleChange = (
@@ -125,183 +93,229 @@ const AuthCard: FC<AuthCardProps> = (props) => {
 
   const isDisableSubmit = () => {
     if (type === "login") {
-      // if (loginTF!.username!.length < 1 || loginTF!.password!.length < 1) {
-      //   return true
-      // }
+      if (!loginTF?.username || !loginTF?.password) {
+        return true;
+      }
     } else {
-      if (registerTF?.username.length < 1 || 
-        registerTF?.name.firstname.length < 1 || 
-        registerTF?.name.lastname.length < 1 || 
-        registerTF?.email.length < 1 || 
-        registerTF.password.length < 1 || 
-        isPwError === true) {
-          return true
+      if (
+        registerTF?.username.length < 1 ||
+        registerTF?.name.firstname.length < 1 ||
+        registerTF?.name.lastname.length < 1 ||
+        registerTF?.email.length < 1 ||
+        registerTF.password.length < 1 ||
+        isPwError === true
+      ) {
+        return true;
       }
     }
-    return false
-  }
+    return false;
+  };
 
-    const onTappedLogin = async () => {
-      console.log("ontap loggin");
-      if (type === "login") {
-        dispatch(updateUserEmail(loginTF?.username!));
-        try {
-          await signIn(loginTF!.username, loginTF!.password);
-          console.log("[onTappedLogin] login pass!");
-          window.location.reload();
-          navigate("/home");
-        } catch (err: any) {
-          if (err.code === "UserNotConfirmedException") {
-            console.log("[onTappedLogin] need to confirm code");
-            navigate("/otp");
-          } else {
-            alert(err.message);
-          }
-        }
-      } else {
-        dispatch(updateUserEmail(registerTF?.username));
-        try {
-          await signUp({
-            ...registerTF,
-            optional_contact:
-              registerTF.optional_contact
-                ? registerTF.optional_contact!
-                : " ",
-          });
+  const onTappedLogin = async () => {
+    console.log("ontap loggin");
+    if (type === "login") {
+      dispatch(updateUserEmail(loginTF?.username!));
+      try {
+        await signIn(loginTF!.username, loginTF!.password);
+        console.log("[onTappedLogin] login pass!");
+        // navigate("/home");
+      } catch (err: any) {
+        if (err.code === "UserNotConfirmedException") {
+          console.log("[onTappedLogin] need to confirm code");
           navigate("/otp");
-          console.log("[onTappedLogin] regis");
-        } catch (err) {
-          if (err) {
-            console.log("error regis", err);
-          }
+        } else {
+          dispatch(displayDialog({
+            id: 'onTappedLogin',
+            isShow: true,
+            title: "Login",
+            message: err.message,
+            primaryLabel: 'Close',
+            onPrimaryAction: () => { dispatch(hideDialog()) },
+          }))
         }
       }
-    };
-
-    return (
-      <Box className={classes.root}>
-        <Box className={classes.content}>
-          <Typography variant="h1">
-            {type === "login" ? "Login" : "Register"}
-          </Typography>
-
-          {type === "login" ? (
-            <div style={{ display: "grid", gap: "17px" }}>
-              <form>
-                <OCTextfield
-                  name="username"
-                  value={loginTF?.username}
-                  onChange={(e) => handleChange(e)}
-                  label={"Username"}
-                  fullWidth
-                  inputProps={{
-                    style: { textTransform: "lowercase" },
-                  }}
-                />
-                <OCTextfield
-                  name="password"
-                  type="password"
-                  value={loginTF?.password}
-                  onChange={(e) => handleChange(e)}
-                  label={"Password"}
-                  fullWidth
-                />
-              </form>
-            </div>
-          ) : (
-            // <Box display={{xs:"flexbox", sm:"grid"}}>
-            <form>
-              <Box display="flex" flexDirection="column" gap="12px">
-                <div style={{ display: "flex", gap: "17px" }}>
-                  <OCTextfield
-                    name="username"
-                    value={registerTF?.username}
-                    onChange={(e) => handleChange(e)}
-                    label={"Username"}
-                    inputProps={{
-                      style: { textTransform: "lowercase" },
-                    }}
-                  />
-                  <Box display={{ xs: "none", sm: "block" }} width="90%"></Box>
-                </div>
-
-                <Box
-                  display="flex"
-                  flexDirection={{ xs: "column", sm: "row" }}
-                  gap={{ xs: "12px", sm: "17px" }}
-                >
-                  <OCTextfield
-                    name="firstname"
-                    value={registerTF?.name.firstname}
-                    onChange={(e) => handleChange(e)}
-                    label={"Firstname"}
-                  />
-                  <OCTextfield
-                    name="lastname"
-                    value={registerTF?.name.lastname}
-                    onChange={(e) => handleChange(e)}
-                    label={"Lastname"}
-                  />
-                </Box>
-                <Box
-                  display="flex"
-                  flexDirection={{ xs: "column", sm: "row" }}
-                  gap={{ xs: "12px", sm: "17px" }}
-                >
-                  <OCTextfield
-                    name="password"
-                    type="password"
-                    value={registerTF?.password}
-                    onChange={(e) => handleChange(e)}
-                    label={"Password"}
-                  />
-                  <OCTextfield
-                    type="password"
-                    name="cfpassword"
-                    value={cfPassword}
-                    onChange={(e) => handleChange(e)}
-                    label={"Confirm Password"}
-                    error={isPwError}
-                    helperText={isPwError && "Password doesn't match!"}
-                  />
-                </Box>
-                <OCTextfield
-                  name="email"
-                  value={registerTF?.email}
-                  onChange={(e) => handleChange(e)}
-                  label={"E-mail"}
-                />
-                <OCTextfield
-                  name="optional_contact"
-                  value={registerTF?.optional_contact}
-                  onChange={(e) => handleChange(e)}
-                  label={"Contact (optional)"}
-                />
-              </Box>
-            </form>
-          )}
-
-          <Box
-            flexDirection={{ xs: "column", sm: "row" }}
-            sx={{
-              display: "flex",
-              gap: "26px",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <OCButton
-              sx={{ width: "190px" }}
-              label={"submit"}
-              disabled={isDisableSubmit()}
-              onClick={onTappedLogin}
-            />
-            <Link onClick={onClick} sx={{ "&:hover": { cursor: "pointer" } }}>
-              {type === "login" ? "Register" : "back to Login"}
-            </Link>
-          </Box>
-        </Box>
-      </Box>
-    );
+    } else {
+      dispatch(updateUserEmail(registerTF?.username));
+      try {
+        await signUp({
+          ...registerTF,
+          optional_contact: registerTF.optional_contact
+            ? registerTF.optional_contact!
+            : " ",
+        });
+        navigate("/otp");
+        console.log("[onTappedLogin] regis");
+      } catch (err) {
+        if (err) {
+          console.log("error regis", err);
+        }
+      }
+    }
   };
-  export default memo(AuthCard);
+
+  return (
+    <Box className={classes.root}>
+      <Box className={classes.content}>
+        {/* <form onSubmit={onTappedLogin}> */}
+        <Typography variant="h1">
+          {type === "login" ? "Login" : "Register"}
+        </Typography>
+
+        {type === "login" ? (
+          <div style={{ display: "grid", gap: "17px" }}>
+            {/* <form onSubmit={onTappedLogin}> */}
+            <OCTextfield
+              name="username"
+              value={loginTF?.username}
+              onChange={(e) => handleChange(e)}
+              label={"Username"}
+              fullWidth
+              inputProps={{
+                style: { textTransform: "lowercase" },
+              }}
+            />
+            <OCTextfield
+              name="password"
+              type="password"
+              value={loginTF?.password}
+              onChange={(e) => handleChange(e)}
+              label={"Password"}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onTappedLogin()
+                }
+              }}
+              fullWidth
+            />
+            {/* </form> */}
+          </div>
+        ) : (
+          // <Box display={{xs:"flexbox", sm:"grid"}}>
+          // <form onSubmit={onTappedLogin}>
+          <Box display="flex" flexDirection="column" gap="12px">
+            <div style={{ display: "flex", gap: "17px" }}>
+              <OCTextfield
+                name="username"
+                value={registerTF?.username}
+                onChange={(e) => handleChange(e)}
+                label={"Username"}
+                inputProps={{
+                  style: { textTransform: "lowercase" },
+                }}
+              />
+              <Box display={{ xs: "none", sm: "block" }} width="90%"></Box>
+            </div>
+
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column", sm: "row" }}
+              gap={{ xs: "12px", sm: "17px" }}
+            >
+              <OCTextfield
+                name="firstname"
+                value={registerTF?.name.firstname}
+                onChange={(e) => handleChange(e)}
+                label={"Firstname"}
+              />
+              <OCTextfield
+                name="lastname"
+                value={registerTF?.name.lastname}
+                onChange={(e) => handleChange(e)}
+                label={"Lastname"}
+              />
+            </Box>
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column", sm: "row" }}
+              gap={{ xs: "12px", sm: "17px" }}
+            >
+              <OCTextfield
+                name="password"
+                type="password"
+                value={registerTF?.password}
+                onChange={(e) => handleChange(e)}
+                label={"Password"}
+              />
+              <OCTextfield
+                type="password"
+                name="cfpassword"
+                value={cfPassword}
+                onChange={(e) => handleChange(e)}
+                label={"Confirm Password"}
+                error={isPwError}
+                helperText={isPwError && "Password doesn't match!"}
+              />
+            </Box>
+            <OCTextfield
+              name="email"
+              value={registerTF?.email}
+              onChange={(e) => handleChange(e)}
+              label={"E-mail"}
+            />
+            <OCTextfield
+              name="optional_contact"
+              value={registerTF?.optional_contact}
+              onChange={(e) => handleChange(e)}
+              label={"Contact (optional)"}
+            />
+          </Box>
+          // </form>
+        )}
+
+        <Box
+          flexDirection={{ xs: "column", sm: "row" }}
+          sx={{
+            display: "flex",
+            gap: "26px",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <OCButton
+            sx={{ width: "190px" }}
+            // type="submit"
+            label={"submit"}
+            disabled={isDisableSubmit()}
+            onClick={onTappedLogin}
+          />
+          <Link onClick={onClick} sx={{ "&:hover": { cursor: "pointer" } }}>
+            {type === "login" ? "Register" : "back to Login"}
+          </Link>
+        </Box>
+        {/* </form> */}
+      </Box>
+    </Box>
+  );
+};
+export default memo(AuthCard);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: "0 40px",
+    margin: "0 40px",
+    position: "relative",
+    borderRadius: "35px",
+    width: "80%",
+    maxWidth: "400px",
+    height: "650px",
+    display: "flex",
+    justifyContent: "center",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    backgroundColor: "white",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 20px",
+      margin: "10px 40px",
+      height: "auto",
+    },
+  },
+  content: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: "40px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "80px 0",
+    },
+  },
+}));

@@ -21,6 +21,7 @@ export const server = {
 export const api_auth = {
   LOGIN_URL: `/loginSession`,
   REGISTER_URL: `/register`,
+  JWT_VERIFY: `/`
 }
 
 export const api_class = {
@@ -42,6 +43,7 @@ export const api_class = {
   PUBLISH: `/post/publish`,
   COMMENT_POST: `/post/comment`,
   GET_POST: `/post/get`,
+  POLL_VOTE: `/post/poll/vote`
 }
 
 export const api_file = {

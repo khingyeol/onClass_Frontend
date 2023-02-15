@@ -17,17 +17,19 @@ import { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import dummyPic from "../assets/image/dummypic.png";
 import NavAddBtn from "../components/Main/Navigation/NavAddBtn";
-import { useNavigate } from "react-router-dom";
 import { logout } from "../services/auth/api_auth";
-import { useDispatch } from "react-redux";
-import { updateAuthentication } from "../store/authentication/action";
+import { useDispatch, useSelector } from "react-redux";
+import { AllStageType, updateCurrentStage } from "../store/stage/action";
+import { useNavigate } from "react-router-dom";
+import { getUserData } from "../store/userdata/selector";
 
 const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { handleDrawer } = props;
   const [menuUserProfile, setMenuUserProfile] = useState<Element | null>(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userData = useSelector(getUserData);
 
   const handleUserProfile = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -50,7 +52,10 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
           boxShadow: "none",
           backgroundColor: { xs: onClassColorTheme.white, sm: "transparent" },
           paddingTop: { xs: 0, sm: 4 },
-          // background: { xs: "white", sm: "-webkit-linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))"}
+          background: {
+            xs: "white",
+            sm: "-webkit-linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+          },
         }}
       >
         <Toolbar>
@@ -60,6 +65,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
           </Box>
 
           {/* AppBar Logo */}
+          {/* <Link > */}
           <Box
             sx={{
               flexGrow: 1,
@@ -67,14 +73,16 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
               display: { xs: "flex", sm: "block" },
               paddingLeft: { sm: "20px" },
             }}
+            onClick={() => navigate("/home")}
           >
             <img
-              onClick={() => navigate("/")}
+              // onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               src={AppLogo}
               style={{ height: isDesktop ? 31 : 20, cursor: "pointer" }}
               alt="app-logo"
             />
           </Box>
+          {/* </Link> */}
 
           {/* AppBar Add btn */}
           {isDesktop ? <NavAddBtn /> : null}
@@ -90,7 +98,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
                 border: "1px solid #707070",
               }}
               alt="profile-image"
-              src={dummyPic}
+              src={userData.profile_pic}
             />
           </IconButton>
           <Menu

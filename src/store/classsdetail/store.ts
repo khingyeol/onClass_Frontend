@@ -1,15 +1,31 @@
 import { Reducer } from 'react';
-import { ClassDetail, ClassDetailActionType, ClassDetailAction } from './action';
+import { GetClassResponseData } from '../../services/types/getClassResponse';
+import { ClassDetailActionType, ClassDetailAction } from './action';
 
-const initialState: ClassDetail = {};
+const initialState: GetClassResponseData = {
+    class_code: '',
+    class_name: '',
+    class_description: '',
+    class_section: '',
+    class_room: '',
+    class_subject: '',
+    teacher: [],
+    student: [],
+    class_assignment: [],
+    class_post: [],
+    class_exam: [],
+    nickname: [],
+    role: ''
+};
 
-export const classDetailReducer: Reducer<ClassDetail, ClassDetailAction> = (
+export const classDetailReducer: Reducer<GetClassResponseData, ClassDetailAction> = (
     state = initialState,
     action,
-): ClassDetail => {
+): GetClassResponseData => {
     switch (action.type) {
-        case ClassDetailActionType.UpdateClassId: {
-            return { ...state, class_code: action.payload.class_code };
+      // case ClassDetailActionType
+        case ClassDetailActionType.UpdateClassDetail: {
+            return { ...action.payload };
         }
         default: {
             return state;

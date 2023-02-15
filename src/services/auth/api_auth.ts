@@ -3,7 +3,10 @@ import httpClient from "../httpClient";
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import UserPool from "../../cognito/UserPool";
 import { updateAuthentication } from "../../store/authentication/action";
-import { store } from "../../store";
+import { clearStore, store } from "../../store";
+import { useDispatch } from "react-redux";
+import { displayDialog, hideDialog } from "../../store/dialog/action";
+import { updateUserData } from "../../store/userdata/action";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -65,8 +68,16 @@ export const register = async (values: onClassRegisterModel) => {
     [],
     async (err, result) => {
       if (err) {
-        //err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-        alert(err.message || JSON.stringify(err));
+        const dispatch = useDispatch();
+        dispatch(displayDialog({
+          id: 'UserPoolSignUp',
+          isShow: true,
+          title: "Sign Up",
+            // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
+          message: err.message || JSON.stringify(err),
+          primaryLabel: 'Close',
+          onPrimaryAction: () => { dispatch(hideDialog()) },
+        }))  
         return;
       }
       var cognitoUser = result?.user;
@@ -100,6 +111,7 @@ export const logout = () => {
   store.dispatch(updateAuthentication(false));
   window.localStorage.clear();
   localStorage.removeItem(server.TOKEN_KEY);
+  store.dispatch(clearStore());
   window.location.reload();
 };
 
@@ -121,16 +133,19 @@ export async function signIn(username: string, password: string) {
         localStorage.setItem(server.TOKEN_KEY, token);
         const res = await httpClient.get(server.AUTH_URL + api_auth.LOGIN_URL);
         if (res.data.result === "OK") {
-          console.log("[Login] Success", res);
-          window.location.reload();
-          resolve(result);
+          console.log("[Login] Success", res.data.data);
+          store.dispatch(updateUserData(res.data.data));
+          store.dispatch(updateAuthentication(true));
+          resolve(res.data);
         } else {
           console.log("[Login] fail", res);
-          console.log("Login fail");
+          localStorage.removeItem(server.TOKEN_KEY);
           reject(`Login fail ${res.statusText}`);
         }
       },
       onFailure: (err) => {
+        console.log("Login fail 2");
+        localStorage.removeItem(server.TOKEN_KEY);
         reject(err);
       },
     });
@@ -171,8 +186,17 @@ export async function signUp(values: onClassRegisterModel) {
       async (err, result) => {
         if (err) {
           //err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-          alert(err.message || JSON.stringify(err));
-          reject(err);
+          const dispatch = useDispatch();
+          dispatch(displayDialog({
+            id: 'UserPoolSignUp',
+            isShow: true,
+            title: "OTP",
+              // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
+            message: err.message || JSON.stringify(err),
+            primaryLabel: 'Close',
+            onPrimaryAction: () => { dispatch(hideDialog()) },
+          }))  
+            reject(err);
         } else {
           var cognitoUser = result?.user;
           console.log("user name is " + cognitoUser?.getUsername());
@@ -237,16 +261,10 @@ export const login = async (values: cognitoUserDataModel) => {
       console.log("cognitoUser onFailure", err.code);
 
       if (err.code === "UserNotConfirmedException") {
-        // console.log("EIEI");
         cognitoUser.resendConfirmationCode((error) => {
           if (error) throw error;
         });
-        // alert("Confirm resendConfirmationCode");
-        // navigate("/otp");
-        // return { code: "102" }
-        //Navigate to sendcode verify account
       } else {
-        alert(err.message || JSON.stringify(err));
         return { code: "404", auth: false, data: err.message };
       }
     },

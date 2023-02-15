@@ -1,41 +1,115 @@
-import React, { useEffect, useMemo, useState } from "react";
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Playground from "./Playground";
-import { AppThemes } from "./common/theme/onClassTheme";
-import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
-import AuthPage from "./screen/Auth/AuthPage";
 import HomePage from "./screen/Home/HomePage";
 import HomeLayout from "./layout/HomeLayout";
 import ClassFeed from "./screen/Classroom/ClassFeed";
 import HomeAssignments from "./screen/Home/HomeAssignments";
 import ClassLayout from "./layout/ClassLayout";
+import { useSelector } from "react-redux";
+import { getCurrentStage } from "./store/stage/selector";
+import { AllStageType } from "./store/stage/action";
+import PostLayout from "./layout/PostLayout";
+import Content from "./screen/Post/Content";
+import { useParams } from "react-router-dom";
+import ClassAssignments from "./screen/Classroom/ClassAssignments";
+import AssignmentCreate from "./screen/Classroom/AssignmentCreate";
 
 function AppRoutes() {
+  const currentState = useSelector(getCurrentStage);
+  const { classid } = useParams();
 
-    return (
-        <BrowserRouter>
-        {/* Using Redux Store to manage State ex; Home Class Exam */}
-          <Routes>
-            <Route path="/" element={<HomeLayout />}>
+  // const checkState = () => {
+  //   switch (currentState) {
+  //     default:
+  //     case AllStageType.HOME: {
+  //       return (
+  //         <Route element={<HomeLayout />}>
+  //           <Route path="/" element={<Navigate to="/home" />} />
+  //           <Route path="*" element={<Navigate to="/home" />} />
+  //           <Route path="/home" element={<HomePage />} />
+  //           <Route path="/assignments" element={<HomeAssignments />} />
+  //         </Route>
+  //       );
+  //     }
 
-            <Route path="/" element={<Navigate to="/home" />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/assignments" element={<HomeAssignments />} />
-            </Route>
+  //     case AllStageType.CLASS: {
+  //       return (
+  //         <Route element={<ClassLayout />}>
+  //           <Route path="/:classid" element={<ClassFeed />} />
+  //           <Route path="/:classid/assignments" element={<ClassAssignments />} />
+  //           <Route path="/:classid/exam" element={<> </>} />
+  //         </Route>
+  //       );
+  //     }
 
-            <Route path="/:classid" element={<ClassLayout />}>
-                <Route path="/:classid" element={<ClassFeed />} />
-                <Route path="/:classid/assignments" element={<HomeAssignments />} />
-                <Route path="/:classid/exam" element={<> </>} />
-           </Route>
+  //     case AllStageType.POST: {
+  //       return (
+  //         <>
+  //           <Route element={<PostLayout />}>
+  //             <Route path="/:classid/post/:id" element={<Content />}></Route>
+  //           </Route>
+  //         </>
+  //       );
+  //     }
 
-            <Route path="/playground" element={<Playground />} />
-          </Routes>
-        {/* </HomeLayout> */}
-        </BrowserRouter>
-      );
-  }
+  //     case AllStageType.EXAM: {
+  //       return (
+  //         <>
+  //           <Route path="/:classid/exam" element={<> EXAM LAYOUT </>}>
+  //             <Route
+  //               path="/:classid/exam"
+  //               element={<> EXAM CONTENT </>}
+  //             ></Route>
+  //           </Route>
+  //         </>
+  //       );
+  //     }
+  //   }
+  // };
 
-  export default AppRoutes;
+  return (
+    <Router>
+      {/* Using Redux Store to manage State ex; Home Class Exam */}
+      <Routes>
+        {/* {checkState()} */}
+        <Route path="/" element={<HomeLayout />}>
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="*" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/assignments" element={<HomeAssignments />} />
+        </Route>
+
+        <Route path="/:classid" element={<ClassLayout />}>
+          <Route path="/:classid" element={<ClassFeed />} />
+          <Route path="/:classid/assignments" element={<ClassAssignments />} />
+          <Route path="/:classid/exam" element={<> </>} />
+        </Route>
+
+        <Route path="/:classid/post" element={<PostLayout />}>
+            <Route path="/:classid/post/:id" element={<Content />}></Route>
+          </Route>
+
+        <Route path="/:classid/assignment" element={<PostLayout />}>
+          <Route path="/:classid/assignment/create" element={<AssignmentCreate />}></Route>
+          <Route path="/:classid/assignment/:id" element={<Content />}></Route>
+        </Route>
+
+        <Route path="/:classid/exam" element={<ClassLayout />}>
+          <Route path="/:classid/exam" element={<> EXAM CONTENT </>}></Route>
+        </Route>
+
+        <Route path="/playground" element={<Playground />} />
+        {/* <Route path="/playground" element={<NotFoundPage />} /> */}
+      </Routes>
+    </Router>
+  );
+}
+
+export default AppRoutes;

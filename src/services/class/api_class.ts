@@ -1,30 +1,53 @@
-import { AxiosResponse } from 'axios';
-import { getAllClassResponse } from '../../screen/Home/HomePage';
-import { server, api_class } from '../constants';
-import httpClient from '../httpClient';
+import { AxiosResponse } from "axios";
+import { server, api_class } from "../constants";
+import httpClient from "../httpClient";
+import { GetAllClassResponse } from "../types/getAllClassResponse";
+import { GetAssignmentResponse } from "../types/getAssignmentResponse";
+import { GetClassResponse } from "../types/getClassResponse";
+import { GetPostResponse } from "../types/getPostResponse";
+import { JoinClassRequest } from "../types/patchClassJoinRequest";
+import { CreateClassRequest } from "../types/postClassCreateRequest";
+import { PostPublishRequest } from "../types/postPostPublishRequest";
 
-export const getAllClass = async (): Promise<AxiosResponse<any>> => {
-    return await httpClient.get(server.CLASS_URL+api_class.GET_ALL);
+// class/get/all
+export const getAllClass = async (): Promise<
+  AxiosResponse<GetAllClassResponse>
+> => {
+  return await httpClient.get(server.CLASS_URL + api_class.GET_ALL);
 };
 
-export const getfromClass = async (id: string) => {
-    return await httpClient.get(server.CLASS_URL+api_class.GET+`/${id}`)
-}
+// class/get/:classid
+export const getfromClass = async (
+  id: string
+): Promise<AxiosResponse<GetClassResponse>> => {
+  const response = await httpClient.get(
+    server.CLASS_URL + api_class.GET + `/${id}`
+  );
+  return response;
+};
 
 // class/assignment/get
-// export const assignmentGet = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.ASM_GET, values);
-// }
+export const assignmentGet = async (
+  class_code: string,
+  assignment_id: string
+) => {
+  return await httpClient.post(server.CLASS_URL + api_class.ASM_GET, {
+    class_code,
+    assignment_id,
+  });
+};
 
 // // class/assignment/get/all
 export const getTodo = async (class_code: string) => {
-    return await httpClient.post(server.CLASS_URL+api_class.ASM_ALL, class_code);
-}
+  return await httpClient.post(server.CLASS_URL + api_class.ASM_ALL, {
+    class_code,
+  });
+};
 
-// // class/assignment/get/all/notification 
-// export const assignmentAllClass = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.ASM_ALL_CLASS, values);
-// }
+// // class/assignment/get/all/notification
+export const assignmentAllClass = async () => {
+  return await httpClient.get(server.CLASS_URL + api_class.ASM_ALL_CLASS);
+};
 
 // // class/assignment/create
 // export const assignmentCreate = async (values) => {
@@ -42,9 +65,17 @@ export const getTodo = async (class_code: string) => {
 // }
 
 // // class/assignment/comment
-// export const assignmentComment = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.ASM_COMMENT, values);
-// }
+export const assignmentComment = async (
+  class_code: string,
+  id: string,
+  comment: string
+) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.ASM_COMMENT, {
+    class_code,
+    id,
+    data: { content: comment },
+  });
+};
 
 // // class/nickname
 // export const setClassNickname = async (values) => {
@@ -52,20 +83,19 @@ export const getTodo = async (class_code: string) => {
 // }
 
 // // class/create
-// export const createClass = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.CREATE, values);
-// }
+export const createClass = async (body: CreateClassRequest) => {
+  return await httpClient.post(server.CLASS_URL + api_class.CREATE, body);
+};
 
 // // class/join
-export const joinClass = async (class_code: string) => {
-    return await httpClient.patch(server.CLASS_URL+api_class.JOIN, {class_code});
-}
+export const joinClass = async (body: JoinClassRequest) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.JOIN, body);
+};
 
 // // class/leave
 // export const leaveClass = async (values) => {
 //     return await httpClient.patch(server.CLASS_URL+api_class.LEAVE, values);
 // }
-
 
 // // class/edit/details
 // export const editClassDetail = async (values) => {
@@ -78,16 +108,42 @@ export const joinClass = async (class_code: string) => {
 // }
 
 // // class/post/publish
-// export const postPublish = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.PUBLISH, values);
-// }
+export const postPublish = async (body: PostPublishRequest) => {
+  return await httpClient.post(server.CLASS_URL + api_class.PUBLISH, body);
+};
 
 // // class/post/comment
-// export const postComment = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.COMMENT_POST, values);
-// }
+export const postComment = async (
+  class_code: string,
+  id: string,
+  comment: string
+) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.COMMENT_POST, {
+    class_code,
+    id,
+    data: { content: comment },
+  });
+};
+
+export const postPollVote = async (
+  class_code: string,
+  post_id: string,
+  choice_name: string
+) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.POLL_VOTE, {
+    class_code,
+    post_id,
+    choice_name,
+  });
+};
 
 // // class/post/get
-// export const postGet = async (values) => {
-//     return await httpClient.post(server.CLASS_URL+api_class.GET_POST, values);
-// }
+export const postGet = async (
+  class_code: string,
+  post_id: string
+): Promise<AxiosResponse<GetPostResponse>> => {
+  return await httpClient.post(server.CLASS_URL + api_class.GET_POST, {
+    class_code,
+    post_id,
+  });
+};

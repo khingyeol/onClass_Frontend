@@ -1,31 +1,39 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { FC, memo, useEffect, useMemo } from "react";
-import { useParams } from "react-router";
+import React, { FC, memo, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
-import { alpha, Theme, useTheme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import ClassDetail from "../components/Class/ClassDetail";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
-import ClassFeed from "../screen/Classroom/ClassFeed";
-import HomeAssignments from "../screen/Home/HomeAssignments";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  navBox: {
-    display: "flex",
-  },
-  mainComponent: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "8px",
-    margin: "6px 14px",
-    flexGrow: 1,
-  },
-}));
+import { getfromClass } from "../services/class/api_class";
+import { updateClassDetail } from "../store/classsdetail/action";
+import { useDispatch, useSelector } from "react-redux";
+import { getClassDetail } from "../store/classsdetail/selector";
+import { GetClassResponseData } from "../services/types/getClassResponse";
 
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { classid } = useParams();
+  const classDetail = useSelector(getClassDetail);
+
+  const fetchGetFromClass = async (id: string) => {
+    try {
+      const res = await getfromClass(id);
+      const data: GetClassResponseData = res.data.data;
+      dispatch(updateClassDetail(data));
+    } catch (err: any) {
+      navigate("/home");
+    }
+  };
+
+  useEffect(() => {
+    console.log("classid", classid);
+    if (classid) fetchGetFromClass(classid);
+  }, []);
 
   return (
     <>
@@ -40,14 +48,23 @@ const ClassLayout: FC = (props) => {
           <Box width="100%" maxWidth="1060px">
             <Outlet />
           </Box>
-          {/* <Routes>
-            <Route path="/" element={<ClassFeed />} />
-            <Route path="/assignments" element={<HomeAssignments />} />
-          </Routes> */}
         </Box>
-        {isDesktop ? <ClassDetail /> : null}
+        {isDesktop ? <ClassDetail classDetail={classDetail} /> : null}
       </Box>
     </>
   );
 };
 export default memo(ClassLayout);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  navBox: {
+    display: "flex",
+  },
+  mainComponent: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "8px",
+    margin: "6px 14px",
+    flexGrow: 1,
+  },
+}));

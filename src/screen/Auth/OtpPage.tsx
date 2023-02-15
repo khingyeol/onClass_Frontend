@@ -4,53 +4,16 @@ import OtpInput from "react18-input-otp";
 import React, { FC, useEffect, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCButton from "../../common/OCButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserEmail } from "../../store/userdata/selector";
 import { confirmOTP } from "../../services/auth/api_auth";
 import { useNavigate } from "react-router-dom";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  box: {
-    padding: "0 40px",
-    margin: "0 40px",
-    position: "relative",
-    borderRadius: "35px",
-    width: "80%",
-    maxWidth: "400px",
-    // height: "650px",
-    display: "flex",
-    justifyContent: "center",
-    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 20px",
-      margin: "10px 40px",
-      height: "auto",
-    },
-  },
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    // justifyContent: "center",
-    padding: "50px 0",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "40px",
-    [theme.breakpoints.down("sm")]: {
-      padding: "80px 0",
-    },
-  },
-}));
+import { displayDialog, hideDialog } from "../../store/dialog/action";
 
 const OtpPage: FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const email = useSelector(getUserEmail);
   const [code, setCode] = useState<any>("");
   const [isError, setIsError] = useState(false);
@@ -69,11 +32,25 @@ const OtpPage: FC = () => {
   const onSubmit = async () => {
     try {
       await confirmOTP(email!, code);
-      alert("confirm otp!");
+      dispatch(displayDialog({
+        id: 'confirmOTP',
+        isShow: true,
+        title: "Login",
+        message: "Already confirm OTP!",
+        primaryLabel: 'Close',
+        onPrimaryAction: () => { dispatch(hideDialog()) },
+      }))
       navigate("/home");
     } catch (err: any) {
       console.log("otp error");
-      alert(err.message);
+      dispatch(displayDialog({
+        id: 'confirmOTP',
+        isShow: true,
+        title: "OTP",
+        message: err.message,
+        primaryLabel: 'Close',
+        onPrimaryAction: () => { dispatch(hideDialog()) },
+      }))
     }
     console.log("on submit w/ code", code);
   };
@@ -117,7 +94,7 @@ const OtpPage: FC = () => {
               }}
               hasErrored={isError}
               numInputs={6}
-              // onSubmit
+            // onSubmit
             />
             <div style={{ textAlign: "center" }}>
               <Typography fontSize="18px" color={onClassColorTheme.grey}>
@@ -141,3 +118,42 @@ const OtpPage: FC = () => {
 };
 
 export default OtpPage;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  box: {
+    padding: "0 40px",
+    margin: "0 40px",
+    position: "relative",
+    borderRadius: "35px",
+    width: "80%",
+    maxWidth: "400px",
+    // height: "650px",
+    display: "flex",
+    justifyContent: "center",
+    boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 20px",
+      margin: "10px 40px",
+      height: "auto",
+    },
+  },
+  content: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    // justifyContent: "center",
+    padding: "50px 0",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "40px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "80px 0",
+    },
+  },
+}));

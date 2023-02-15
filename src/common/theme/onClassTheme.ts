@@ -72,6 +72,12 @@ export const AppThemes = createTheme({
                 fontSize: '16px',
             }
         },
+        body2: {
+            fontSize: '20px',
+            [defaultTheme.breakpoints.down('sm')]: {
+                fontSize: '18px',
+            }
+        },
         description: {
             fontSize: '16px',
             lineHeight: 1.5,

@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import NavListClass from "../assets/svg/icon_class.svg";
 import NavListAsm from "../assets/svg/icon_asm.svg";
 import NavInfo from "../assets/svg/icon_info.svg";
@@ -21,83 +21,26 @@ import {
   appBarHeightSm,
   appBarHeightXs,
 } from "./HomeLayout";
-import { alpha, Theme, useTheme } from "@mui/material/styles";
+import { alpha, Theme } from "@mui/material/styles";
 import Header from "./Header";
 import { makeStyles } from "@mui/styles";
-import { matchPath, Navigate, useNavigate, useParams } from "react-router-dom";
-import ClassDetail from "../components/Class/ClassDetail";
 import ChevronRight from "../assets/svg/chevron-right.svg";
 import ChevronLeft from "../assets/svg/chevron-left.svg";
 import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  drawerBox: {
-    height: "100%",
-    width: "auto",
-    marginTop: "25px",
-    position: "relative",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: appBarHeightXs,
-    },
-  },
-  drawerContent: {
-    // The Content inside (exclude the Button)
-    overflowX: "hidden",
-    overflowY: "auto",
-  },
-  laptopDrawer: {
-    width: navBarWidthSm,
-    transition: "all 0.4s ease",
-    "& .MuiDrawer-paper": {
-      transition: "all 0.4s ease",
-      width: navBarWidthSm,
-      borderTopRightRadius: "50px",
-      marginTop: `${appBarHeightSm}px`,
-      justifyContent: "flex-start",
-      overflowX: "hidden",
-      backgroundColor: onClassColorTheme.white,
-      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    },
-  },
-  laptopBox: {
-    width: navBarWidthSm,
-    padding: "10px",
-    marginTop: "30px",
-  },
-  desktopDrawer: {
-    // The whole Drawer Box one
-    transition: "all 0.4s ease",
-    "& .MuiDrawer-paper": {
-      transition: "all 0.4s ease",
-      borderTopRightRadius: "50px",
-      marginTop: `${appBarHeightSm}px`,
-      justifyContent: "flex-start",
-      overflowX: "hidden",
-      backgroundColor: onClassColorTheme.white,
-      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
-    },
-  },
-  settingBox: {
-    position: "absolute",
-    width: "100%",
-  },
-  settingItems: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "25px",
-  },
-}));
+import { useDispatch, useSelector } from "react-redux";
+import { updateCurrentStage, AllStageType } from "../store/stage/action";
+import { getClassDetail } from "../store/classsdetail/selector";
+import { useNavigate } from "react-router-dom";
 
 const Navigation: FC<{ type: "home" | "class" }> = (props) => {
-  // const Navigation: FC<{ children: any }> = (props: { children: any }) => {
   const { type } = props;
-  const theme = useTheme();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
-  const { classid } = useParams();
   const [openDesktop, setOpenDesktop] = useState(true);
-  const navigate = useNavigate();
+  const classDetail = useSelector(getClassDetail);
 
   const drawerManage = isDesktop ? openDesktop : true;
 
@@ -159,13 +102,13 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
       >
         <div className={classes.settingItems}>
           <OCIconButton
-            href="/info"
+            onClick={() => navigate("/info")}
             icon={NavInfo}
             color={onClassColorTheme.grey}
             size={"60px"}
           />
           <OCIconButton
-            href="/setting"
+            onClick={() => navigate("/setting")}
             icon={NavSetting}
             color={onClassColorTheme.grey}
             size={"60px"}
@@ -190,9 +133,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           }}
         >
           <Box display="flex" alignItems="center">
-            {/* <OCIconButton href={"/home"} icon={NavListAsm} color={onClassColorTheme.grey} size={"45px"} /> */}
             <Button
-              onClick={() => navigate("/home")}
+              onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
               sx={{
                 // width: "40px",
                 // height: "40px",
@@ -223,7 +165,9 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
               alt="chevron-right"
             />
 
-            <Typography variant="h3" paddingLeft="12px" noWrap>Cyber-Communication</Typography>
+            <Typography variant="h3" paddingLeft="12px" noWrap>
+              {classDetail.class_name}
+            </Typography>
           </Box>
 
           <NavClassMenu />
@@ -252,21 +196,13 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           <NavList title={"ชั้นเรียน"} icon={NavListClass} path={"/home"}>
             <NavCallClass />
           </NavList>
-          <NavList
-            title="งานมอบหมาย"
-            icon={NavListAsm}
-            path={"/assignments"}
-          />
+          <NavList title="งานมอบหมาย" icon={NavListAsm} path={"/assignments"} />
         </Box>
 
         <SettingsBar />
       </Box>
     </>
   );
-
-  useEffect(() => {
-    console.log(classid);
-  });
 
   return (
     <>
@@ -308,3 +244,61 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
 };
 
 export default Navigation;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  drawerBox: {
+    height: "100%",
+    width: "auto",
+    marginTop: "25px",
+    position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: appBarHeightXs,
+    },
+  },
+  drawerContent: {
+    // The Content inside (exclude the Button)
+    overflowX: "hidden",
+    overflowY: "auto",
+  },
+  laptopDrawer: {
+    width: navBarWidthSm,
+    transition: "all 0.4s ease",
+    "& .MuiDrawer-paper": {
+      transition: "all 0.4s ease",
+      width: navBarWidthSm,
+      borderTopRightRadius: "50px",
+      marginTop: `${appBarHeightSm}px`,
+      justifyContent: "flex-start",
+      overflowX: "hidden",
+      backgroundColor: onClassColorTheme.white,
+      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    },
+  },
+  laptopBox: {
+    width: navBarWidthSm,
+    padding: "10px",
+    marginTop: "30px",
+  },
+  desktopDrawer: {
+    // The whole Drawer Box one
+    transition: "all 0.4s ease",
+    "& .MuiDrawer-paper": {
+      transition: "all 0.4s ease",
+      borderTopRightRadius: "50px",
+      marginTop: `${appBarHeightSm}px`,
+      justifyContent: "flex-start",
+      overflowX: "hidden",
+      backgroundColor: onClassColorTheme.white,
+      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+    },
+  },
+  settingBox: {
+    position: "absolute",
+    width: "100%",
+  },
+  settingItems: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "25px",
+  },
+}));
