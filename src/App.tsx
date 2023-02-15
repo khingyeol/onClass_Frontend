@@ -14,6 +14,7 @@ import { persistor } from "./store";
 import OtpPage from "./screen/Auth/OtpPage";
 import { useSelector } from "react-redux";
 import { getIsAuthenticate } from "./store/authentication/selector";
+import OCDialog from "./common/OCDialog";
 
 function App() {
   const isLogin: boolean = useSelector(getIsAuthenticate);
@@ -33,6 +34,7 @@ function App() {
             </Routes>
           </Router>
         )}
+        <OCDialog />
       </PersistGate>
     </MuiThemeProvider>
   );

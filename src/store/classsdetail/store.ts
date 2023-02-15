@@ -2,18 +2,6 @@ import { Reducer } from 'react';
 import { GetClassResponseData } from '../../services/types/getClassResponse';
 import { ClassDetailActionType, ClassDetailAction } from './action';
 
-// export interface ClassDetail {
-//     class_code?: string;
-//     class_name?: string;
-//     class_section?: string;
-//     teacher?: {
-//       profile_pic?: string;
-//       name: {
-//         firstname: string;
-//         lastname: string;
-//       };
-//     };
-//   }
 const initialState: GetClassResponseData = {
   class_code: '',
   class_name: '',

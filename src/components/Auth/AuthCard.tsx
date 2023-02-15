@@ -1,4 +1,4 @@
-import { Link, Theme, Typography } from "@mui/material";
+import { Dialog, Link, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { FC, memo, useState } from "react";
 import { makeStyles } from "@mui/styles";
@@ -10,8 +10,11 @@ import {
   onClassRegisterModel,
 } from "../../services/auth/api_auth";
 import { updateUserEmail } from "../../store/userdata/action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { displayDialog, hideDialog } from "../../store/dialog/action";
+import OCDialog from "../../common/OCDialog";
+import { getDialogState } from "../../store/dialog/selector";
 
 interface AuthCardProps {
   type: "login" | "register";
@@ -38,6 +41,8 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   // const [registerTF, setRegisterTF] = useState({});
 
   const { type, onClick } = props;
+  const dialogState = useSelector(getDialogState)
+  const { isShow = false } = dialogState
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -124,7 +129,15 @@ const AuthCard: FC<AuthCardProps> = (props) => {
           console.log("[onTappedLogin] need to confirm code");
           navigate("/otp");
         } else {
-          alert(err.message);
+          dispatch(displayDialog({
+            id: 'aaa',
+            isShow: true,
+            title: "ERROR",
+            message: err.message,
+            primaryLabel: 'Close',
+            onPrimaryAction: () => {dispatch(hideDialog())},
+            secondaryLabel: 'Close but secondary'
+          }))
         }
       }
     } else {
