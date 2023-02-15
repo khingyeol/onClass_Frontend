@@ -18,9 +18,10 @@ import Toolbar from "@mui/material/Toolbar";
 import dummyPic from "../assets/image/dummypic.png";
 import NavAddBtn from "../components/Main/Navigation/NavAddBtn";
 import { logout } from "../services/auth/api_auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AllStageType, updateCurrentStage } from "../store/stage/action";
 import { useNavigate } from "react-router-dom";
+import { getUserData } from "../store/userdata/selector";
 
 const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -28,6 +29,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const [menuUserProfile, setMenuUserProfile] = useState<Element | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userData = useSelector(getUserData);
 
   const handleUserProfile = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -96,7 +98,7 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
                 border: "1px solid #707070",
               }}
               alt="profile-image"
-              src={dummyPic}
+              src={userData.profile_pic}
             />
           </IconButton>
           <Menu
