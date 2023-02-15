@@ -113,6 +113,11 @@ const CommentSection: FC<CommentProps> = (props) => {
             value={comment}
             onChange={(e) => handleChange(e)}
             placeholder="Comments…"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onClickSend();
+              }
+            }}
           />
           <Box>
             <OCIconButton
