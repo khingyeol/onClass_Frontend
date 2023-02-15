@@ -15,7 +15,7 @@ import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import dummyPic from "../../assets/image/dummypic.png";
 import IconSend from "../../assets/svg/icon_send.svg";
 import IconClose from "../../assets/svg/icon_close.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 import OCIconButton from "../../common/OCIconButton";
 import { OCPollBuilderFunction } from "../../common/OCPollBuilder";
@@ -23,13 +23,16 @@ import OCPollBuilder from "../../common/OCPollBuilder";
 import IconPoll from "../../assets/svg/icon_poll.svg";
 import IconFile from "../../assets/svg/icon_clip.svg";
 import { useParams } from "react-router-dom";
-import { postPublish } from "../../services/class/api_class";
+import { getfromClass, postPublish } from "../../services/class/api_class";
 import OCTextField from "../../common/OCTextfield";
+import { GetClassResponseData } from "../../services/types/getClassResponse";
+import { updateClassDetail } from "../../store/classsdetail/action";
 
 const PostBox: FC = () => {
   // const classid = useSelector(getClassId);
   const { classid } = useParams();
   const classes = useStyles();
+  const dispatch = useDispatch();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [openPostBox, setOpenPostBox] = useState(false);
   const [content, setContent] = useState("");
@@ -101,8 +104,20 @@ const PostBox: FC = () => {
       },
     };
     postPublish(reqBody).then(() => {
-      window.location.reload();
+      // window.location.reload();
+      setContent('');
+      if (classid) fetchGetFromClass(classid);
     });
+  };
+
+  const fetchGetFromClass = async (id: string) => {
+    try {
+      const res = await getfromClass(id);
+      const data: GetClassResponseData = res.data.data;
+      dispatch(updateClassDetail(data));
+    } catch (err: any) {
+      // navigate("/home");
+    }
   };
 
   const CloseButton = () => {
