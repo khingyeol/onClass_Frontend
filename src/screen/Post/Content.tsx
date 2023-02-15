@@ -16,7 +16,7 @@ import { getClassId } from "../../store/classsdetail/selector";
 import { assignmentGet, postGet } from "../../services/class/api_class";
 import { getSelectedId, getSelectedType } from "../../store/stage/selector";
 import IconASM from "../../assets/svg/icon_asm.svg";
-import { formatDate } from "../../utils/formatDate";
+import { formatDate, formatDateTime } from "../../utils/formatDate";
 import CommentSection from "../../components/Post/Comment";
 import NotFoundPage from "../common/NotFoundPage";
 import { AssignmentModel, PostModel } from "../../services/types/ClassModel";
@@ -112,7 +112,7 @@ const Content: FC = () => {
                   </Typography>
 
                   <Typography variant="body1" color={onClassColorTheme.grey}>
-                    {`${formatDate(
+                    {`${formatDateTime(
                       asmContent?.assignment_start_date ??
                         postContent?.created ??
                         ""

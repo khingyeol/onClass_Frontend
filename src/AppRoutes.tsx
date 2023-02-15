@@ -20,6 +20,8 @@ import Content from "./screen/Post/Content";
 import { useParams } from "react-router-dom";
 import ClassAssignments from "./screen/Classroom/ClassAssignments";
 import AssignmentCreate from "./screen/Classroom/AssignmentCreate";
+import ClassExam from "./screen/Classroom/ClassExam";
+import ExamCreate from "./screen/Classroom/ExamCreate";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
@@ -102,7 +104,8 @@ function AppRoutes() {
         </Route>
 
         <Route path="/:classid/exam" element={<ClassLayout />}>
-          <Route path="/:classid/exam" element={<> EXAM CONTENT </>}></Route>
+          <Route path="/:classid/exam/create" element={<ExamCreate />}></Route>
+          <Route path="/:classid/exam" element={<ClassExam />}></Route>
         </Route>
 
         <Route path="/playground" element={<Playground />} />

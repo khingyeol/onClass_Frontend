@@ -39,7 +39,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
         <Box display="grid" paddingX="1.2rem" gap="15px">
           <div style={{ wordBreak: "break-all" }}>
             <Typography variant="h4" display="inline">
-              class code:
+              class code:{' '}
             </Typography>
             {classDetail?.class_code}
           </div>
