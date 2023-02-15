@@ -4,9 +4,9 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import UserPool from "../../cognito/UserPool";
 import { updateAuthentication } from "../../store/authentication/action";
 import { clearStore, store } from "../../store";
-import OCDialog from "../../common/OCDialog";
 import { useDispatch } from "react-redux";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
+import { updateUserData } from "../../store/userdata/action";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -133,9 +133,10 @@ export async function signIn(username: string, password: string) {
         localStorage.setItem(server.TOKEN_KEY, token);
         const res = await httpClient.get(server.AUTH_URL + api_auth.LOGIN_URL);
         if (res.data.result === "OK") {
-          console.log("[Login] Success", res);
+          console.log("[Login] Success", res.data.data);
+          store.dispatch(updateUserData(res.data.data));
           store.dispatch(updateAuthentication(true));
-          resolve(result);
+          resolve(res.data);
         } else {
           console.log("[Login] fail", res);
           localStorage.removeItem(server.TOKEN_KEY);

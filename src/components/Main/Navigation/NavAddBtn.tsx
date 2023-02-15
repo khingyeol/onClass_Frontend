@@ -1,17 +1,11 @@
-import AddButton from "../../../assets/svg/icon_plus.svg";
 import {
-  Box,
-  Button,
-  Dialog,
   Menu,
   MenuItem,
-  Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { alpha, Theme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
 import JoinClassDialog from "./JoinClassDialog";
 import CreateClassDialog from "./CreateClassDialog";
 import OCButton from "../../../common/OCButton";

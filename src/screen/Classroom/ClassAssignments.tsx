@@ -3,19 +3,25 @@ import { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import OCButton from "../../common/OCButton";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import AsmCard from "../../components/Home/AsmCard";
 import { getTodo } from "../../services/class/api_class";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
 import { getClassDetail } from "../../store/classsdetail/selector";
 import { formatShortDate } from "../../utils/formatDate";
+import { ReactComponent as AddButton2 } from "../../assets/svg/icon_plus.svg";
+import { makeStyles } from "@mui/styles";
 
 const ClassAssignments: FC = () => {
+  const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [content, setContent] = useState<getAllAssignmentsResponse[]>([]);
   const { classid } = useParams();
   const navigate = useNavigate();
-  const {role} = useSelector(getClassDetail);
+  const { role } = useSelector(getClassDetail);
+
+  const isTeacher = () => { if (role === 'teacher') { return true } return false };
 
   const fetchGetAllAsm = async () => {
     try {
@@ -35,7 +41,7 @@ const ClassAssignments: FC = () => {
         return onClassColorTheme.grey;
       case "เลยกำหนด":
       case "ส่งช้า":
-        return onClassColorTheme.error;  
+        return onClassColorTheme.error;
     }
   }
 
@@ -50,14 +56,33 @@ const ClassAssignments: FC = () => {
   return (
     <>
       <Box width="100%" maxWidth="1060px">
-        <Box
-          paddingY={{ xs: 2, sm: 3 }}
-          display="flex"
-          justifyContent="space-between"
-        >
+        <Box className={classes.headBox}>
           <Typography variant="h2">งานมอบหมาย</Typography>
+          {isTeacher() ? (
+            <OCButton
+              label={isDesktop ? "Create New Assignment" : ""}
+              onClick={() => navigate(`/${classid}/assignment/create`)}
+              leadingIcon={<AddButton2 />}
+              fontSize="20px"
+              cornerRadius="15px"
+              variant="black"
+              fontWeight="regular"
+              sx={{
+                width: { xs: "40px", sm: "auto" },
+                height: { xs: "40px", sm: "auto" },
+                padding: { xs: "22px 0px 22px 0px", sm: "0px 18px" }, //Vertical, Horizontal
+                gap: { xs: 0, sm: 1 },
+                borderWidth: 1,
+                borderColor: onClassColorTheme.darkGrey,
+                "&& .MuiTouchRipple-child": {
+                  backgroundColor: onClassColorTheme.darkGrey,
+                },
+              }}
+            />
+          ) : null}
         </Box>
-        <Box display="flex" flexDirection="column" gap="21px">
+        <Box className={classes.contentBox}>
+
           {content.map((item: getAllAssignmentsResponse) => (
             <AsmCard
               title={item.assignment_name}
@@ -74,3 +99,20 @@ const ClassAssignments: FC = () => {
 };
 
 export default ClassAssignments;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  headBox: {
+    padding: 3,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      padding: 2,
+    },
+  },
+  contentBox: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "21px",
+  }
+}));

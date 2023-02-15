@@ -19,6 +19,7 @@ import PostLayout from "./layout/PostLayout";
 import Content from "./screen/Post/Content";
 import { useParams } from "react-router-dom";
 import ClassAssignments from "./screen/Classroom/ClassAssignments";
+import AssignmentCreate from "./screen/Classroom/AssignmentCreate";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
@@ -96,6 +97,7 @@ function AppRoutes() {
           </Route>
 
         <Route path="/:classid/assignment" element={<PostLayout />}>
+          <Route path="/:classid/assignment/create" element={<AssignmentCreate />}></Route>
           <Route path="/:classid/assignment/:id" element={<Content />}></Route>
         </Route>
 

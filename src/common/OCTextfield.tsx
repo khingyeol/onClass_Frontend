@@ -2,15 +2,17 @@ import React, { FC, useEffect, useState } from "react";
 import { Box, TextField, TextFieldProps, Typography } from "@mui/material";
 import { onClassColorTheme } from "./theme/onClassColorTheme";
 
-interface OCTextFieldProps extends Omit<TextFieldProps, "label"> {
+interface OCTextFieldProps extends Omit<TextFieldProps, "variant"> {
   label?: string;
+  variant?: 'fill' | 'outline';
   placeholder?: string;
+  maxWidth?: string;
 }
 
 const OCTextField: FC<OCTextFieldProps> = (props) => {
-  const { label, placeholder, ...otherProps } = props;
+  const { label, variant = 'fill', placeholder, maxWidth, ...otherProps } = props;
   return (
-    <Box flex={"flex"} gap={3} width="100%">
+    <Box flex={"flex"} gap={3} width="100%" maxWidth={maxWidth}>
       <Typography
         fontSize="18px"
         fontFamily="FC-Subject"
@@ -31,18 +33,20 @@ const OCTextField: FC<OCTextFieldProps> = (props) => {
         sx={{
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: 0,
-              borderWidth: 0,
+              border: variant === 'outline' ? `1px solid rgba(139,139,139,0.3)` : 0,
+              // borderWidth: 0,
             },
           },
           "& .MuiInputBase-root": {
             borderRadius: "23px",
-            backgroundColor: onClassColorTheme.lightgrey,
+            backgroundColor: variant === 'fill' ? onClassColorTheme.lightgrey : onClassColorTheme.white,
+            // borderColor: onClassColorTheme.grey,
             "& input": {
               height: "33px",
               padding: "5px 20px",
               borderRadius: "23px",
-              backgroundColor: onClassColorTheme.lightgrey,
+              backgroundColor: variant === 'fill' ? onClassColorTheme.lightgrey : onClassColorTheme.white,
+              // borderColor: onClassColorTheme.grey,
             },
             "&.Mui-focused fieldset": {
               borderColor: onClassColorTheme.primary,
