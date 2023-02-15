@@ -41,6 +41,7 @@ export interface GetClassResponseData {
   class_exam: ClassExamModel[];
   class_feed?: [{ type: string; data: ClassAssignmentModel | ClassPostModel }];
   nickname: NicknameModel[];
+  role: string;
 }
 
 export interface GetClassResponse {

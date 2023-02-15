@@ -1,11 +1,13 @@
 import { Box, Theme, Typography, useMediaQuery } from "@mui/material";
 import { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import AsmCard from "../../components/Home/AsmCard";
 import { getTodo } from "../../services/class/api_class";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
+import { getClassDetail } from "../../store/classsdetail/selector";
 import { formatShortDate } from "../../utils/formatDate";
 
 const ClassAssignments: FC = () => {
@@ -13,6 +15,7 @@ const ClassAssignments: FC = () => {
   const [content, setContent] = useState<getAllAssignmentsResponse[]>([]);
   const { classid } = useParams();
   const navigate = useNavigate();
+  const {role} = useSelector(getClassDetail);
 
   const fetchGetAllAsm = async () => {
     try {
