@@ -34,8 +34,14 @@ export interface PostModel {
 	post_content: string;
 	post_optional_file: FileModel[]; // additonal file from post if it has
 	poll: PollModel[];
+  vote_author?: VoteAuthorModel[];
 	comment: CommentModel[];
 	created: string;
+}
+
+export interface VoteAuthorModel {
+  username: string;
+  vote: number;
 }
 
 export interface AssignmentModel {

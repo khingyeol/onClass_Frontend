@@ -43,6 +43,7 @@ export const api_class = {
   PUBLISH: `/post/publish`,
   COMMENT_POST: `/post/comment`,
   GET_POST: `/post/get`,
+  POLL_VOTE: `/post/poll/vote`
 }
 
 export const api_file = {

@@ -125,6 +125,18 @@ export const postComment = async (
   });
 };
 
+export const postPollVote = async (
+  class_code: string,
+  post_id: string,
+  choice_name: string
+) => {
+  return await httpClient.patch(server.CLASS_URL + api_class.POLL_VOTE, {
+    class_code,
+    post_id,
+    choice_name,
+  });
+};
+
 // // class/post/get
 export const postGet = async (
   class_code: string,

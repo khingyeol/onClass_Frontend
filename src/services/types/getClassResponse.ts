@@ -1,4 +1,4 @@
-import { ClassExamModel, FileModel, NicknameModel, PollModel, UserModel } from "./ClassModel";
+import { ClassExamModel, FileModel, NicknameModel, PollModel, VoteAuthorModel, UserModel } from "./ClassModel";
 
 interface ClassAssignmentModel {
   id: string;
@@ -21,6 +21,7 @@ interface ClassAssignmentModel {
     post_content: string;
     post_optional_file?: FileModel[];
     poll?: PollModel[];
+    vote_author?: VoteAuthorModel;
     comment: number;
     created: string;
     moment_sort: string; //moment
