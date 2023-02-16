@@ -43,15 +43,17 @@ const ClassLayout: FC = (props) => {
   const classDetail = useSelector(getClassDetail);
   const {
     loading: loadingQ,
-    error: errorQ,
     data: dataQ,
   } = useQuery(FEEDS_QUERY, {
     variables: { classCode: classid },
   });
-  const { data: dataSub, loading: loadingSub } = useSubscription(
+  const subscriptionClassFeed = useSubscription(
     FEEDS_SUBSCRIPTION,
     {
       variables: { classCode: classid },
+      onData: ({ data }) => {
+        if (!data.loading) dispatch(updateClassFeed(data.data.feeds));
+      }
     }
   );
 
@@ -73,16 +75,11 @@ const ClassLayout: FC = (props) => {
   }, []);
 
   useEffect(() => {
-    if (classid && !loadingQ && dataQ && !errorQ) {
+    if (classid && !loadingQ && dataQ) {
       dispatch(updateClassFeed(dataQ.feeds));
     }
   }, [loadingQ])
 
-  useEffect(() => {
-    if (classid && !loadingSub && dataSub) {
-      dispatch(updateClassFeed(dataSub.feeds));
-    }
-  }, [loadingSub]);
 
   return (
     <>
