@@ -6,7 +6,7 @@ import { makeStyles } from "@mui/styles";
 
 interface OCPollSectionProps {
   pollItems: PollModel[];
-  voteAuthor: VoteAuthorModel;
+  voteAuthor: VoteAuthorModel | null;
   handleOnClickVote: (votedPoll: PollModel) => void;
 }
 
