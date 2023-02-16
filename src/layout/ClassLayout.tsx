@@ -79,7 +79,7 @@ const ClassLayout: FC = (props) => {
     if (classid && !loadingSub && dataSub) {
       dispatch(updateClassFeed(dataSub.feeds));
     }
-  }, [loading]);
+  }, [loadingSub]);
 
   return (
     <>
