@@ -69,11 +69,14 @@ const ClassLayout: FC = (props) => {
     console.log("classid", classid);
     if (classid) {
       fetchGetFromClass(classid);
-      if (!loadingQ && dataQ && !errorQ) {
-        dispatch(updateClassFeed(dataQ.feeds));
-      }
     }
   }, []);
+
+  useEffect(() => {
+    if (classid && !loadingQ && dataQ && !errorQ) {
+      dispatch(updateClassFeed(dataQ.feeds));
+    }
+  }, [loadingQ])
 
   useEffect(() => {
     if (classid && !loadingSub && dataSub) {
