@@ -1,13 +1,25 @@
-import { split, HttpLink } from "@apollo/client";
+import { split, HttpLink, ApolloLink, ApolloClient, InMemoryCache, concat } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { queryUrl, websocketUrl } from "./constants";
+import { server } from "./constants";
 
 const httpLink = new HttpLink({
   uri: queryUrl,
 });
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  const userToken = localStorage.getItem(server.TOKEN_KEY)
+  operation.setContext(({ headers = {} }) => ({
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${userToken}`
+    }
+  }));
+
+  return forward(operation);
+})
 
 const wsLink = new GraphQLWsLink(
   createClient({
@@ -24,7 +36,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpLink
+  concat(authMiddleware, httpLink),
 );
 
 export const apolloClient = new ApolloClient({
