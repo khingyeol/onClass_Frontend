@@ -7,11 +7,23 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 import { getfromClass } from "../services/class/api_class";
-import { updateClassDetail, updateClassFeed } from "../store/classsdetail/action";
+import {
+  updateClassDetail,
+  updateClassFeed,
+} from "../store/classsdetail/action";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassDetail } from "../store/classsdetail/selector";
 import { GetClassResponseData } from "../services/types/getClassResponse";
-import { gql, useSubscription } from "@apollo/client";
+import { gql, useQuery, useSubscription } from "@apollo/client";
+
+const FEEDS_QUERY = gql`
+  query FeedsQuery($classCode: String!) {
+    feeds(class_code: $classCode) {
+      type
+      data
+    }
+  }
+`;
 
 const FEEDS_SUBSCRIPTION = gql`
   subscription NewFeedUpdate($classCode: String!) {
@@ -29,9 +41,18 @@ const ClassLayout: FC = (props) => {
   const dispatch = useDispatch();
   const { classid } = useParams();
   const classDetail = useSelector(getClassDetail);
-  const { data, loading } = useSubscription(
+  const {
+    loading: loadingQ,
+    error: errorQ,
+    data: dataQ,
+  } = useQuery(FEEDS_QUERY, {
+    variables: { classCode: classid },
+  });
+  const { data: dataSub, loading: loadingSub } = useSubscription(
     FEEDS_SUBSCRIPTION,
-    { variables: { classCode: classid } }
+    {
+      variables: { classCode: classid },
+    }
   );
 
   const fetchGetFromClass = async (id: string) => {
@@ -46,14 +67,19 @@ const ClassLayout: FC = (props) => {
 
   useEffect(() => {
     console.log("classid", classid);
-    if (classid) fetchGetFromClass(classid);
+    if (classid) {
+      fetchGetFromClass(classid);
+      if (!loadingQ && dataQ && !errorQ) {
+        dispatch(updateClassFeed(dataQ.feeds));
+      }
+    }
   }, []);
 
   useEffect(() => {
-    if (classid && !loading && data) {
-      dispatch(updateClassFeed(data.feeds));
+    if (classid && !loadingSub && dataSub) {
+      dispatch(updateClassFeed(dataSub.feeds));
     }
-  }, [loading])
+  }, [loading]);
 
   return (
     <>
