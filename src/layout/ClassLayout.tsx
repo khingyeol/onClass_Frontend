@@ -51,7 +51,7 @@ const ClassLayout: FC = (props) => {
 
   useEffect(() => {
     if (classid && !loading && data) {
-      dispatch(updateClassFeed(data.data.feeds));
+      dispatch(updateClassFeed(data.feeds));
     }
   }, [loading])
 
