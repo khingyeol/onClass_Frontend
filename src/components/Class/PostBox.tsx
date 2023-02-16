@@ -106,19 +106,19 @@ const PostBox: FC = () => {
     postPublish(reqBody).then(() => {
       // window.location.reload();
       setContent('');
-      if (classid) fetchGetFromClass(classid);
+      // if (classid) fetchGetFromClass(classid);
     });
   };
 
-  const fetchGetFromClass = async (id: string) => {
-    try {
-      const res = await getfromClass(id);
-      const data: GetClassResponseData = res.data.data;
-      dispatch(updateClassDetail(data));
-    } catch (err: any) {
-      // navigate("/home");
-    }
-  };
+  // const fetchGetFromClass = async (id: string) => {
+  //   try {
+  //     const res = await getfromClass(id);
+  //     const data: GetClassResponseData = res.data.data;
+  //     dispatch(updateClassDetail(data));
+  //   } catch (err: any) {
+  //     // navigate("/home");
+  //   }
+  // };
 
   const CloseButton = () => {
     return (
