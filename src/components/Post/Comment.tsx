@@ -39,11 +39,9 @@ const CommentSection: FC<CommentProps> = (props) => {
   const onClickSend = () => {
     if (type === "ASSIGNMENT") {
       assignmentComment(classid!, id!, comment).then(() => {
-        window.location.reload();
       });
     } else if (type === "POST") {
       postComment(classid!, id!, comment).then(() => {
-        window.location.reload();
       });
     }
     setComment("");

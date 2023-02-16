@@ -20,6 +20,74 @@ import { formatDate, formatDateTime } from "../../utils/formatDate";
 import CommentSection from "../../components/Post/Comment";
 import NotFoundPage from "../common/NotFoundPage";
 import { AssignmentModel, PostModel } from "../../services/types/ClassModel";
+import { gql, useSubscription } from "@apollo/client";
+
+const ONASSIGNMENTUPDATED_SUBSCRIPTION = gql`
+  subscription OnAssignmentUpdate($classCode: String!, $assignmentId: String!) {
+    onAssignmentUpdate(class_code: $classCode, assignment_id: $assignmentId) {
+      singleAssignment {
+        comment {
+          comment_author {
+            lastname
+            optional_name
+            user_id
+            firstname
+          }
+          content
+          create
+          profile_pic
+        }
+        id
+      }
+    }
+  }
+`;
+
+const ONPOSTUPDATED_SUBSCRIPTION = gql`
+  subscription OnPostUpdate($classCode: String!, $postId: String!) {
+    onPostUpdate(class_code: $classCode, post_id: $postId) {
+      singlePost {
+        id
+        post_content
+        type
+        post_author {
+          user_id
+          optional_name
+          lastname
+          firstname
+        }
+
+        poll {
+          choice_name
+          vote
+        }
+        created
+        profile_pic
+        vote_author {
+          username
+          vote
+        }
+        post_optional_file {
+          file_extension
+          file_name
+          file_path
+        }
+        comment {
+          comment_author {
+            firstname
+            lastname
+            optional_name
+            user_id
+          }
+          content
+          profile_pic
+          create
+        }
+        class_code
+      }
+    }
+  }
+`;
 
 const Content: FC = () => {
   const classes = useStyles();
@@ -28,13 +96,39 @@ const Content: FC = () => {
   // const classid = useSelector(getClassId);
   // const type = useSelector(getSelectedType);
   const pathname = window.location.pathname;
-  const type = window.location.pathname.split("/")[2].toUpperCase()
+  const type = window.location.pathname.split("/")[2].toUpperCase();
   // const postid = useSelector(getSelectedId);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [asmContent, setAsmContent] = useState<AssignmentModel>();
   const [postContent, setPostContent] = useState<PostModel>();
   const { classid, id } = useParams();
   const [error, setError] = useState<boolean | null>();
+
+  if (type === "ASSIGNMENT") {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const subscriptionSingleAssignment = useSubscription(ONASSIGNMENTUPDATED_SUBSCRIPTION, {
+      variables: { classCode: classid, assignmentId: id! },
+      onData: ({ data }) => {
+        if (!data.loading) {
+          console.log('MYLOG: ', data.data.onAssignmentUpdate)
+          const asmContentTemp = asmContent
+          asmContentTemp!.comment = data.data.onAssignmentUpdate.singleAssignment.comment
+          setAsmContent(asmContentTemp);
+        }
+      }
+    })
+  } else if (type === "POST") {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const subscriptionSinglePost = useSubscription(ONPOSTUPDATED_SUBSCRIPTION, {
+      variables: { classCode: classid, postId: id! },
+      onData: ({ data }) => {
+        if (!data.loading) {
+          console.log('MYLOG: ', data.data.onPostUpdate)
+          setPostContent(data.data.onPostUpdate.singlePost);
+        }
+      },
+    });
+  }
 
   const fetchGetPost = async () => {
     if (type === "ASSIGNMENT") {
@@ -58,7 +152,7 @@ const Content: FC = () => {
   };
 
   useEffect(() => {
-    console.log('', )
+    console.log("");
     fetchGetPost();
   }, []);
 
