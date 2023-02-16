@@ -49,11 +49,11 @@ const ClassLayout: FC = (props) => {
     if (classid) fetchGetFromClass(classid);
   }, []);
 
-  // useEffect(() => {
-  //   if (classid && !loading && data) {
-  //     dispatch(updateClassFeed(data));
-  //   }
-  // }, [loading])
+  useEffect(() => {
+    if (classid && !loading && data) {
+      dispatch(updateClassFeed(data));
+    }
+  }, [loading])
 
   return (
     <>
