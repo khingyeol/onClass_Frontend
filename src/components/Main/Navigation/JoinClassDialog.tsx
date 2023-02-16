@@ -21,6 +21,7 @@ const JoinClassDialog: FC<JoinClassDialogProps> = (props) => {
     class_code: "",
     firstname: "",
     lastname: "",
+    optional_name: "",
   });
   const [errMsg, setErrMsg] = useState("");
 
