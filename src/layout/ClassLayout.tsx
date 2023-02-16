@@ -7,10 +7,20 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 import { getfromClass } from "../services/class/api_class";
-import { updateClassDetail } from "../store/classsdetail/action";
+import { updateClassDetail, updateClassFeed } from "../store/classsdetail/action";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassDetail } from "../store/classsdetail/selector";
 import { GetClassResponseData } from "../services/types/getClassResponse";
+import { gql, useSubscription } from "@apollo/client";
+
+const FEEDS_SUBSCRIPTION = gql`
+  subscription NewFeedUpdate($classCode: String!) {
+    feeds(class_code: $classCode) {
+      type
+      data
+    }
+  }
+`;
 
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
@@ -19,6 +29,10 @@ const ClassLayout: FC = (props) => {
   const dispatch = useDispatch();
   const { classid } = useParams();
   const classDetail = useSelector(getClassDetail);
+  const { data, loading } = useSubscription(
+    FEEDS_SUBSCRIPTION,
+    { variables: { classCode: classid } }
+  );
 
   const fetchGetFromClass = async (id: string) => {
     try {
@@ -34,6 +48,12 @@ const ClassLayout: FC = (props) => {
     console.log("classid", classid);
     if (classid) fetchGetFromClass(classid);
   }, []);
+
+  // useEffect(() => {
+  //   if (classid && !loading && data) {
+  //     dispatch(updateClassFeed(data));
+  //   }
+  // }, [loading])
 
   return (
     <>
