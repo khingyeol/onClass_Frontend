@@ -82,26 +82,22 @@ const FeedPost: FC<FeedPostProps> = (props) => {
       case "post": {
         return (
           <Typography
-            variant="h3"
-            fontSize="21px"
+            variant="title3"
             color={onClassColorTheme.green}
           >
-            {`${data.post_author.firstname} ${data.post_author.lastname} ${
-              `(${data.post_author.optional_name ?? ""})` ?? ""
-            }`}
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${`(${data.post_author.optional_name ?? ""})` ?? ""
+              }`}
           </Typography>
         );
       }
       case "poll": {
         return (
           <Typography
-            variant="h3"
-            fontSize="21px"
+            variant="title3"
             color={onClassColorTheme.green}
           >
-            {`${data.post_author.firstname} ${data.post_author.lastname} ${
-              `(${data.post_author.optional_name ?? ""})` ?? ""
-            }`}
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${`(${data.post_author.optional_name ?? ""})` ?? ""
+              }`}
           </Typography>
         );
       }
@@ -109,8 +105,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
       case "assignment": {
         return (
           <Typography
-            variant="h3"
-            fontSize="21px"
+            variant="title3"
             color={onClassColorTheme.green}
           >
             {data.assignment_name}
@@ -128,8 +123,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
           className={classes.headline}
           onClick={() => {
             navigate(
-              `/${classid}/${type === "assignment" ? "assignment" : "post"}/${
-                data.id
+              `/${classid}/${type === "assignment" ? "assignment" : "post"}/${data.id
               }`
             ); // <<< Navigate to each POST
             dispatch(updateCurrentStage(AllStageType.POST));
@@ -138,10 +132,11 @@ const FeedPost: FC<FeedPostProps> = (props) => {
           }}
         >
           {data.profile_pic ? (
+            // Profile Pic
             <Avatar
               sx={{
-                width: isDesktop ? 60 : 50,
-                height: isDesktop ? 60 : 50,
+                width: isDesktop ? 60 : 45,
+                height: isDesktop ? 60 : 45,
                 boxSizing: "border-box",
                 border: "1px solid #707070",
                 alignSelf: "center",
@@ -150,10 +145,11 @@ const FeedPost: FC<FeedPostProps> = (props) => {
               src={data.profile_pic}
             />
           ) : (
+            // Assignment Pic
             <OCIconButton
               icon={IconASM}
               color={onClassColorTheme.green}
-              size={isDesktop ? "60px" : "50px"}
+              size={isDesktop ? "60px" : "45px"}
             />
           )}
 
@@ -263,6 +259,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
     padding: "20px 30px",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      padding: "13px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+    }
   },
   headline: {
     justifyContent: "flex-start",
@@ -270,25 +271,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     gap: "20px",
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      gap: "10px"
+    }
   },
   contents: {
     wordBreak: "break-word",
     whiteSpace: "pre-line",
     padding: "0.75rem 0",
-    margin: "0.75rem 0",
-    // borderTop: 1,
+    margin: "0.75rem 0 0 0",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "14px"
+    }
   },
   comments: {
-    // position: "sticky",
-    // height: "50px",
     marginTop: "10px",
     paddingTop: "10px",
     borderTop: "1px solid rgba(191, 191,191, 0.3)",
     display: "flex",
-    // whiteSpace: "nowrap",
     gap: "15px",
-    // width: "90%",
     bottom: "0",
-    // overflowX: "auto",
   },
 }));

@@ -169,8 +169,8 @@ const Content: FC = () => {
                 {type === "POST" ? (
                   <Avatar
                     sx={{
-                      width: isDesktop ? 60 : 50,
-                      height: isDesktop ? 60 : 50,
+                      width: isDesktop ? 60 : 45,
+                      height: isDesktop ? 60 : 45,
                       boxSizing: "border-box",
                       border: "1px solid #707070",
                       alignSelf: "center",
@@ -188,8 +188,7 @@ const Content: FC = () => {
                 {/*  */}
                 <Box style={{ alignSelf: "center" }}>
                   <Typography
-                    variant="h3"
-                    fontSize="21px"
+                    variant="title3"
                     color={
                       type === "POST"
                         ? onClassColorTheme.black
@@ -197,26 +196,23 @@ const Content: FC = () => {
                     }
                   >
                     {asmContent?.assignment_name ??
-                      `${postContent?.post_author.firstname} ${
-                        postContent?.post_author.lastname
-                      } ${
-                        `(${postContent?.post_author.optional_name ?? ""})` ??
-                        ""
+                      `${postContent?.post_author.firstname} ${postContent?.post_author.lastname
+                      } ${`(${postContent?.post_author.optional_name ?? ""})` ??
+                      ""
                       }`}
                   </Typography>
 
                   <Typography variant="body1" color={onClassColorTheme.grey}>
                     {`${formatDateTime(
                       asmContent?.assignment_start_date ??
-                        postContent?.created ??
-                        ""
+                      postContent?.created ??
+                      ""
                     )}`}
                   </Typography>
                 </Box>
               </Box>
               <Typography
-                variant="h3"
-                fontSize="21px"
+                variant="title3"
                 color={onClassColorTheme.black}
               >
                 {type === "POST" ? null : `${asmContent?.score} pts.`}
@@ -230,7 +226,7 @@ const Content: FC = () => {
               {asmContent?.assignment_description ?? postContent?.post_content}
             </Box>
           </Box>
-          <Box padding={1.5} />
+          <Box padding={{ xs: 1, sm: 1.5 }} />
           <CommentSection
             comment_data={asmContent?.comment ?? postContent?.comment!}
           />
@@ -251,6 +247,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
     padding: "20px 30px",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      padding: "13px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+    }
   },
   boxhead: {
     display: "flex",
@@ -262,24 +263,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     gap: "20px",
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      gap: "10px"
+    }
   },
   contents: {
     wordBreak: "break-word",
     whiteSpace: "pre-line",
     padding: "0.75rem 0",
-    margin: "0.75rem 0",
-    // borderTop: 1,
+    margin: "0.75rem 0 0 0",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "15px"
+    }
   },
   comments: {
-    // position: "sticky",
-    // height: "50px",
     borderTop: "1px solid rgba(191, 191,191, 0.2)",
     display: "flex",
-    // whiteSpace: "nowrap",
     paddingTop: "10px",
     gap: "15px",
-    // width: "90%",
     bottom: "0",
-    // overflowX: "auto",
   },
 }));

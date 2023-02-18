@@ -125,7 +125,7 @@ export async function signIn(username: string, password: string) {
       new AmazonCognitoIdentity.AuthenticationDetails(
         cognitoAuthenticationData
       );
-
+      
     currentUser = getCognitoUser(username);
     currentUser.authenticateUser(authenticationDetails, {
       onSuccess: async (result) => {

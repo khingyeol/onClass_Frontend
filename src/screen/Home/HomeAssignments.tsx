@@ -30,7 +30,7 @@ const HomeAssignments: FC = () => {
         return onClassColorTheme.grey;
       case "เลยกำหนด":
       case "ส่งช้า":
-        return onClassColorTheme.error;  
+        return onClassColorTheme.error;
     }
   }
 

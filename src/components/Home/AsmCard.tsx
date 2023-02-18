@@ -25,15 +25,15 @@ const AsmCard: FC<AsmCardProps> = (props) => {
       <Box display="flex" onClick={onClick}>
         <Box className={classes.asmBox}>
           {/* LEFT SIDE */}
-          <Box display="flex" flexWrap="wrap" alignContent="center" gap={2}>
+          <Box display="flex" flexWrap="wrap" alignContent="center" gap={{ xs: 1.5, sm: 2 }}>
             <OCIconButton
               icon={icon ?? AsmIcon}
               color={onClassColorTheme.green}
-              size="56px"
+              size={isDesktop ? "56px" : "45px"}
             />
 
             <Box alignSelf="center">
-              <Typography variant="h4">{title}</Typography>
+              <Typography variant="title3">{title}</Typography>
               <Typography variant="description" color={onClassColorTheme.grey}>
                 {desc}
               </Typography>
@@ -41,19 +41,20 @@ const AsmCard: FC<AsmCardProps> = (props) => {
           </Box>
 
           <Box
+            paddingTop={{ xs: "5px", sm: "0" }}
             display="flex"
             alignSelf="center"
             flexGrow="1"
             justifyContent={{ xs: "space-between", sm: "space-around" }}
           >
             {/* MIDDLE */}
-            <Typography variant="h4" alignSelf="center" color={trailTextColor ?? onClassColorTheme.green}>
+            <Typography variant="description" alignSelf="center" color={trailTextColor ?? onClassColorTheme.green}>
               {midText}
             </Typography>
 
             {/* RIGHT SIDE */}
             <Typography
-              variant="description"
+              variant="title3"
               color={trailTextColor ?? onClassColorTheme.green}
               alignSelf="center"
             >
@@ -88,10 +89,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderColor: alpha(onClassColorTheme.green, 0.3),
     },
     [theme.breakpoints.down("sm")]: {
-      // display: "grid",
       minHeight: "108px",
-      padding: "0px 20px",
-      borderRadius: "31.5px",
+      padding: "0px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
     },
   },
 }));

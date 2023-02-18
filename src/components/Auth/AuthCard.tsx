@@ -13,8 +13,6 @@ import { updateUserEmail } from "../../store/userdata/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
-import OCDialog from "../../common/OCDialog";
-import { getDialogState } from "../../store/dialog/selector";
 
 interface AuthCardProps {
   type: "login" | "register";
@@ -124,11 +122,12 @@ const AuthCard: FC<AuthCardProps> = (props) => {
           console.log("[onTappedLogin] need to confirm code");
           navigate("/otp");
         } else {
+          console.log('[!!]', err);
           dispatch(displayDialog({
             id: 'onTappedLogin',
             isShow: true,
             title: "Login",
-            message: err.message,
+            message: err.message || err.response.status,
             primaryLabel: 'Close',
             onPrimaryAction: () => { dispatch(hideDialog()) },
           }))
@@ -279,7 +278,9 @@ const AuthCard: FC<AuthCardProps> = (props) => {
             onClick={onTappedLogin}
           />
           <Link onClick={onClick} sx={{ "&:hover": { cursor: "pointer" } }}>
-            {type === "login" ? "Register" : "back to Login"}
+            <Typography>
+              {type === "login" ? "Register" : "back to Login"}
+            </Typography>
           </Link>
         </Box>
         {/* </form> */}

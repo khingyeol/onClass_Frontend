@@ -134,13 +134,12 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
         >
           <Box display="flex" alignItems="center">
             <Button
-              onClick={() => dispatch(updateCurrentStage(AllStageType.HOME))}
+              onClick={() => {
+                navigate("/home")
+                dispatch(updateCurrentStage(AllStageType.HOME))
+              }}
               sx={{
-                // width: "40px",
-                // height: "40px",
                 borderRadius: "36px",
-                // margin: "10px",
-                // display: `${isDesktop ? "" : "none"}`,
                 alignSelf: "center",
                 ":hover": {
                   backgroundColor: alpha(onClassColorTheme.grey, 0.2),
@@ -214,8 +213,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           {type === "home"
             ? drawerContent
             : type === "class"
-            ? drawerClass
-            : drawerContent}
+              ? drawerClass
+              : drawerContent}
         </Drawer>
       </Hidden>
 
@@ -235,8 +234,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           {type === "home"
             ? drawerContent
             : type === "class"
-            ? drawerClass
-            : drawerContent}
+              ? drawerClass
+              : drawerContent}
         </Drawer>
       </Hidden>
     </>
