@@ -55,7 +55,7 @@ export const AppThemes = createTheme({
             fontFamily: 'FC-Subject',
             color: onClassColorTheme.black,
             [defaultTheme.breakpoints.down('sm')]: {
-                fontSize: '27px',
+                fontSize: '24px',
                 fontWeight: 'bold',    
             }
         },
@@ -102,7 +102,7 @@ export const AppThemes = createTheme({
             }
         },
         title3: {
-            fontSize: '21px',
+            fontSize: '19px',
             fontWeight: 'bold',
             [defaultTheme.breakpoints.down('sm')]: {
                 fontSize: '15px',
