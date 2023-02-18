@@ -9,6 +9,8 @@ export const NOT_CONNECT_NETWORK = "NOT_CONNECT_NETWORK";
 export const apiUrl = `${config.serviceUrl}/api`;
 export const imageUrl = `${config.serviceUrl}/public/images`;
 export const fileUrl = `${config.serviceUrl}/public/files`;
+export const queryUrl = `${config.serviceUrl}/graphql-apollo`
+export const websocketUrl = `${config.wsUrl}/graphql-apollo-subscription`
 
 export const server = {
   AUTH_URL: `auth`,

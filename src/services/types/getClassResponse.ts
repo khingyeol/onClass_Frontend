@@ -21,11 +21,16 @@ interface ClassAssignmentModel {
     post_content: string;
     post_optional_file?: FileModel[];
     poll?: PollModel[];
-    vote_author?: VoteAuthorModel;
+    vote_author?: VoteAuthorModel[];
     comment: number;
     created: string;
     moment_sort: string; //moment
   }
+
+export interface ClassFeedModel {
+  type: string;
+  data: ClassAssignmentModel | ClassPostModel
+}
 
 export interface GetClassResponseData {
   class_code: string;
@@ -40,7 +45,7 @@ export interface GetClassResponseData {
   class_assignment: ClassAssignmentModel[];
   class_post: ClassPostModel[];
   class_exam: ClassExamModel[];
-  class_feed?: [{ type: string; data: ClassAssignmentModel | ClassPostModel }];
+  class_feed?: ClassFeedModel[];
   nickname: NicknameModel[];
   role: string;
 }

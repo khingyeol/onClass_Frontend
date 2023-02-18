@@ -5,6 +5,7 @@ import FeedPost from "../../components/Class/FeedPost";
 import { makeStyles } from "@mui/styles";
 import { getClassDetail } from "../../store/classsdetail/selector";
 import { useSelector } from "react-redux";
+import { ClassFeedModel } from "../../services/types/getClassResponse";
 
 const ClassFeed: FC = () => {
   const classes = useStyles();
@@ -25,7 +26,7 @@ const ClassFeed: FC = () => {
         {/* Re-render problem */}
         <PostBox />
         {classDetail?.class_feed &&
-          classDetail?.class_feed.map((item) => (
+          classDetail?.class_feed.map((item: ClassFeedModel) => (
             <div key={item.data.id}>
               <FeedPost type={item.type} data={item.data} />
             </div>

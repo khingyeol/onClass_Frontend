@@ -9,6 +9,9 @@ export const userDataReducer: Reducer<UserModel, UserDataAction> = (
     action,
 ): UserModel => {
     switch (action.type) {
+        case UserDataActionType.UpdateUserData: {
+            return { ...action.payload }
+        }
         case UserDataActionType.UpdateUserEmail: {
             return { ...state, email: action.payload.email};
         }

@@ -25,7 +25,11 @@ import {
   updateSelectedType,
 } from "../../store/stage/action";
 import { formatDate, formatTime } from "../../utils/formatDate";
-import { assignmentComment, postPollVote } from "../../services/class/api_class";
+import {
+  assignmentComment,
+  postComment,
+  postPollVote,
+} from "../../services/class/api_class";
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { PollModel } from "../../services/types/ClassModel";
 
@@ -47,6 +51,8 @@ const FeedPost: FC<FeedPostProps> = (props) => {
   const onClickSend = () => {
     if (type === "assignment") {
       assignmentComment(classid!, data.id, comment);
+    } else if (type === "poll" || type === "post") {
+      postComment(classid!, data.id, comment);
     }
     console.log(comment);
     setComment("");
@@ -64,7 +70,11 @@ const FeedPost: FC<FeedPostProps> = (props) => {
       post_id: data.id,
       choice_name: votedPoll.choice_name,
     };
-    const response = await postPollVote(reqBody.class_code, reqBody.post_id, reqBody.choice_name)
+    const response = await postPollVote(
+      reqBody.class_code,
+      reqBody.post_id,
+      reqBody.choice_name
+    );
   };
 
   const renderTitle = () => {
@@ -117,7 +127,11 @@ const FeedPost: FC<FeedPostProps> = (props) => {
         <Box
           className={classes.headline}
           onClick={() => {
-            navigate(`/${classid}/${type}/${data.id}`);
+            navigate(
+              `/${classid}/${type === "assignment" ? "assignment" : "post"}/${
+                data.id
+              }`
+            ); // <<< Navigate to each POST
             dispatch(updateCurrentStage(AllStageType.POST));
             dispatch(updateSelectedType(type.toUpperCase()));
             dispatch(updateSelectedId(data.id));
@@ -218,6 +232,11 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             value={comment}
             onChange={(e) => handleChange(e)}
             placeholder="Comments…"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onClickSend();
+              }
+            }}
           />
           <Box>
             <OCIconButton

@@ -15,6 +15,8 @@ import OtpPage from "./screen/Auth/OtpPage";
 import { useSelector } from "react-redux";
 import { getIsAuthenticate } from "./store/authentication/selector";
 import OCDialog from "./common/OCDialog";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "./services/apolloClient"
 
 function App() {
   const isLogin: boolean = useSelector(getIsAuthenticate);
@@ -23,7 +25,9 @@ function App() {
     <MuiThemeProvider theme={AppThemes}>
       <PersistGate persistor={persistor}>
         {isLogin ? (
-          <AppRoutes />
+          <ApolloProvider client={apolloClient}>
+            <AppRoutes />
+          </ApolloProvider>
         ) : (
           <Router>
             <Routes>

@@ -7,10 +7,32 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import HomeNavigation from "./Navigation";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 import { getfromClass } from "../services/class/api_class";
-import { updateClassDetail } from "../store/classsdetail/action";
+import {
+  updateClassDetail,
+  updateClassFeed,
+} from "../store/classsdetail/action";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassDetail } from "../store/classsdetail/selector";
 import { GetClassResponseData } from "../services/types/getClassResponse";
+import { gql, useQuery, useSubscription } from "@apollo/client";
+
+const FEEDS_QUERY = gql`
+  query FeedsQuery($classCode: String!) {
+    feeds(class_code: $classCode) {
+      type
+      data
+    }
+  }
+`;
+
+const FEEDS_SUBSCRIPTION = gql`
+  subscription NewFeedUpdate($classCode: String!) {
+    feeds(class_code: $classCode) {
+      type
+      data
+    }
+  }
+`;
 
 const ClassLayout: FC = (props) => {
   const classes = useStyles();
@@ -19,6 +41,21 @@ const ClassLayout: FC = (props) => {
   const dispatch = useDispatch();
   const { classid } = useParams();
   const classDetail = useSelector(getClassDetail);
+  const {
+    loading: loadingQ,
+    data: dataQ,
+  } = useQuery(FEEDS_QUERY, {
+    variables: { classCode: classid },
+  });
+  const subscriptionClassFeed = useSubscription(
+    FEEDS_SUBSCRIPTION,
+    {
+      variables: { classCode: classid },
+      onData: ({ data }) => {
+        if (!data.loading) dispatch(updateClassFeed(data.data.feeds));
+      }
+    }
+  );
 
   const fetchGetFromClass = async (id: string) => {
     try {
@@ -32,8 +69,17 @@ const ClassLayout: FC = (props) => {
 
   useEffect(() => {
     console.log("classid", classid);
-    if (classid) fetchGetFromClass(classid);
+    if (classid) {
+      fetchGetFromClass(classid);
+    }
   }, []);
+
+  useEffect(() => {
+    if (classid && !loadingQ && dataQ) {
+      dispatch(updateClassFeed(dataQ.feeds));
+    }
+  }, [loadingQ])
+
 
   return (
     <>

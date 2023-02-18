@@ -1,4 +1,4 @@
-import { Box, Theme, Typography } from "@mui/material";
+import { Box, Grid, Theme, Typography } from "@mui/material";
 import React, { FC } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
@@ -19,16 +19,17 @@ const AssignmentCreate: FC = () => {
           <OCTextField variant="outline" maxWidth="300px" />
         </Box>
 
-<Box display={"inline"}>
-        <Box className={classes.row}>
-          <Typography variant="h4">นักเรียนสามารถส่งช้า :</Typography>
-          **INSERT CHIPS**
-        </Box>
+        <Grid container columnSpacing={1} rowSpacing="20px">
+          <Grid item xs={12} lg={5} className={classes.row}>
+            <Typography variant="h4">นักเรียนสามารถส่งช้า :</Typography>
+            **INSERT CHIPS**
+          </Grid>
 
-        <Box className={classes.row}>
-        <Typography variant="h4">คะแนน :</Typography>
-          <OCTextField variant="outline" maxWidth="100px" />
-          </Box></Box>
+          <Grid item xs={12} lg={5} className={classes.row}>
+            <Typography variant="h4">คะแนน :</Typography>
+            <OCTextField variant="outline" maxWidth="100px" />
+          </Grid>
+        </Grid>
 
         <Box className={classes.row}>
           <Typography variant="h4">คำอธิบาย :</Typography>
@@ -47,7 +48,6 @@ const AssignmentCreate: FC = () => {
           <OCButton variant="outline" label="Cancel" />
           <OCButton label="Create" />
         </Box>
-
       </Box>
     </>
   );
