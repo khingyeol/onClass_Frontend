@@ -6,16 +6,24 @@ const defaultTheme = createTheme();
 declare module '@mui/material/styles' {
     interface TypographyVariants {
     description: React.CSSProperties;
+    title3: React.CSSProperties;
+    body3: React.CSSProperties;
     }
 
     interface TypographyVariantsOptions {
         description: React.CSSProperties;
+        title3: React.CSSProperties;
+        body3: React.CSSProperties;
+
     }
 }
 
 declare module '@mui/material/Typography' {
     interface TypographyPropsVariantOverrides {
         description: true;
+        title3: true;
+        body3: true;
+
     }
 }  
 
@@ -25,6 +33,7 @@ export const AppThemes = createTheme({
             defaultProps: {
                 variantMapping: {
                     description: 'p',
+                    title3: 'p',
                 }
             }
         }
@@ -46,7 +55,7 @@ export const AppThemes = createTheme({
             fontFamily: 'FC-Subject',
             color: onClassColorTheme.black,
             [defaultTheme.breakpoints.down('sm')]: {
-                fontSize: '27px',
+                fontSize: '24px',
                 fontWeight: 'bold',    
             }
         },
@@ -69,7 +78,7 @@ export const AppThemes = createTheme({
         body1: {
             fontSize: '18px',
             [defaultTheme.breakpoints.down('sm')]: {
-                fontSize: '16px',
+                fontSize: '13.5px',
             }
         },
         body2: {
@@ -78,12 +87,26 @@ export const AppThemes = createTheme({
                 fontSize: '18px',
             }
         },
+        body3: {
+            fontSize: '20px',
+            [defaultTheme.breakpoints.down('sm')]: {
+                fontSize: '15px',
+            } 
+        },
         description: {
             fontSize: '16px',
             lineHeight: 1.5,
             [defaultTheme.breakpoints.down('sm')]: {
-                fontSize: '14px',
-                lineHeight: 1.5,
+                fontSize: '13.5px',
+                lineHeight: 1.2,
+            }
+        },
+        title3: {
+            fontSize: '19px',
+            fontWeight: 'bold',
+            [defaultTheme.breakpoints.down('sm')]: {
+                fontSize: '15px',
+                fontWeight: 'bold',    
             }
         }
     }

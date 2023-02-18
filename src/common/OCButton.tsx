@@ -99,7 +99,7 @@ const OCButton: FC<OCButtonProps> = (props) => {
     <Button
       disabled={disabled}
       sx={{
-        height: `${height ? height : "43px"}`,
+        height: {xs: `${height ? height : "38px"}`, sm: `${height ? height : "43px"}`},
         borderRadius: `${cornerRadius ? cornerRadius : "21.5px"}`,
         paddingX: "30px",
         ...sx,

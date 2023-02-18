@@ -230,7 +230,7 @@ const PostBox: FC = () => {
             color={onClassColorTheme.grey}
             size={"39px"}
             type="square"
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </Box>
       </Box>
@@ -254,7 +254,7 @@ const PostBox: FC = () => {
         onClose={handleClickDialog}
         PaperProps={{
           style: {
-            borderRadius: "35px",
+            borderRadius: "28px",
             width: "100%",
             height: "50%",
           },
@@ -314,10 +314,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       cursor: "pointer",
-      minHeight: "69px",
-      padding: "0px 35px",
-      borderRadius: "35px",
+      minHeight: "56px",
+      padding: "0px 20px",
+      borderRadius: "28px",
       color: onClassColorTheme.grey,
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
     },
   },
   input: {

@@ -59,8 +59,8 @@ const CommentSection: FC<CommentProps> = (props) => {
       <Box className={classes.commentbox} key={item.create}>
         <Avatar
           sx={{
-            width: isDesktop ? 60 : 50,
-            height: isDesktop ? 60 : 50,
+            width: isDesktop ? 60 : 45,
+            height: isDesktop ? 60 : 45,
             boxSizing: "border-box",
             border: "1px solid #707070",
             //   alignSelf: "center",
@@ -71,11 +71,11 @@ const CommentSection: FC<CommentProps> = (props) => {
 
         <Box className={classes.contentBox}>
           <Box style={{ display: "flex", gap: "16px" }}>
-            <Typography variant="body2" color={onClassColorTheme.black}>
+            <Typography variant="title3" color={onClassColorTheme.black}>
               {`${item.comment_author.firstname} ${item.comment_author.lastname}`}
             </Typography>
 
-            <Typography variant="body1" color={onClassColorTheme.grey}>
+            <Typography variant="description" color={onClassColorTheme.grey}>
               {`${formatDate(item.create ?? "")} ${formatTime(
                 item.create ?? ""
               )}`}
@@ -97,14 +97,12 @@ const CommentSection: FC<CommentProps> = (props) => {
           className={classes.comments}
           display="flex"
           sx={{
-            borderTop: `${
-              comment_data && comment_data.length !== 0
+            borderTop: `${comment_data && comment_data.length !== 0
                 ? "1px solid #BFBFBF"
                 : "0px"
-            }`,
-            paddingTop: `${
-              comment_data && comment_data.length !== 0 ? "10px" : "0px"
-            }`,
+              }`,
+            paddingTop: `${comment_data && comment_data.length !== 0 ? "10px" : "0px"
+              }`,
           }}
         >
           <OCTextField
@@ -144,6 +142,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
     padding: "20px 30px",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      padding: "13px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+      gap: "8px",
+
+    }
   },
   commentbox: {
     display: "flex",
@@ -152,19 +157,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "5px",
   },
   contents: {
+    padding: "0.5rem 0",
     wordBreak: "break-word",
     whiteSpace: "pre-line",
+    fontweight: "regular",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "15px",
+    }
   },
   comments: {
-    // position: "sticky",
-    // height: "50px",
     marginTop: "10px",
-    // paddingTop: "10px",
     display: "flex",
-    // whiteSpace: "nowrap",
     gap: "15px",
-    // width: "90%",
     bottom: "0",
-    // overflowX: "auto",
   },
 }));
