@@ -6,6 +6,7 @@ import OCIconButton from "../../common/OCIconButton";
 import IconMail from "../../assets/svg/icon_mail.svg";
 import IconPhone from "../../assets/svg/icon_phone.svg";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
+import OCAvatar from "../../common/OCAvatar";
 
 interface ClassDetailProps {
   classDetail: GetClassResponseData;
@@ -39,7 +40,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
         <Box display="grid" paddingX="1.2rem" gap="15px">
           <div style={{ wordBreak: "break-all" }}>
             <Typography variant="h4" display="inline">
-              class code:{' '}
+              class code:{" "}
             </Typography>
             {classDetail?.class_code}
           </div>
@@ -73,15 +74,12 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             flexGrow={1}
             gap={1}
           >
-            <Avatar
+            <OCAvatar
+              width={isDesktop ? 90 : 28}
+              height={isDesktop ? 90 : 28}
               sx={{
-                width: isDesktop ? 90 : 28,
-                height: isDesktop ? 90 : 28,
-                boxSizing: "border-box",
-                border: "1px solid #707070",
                 alignSelf: "center",
               }}
-              alt="profile-image"
               src={classDetail?.teacher[0]?.profile_pic ?? ""}
             />
             <Typography fontSize="auto">{`${classDetail?.teacher[0]?.name?.firstname} ${classDetail?.teacher[0]?.name?.lastname}`}</Typography>
