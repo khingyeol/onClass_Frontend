@@ -7,6 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { onClassColorTheme } from "./theme/onClassColorTheme";
+import dummyPic from "../assets/image/dummypic.png"
 
 interface OCAvatarProps extends AvatarProps {
   src: string;
@@ -32,7 +33,7 @@ const OCAvatar: FC<OCAvatarProps> = (props) => {
         },
       }}
       alt="profile-image"
-      src={src}
+      src={src ?? dummyPic}
       {...otherProps}
     />
   );

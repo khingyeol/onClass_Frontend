@@ -83,9 +83,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
       case "post": {
         return (
           <Typography variant="title3" color={onClassColorTheme.green}>
-            {`${data.post_author.firstname} ${data.post_author.lastname} ${
-              `(${data.post_author.optional_name ?? ""})` ?? ""
-            }`}
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${data.post_author.optional_name && `(${data.post_author.optional_name})`}`}
           </Typography>
         );
       }
@@ -126,16 +124,16 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             dispatch(updateSelectedId(data.id));
           }}
         >
-          {data.profile_pic ? (
-            // Profile Pic
-            <OCAvatar src={data.profile_pic} sx={{ alignSelf: "center" }} />
-          ) : (
+          {type === "assignment" ? (
             // Assignment Pic
             <OCIconButton
               icon={IconASM}
               color={onClassColorTheme.green}
               size={isDesktop ? "60px" : "45px"}
             />
+          ) : (
+            // Profile Pic
+            <OCAvatar src={data.profile_pic} sx={{ alignSelf: "center" }} />
           )}
 
           <Box style={{ alignSelf: "center" }}>

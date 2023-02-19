@@ -20,21 +20,23 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
   return (
     <Box>
       <Box className={classes.class_list}>
-        <Box height="100%" position="relative">
-          <Box position="absolute" padding="1.2rem">
+        <Box position="relative" paddingBottom="10px">
+          <Box
+            className={classes.head}
+            padding="1.2rem"
+            sx={{
+              backgroundSize: "cover",
+              backgroundImage: `url(${
+                classDetail?.class_thumbnail ??
+                "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"
+              })`,
+            }}
+          >
             <Typography variant="h2">{classDetail?.class_name}</Typography>
             <Typography variant="description">
               {classDetail?.class_section}
             </Typography>
           </Box>
-          <img
-            src={
-              classDetail?.class_thumbnail ??
-              "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"
-            }
-            className={classes.coverImg}
-            alt="cover-img"
-          />
         </Box>
 
         <Box display="grid" paddingX="1.2rem" gap="15px">
@@ -44,18 +46,22 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             </Typography>
             {classDetail?.class_code}
           </div>
-          <div style={{ wordBreak: "break-all" }}>
-            <Typography variant="h4" display="inline">
-              subject:{" "}
-            </Typography>
-            {classDetail?.class_subject}
-          </div>
-          <div style={{ wordBreak: "break-all" }}>
-            <Typography variant="h4" display="inline">
-              room:{" "}
-            </Typography>
-            {classDetail?.class_room}
-          </div>
+          {classDetail?.class_subject && (
+            <div style={{ wordBreak: "break-all" }}>
+              <Typography variant="h4" display="inline">
+                subject:{" "}
+              </Typography>
+              {classDetail?.class_subject}
+            </div>
+          )}
+          {classDetail?.class_room && (
+            <div style={{ wordBreak: "break-all" }}>
+              <Typography variant="h4" display="inline">
+                room:{" "}
+              </Typography>
+              {classDetail?.class_room}
+            </div>
+          )}
           {classDetail?.class_description && (
             <div style={{ wordBreak: "break-all" }}>
               <Typography variant="h4" display="inline">
@@ -66,7 +72,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
           )}
         </Box>
 
-        <Box bottom={0} padding="1.2em">
+        <Box bottom={0} paddingY="1.2em">
           <Box
             display="flex"
             flexDirection="column"
@@ -133,5 +139,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     objectFit: "cover",
     width: "100%",
     height: "100%",
+  },
+  head: {
+    wordBreak: "break-word",
+    whiteSpace: "pre-line",
+    height: "auto",
   },
 }));

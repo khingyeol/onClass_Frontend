@@ -31,7 +31,7 @@ export interface onClassRegisterModel {
     lastname: string;
   };
   optional_contact?: string;
-  profile_pic: "61a4cb8ecbdaf9c5449507f3";
+  profile_pic: string;
 }
 
 export interface cognitoUserDataModel {
@@ -39,63 +39,63 @@ export interface cognitoUserDataModel {
   password: string;
 }
 
-export const register = async (values: onClassRegisterModel) => {
-  const cognitoRegisterData = {
-    username: values.username,
-    password: values.password,
-    email: values.email,
-  };
-  const emailAttribute = new AmazonCognitoIdentity.CognitoUserAttribute({
-    Name: "email",
-    Value: cognitoRegisterData.email,
-  });
+// export const register = async (values: onClassRegisterModel) => {
+//   const cognitoRegisterData = {
+//     username: values.username,
+//     password: values.password,
+//     email: values.email,
+//   };
+//   const emailAttribute = new AmazonCognitoIdentity.CognitoUserAttribute({
+//     Name: "email",
+//     Value: cognitoRegisterData.email,
+//   });
 
-  const onClassRegisterData = {
-    username: values.username,
-    email: values.email,
-    name: {
-      firstname: values.name.firstname,
-      lastname: values.name.lastname,
-    },
-    optional_contact: values.optional_contact,
-    profile_pic: "61a4cb8ecbdaf9c5449507f3",
-  };
+//   const onClassRegisterData = {
+//     username: values.username,
+//     email: values.email,
+//     name: {
+//       firstname: values.name.firstname,
+//       lastname: values.name.lastname,
+//     },
+//     optional_contact: values.optional_contact,
+//     profile_pic: "61a4cb8ecbdaf9c5449507f3",
+//   };
 
-  UserPool.signUp(
-    cognitoRegisterData.username,
-    cognitoRegisterData.password,
-    [emailAttribute],
-    [],
-    async (err, result) => {
-      if (err) {
-        const dispatch = useDispatch();
-        dispatch(displayDialog({
-          id: 'UserPoolSignUp',
-          isShow: true,
-          title: "Sign Up",
-            // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-          message: err.message || JSON.stringify(err),
-          primaryLabel: 'Close',
-          onPrimaryAction: () => { dispatch(hideDialog()) },
-        }))  
-        return;
-      }
-      var cognitoUser = result?.user;
-      console.log("user name is " + cognitoUser?.getUsername());
+//   UserPool.signUp(
+//     cognitoRegisterData.username,
+//     cognitoRegisterData.password,
+//     [emailAttribute],
+//     [],
+//     async (err, result) => {
+//       if (err) {
+//         const dispatch = useDispatch();
+//         dispatch(displayDialog({
+//           id: 'UserPoolSignUp',
+//           isShow: true,
+//           title: "Sign Up",
+//             // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
+//           message: err.message || JSON.stringify(err),
+//           primaryLabel: 'Close',
+//           onPrimaryAction: () => { dispatch(hideDialog()) },
+//         }))  
+//         return;
+//       }
+//       var cognitoUser = result?.user;
+//       console.log("user name is " + cognitoUser?.getUsername());
 
-      const res = await httpClient.post(
-        server.AUTH_URL + api_auth.REGISTER_URL,
-        onClassRegisterData
-      );
-      if (res.data.result === "OK") {
-        // navigate("/otp");
-        return true;
-      } else {
-        return false;
-      }
-    }
-  );
-};
+//       const res = await httpClient.post(
+//         server.AUTH_URL + api_auth.REGISTER_URL,
+//         onClassRegisterData
+//       );
+//       if (res.data.result === "OK") {
+//         // navigate("/otp");
+//         return true;
+//       } else {
+//         return false;
+//       }
+//     }
+//   );
+// };
 
 export const isLoggedIn = () => {
   let token = localStorage.getItem(server.TOKEN_KEY);
@@ -175,7 +175,7 @@ export async function signUp(values: onClassRegisterModel) {
         lastname: values.name.lastname,
       },
       optional_contact: values.optional_contact,
-      profile_pic: "61a4cb8ecbdaf9c5449507f3",
+      profile_pic: values.profile_pic,
     };
 
     UserPool.signUp(
