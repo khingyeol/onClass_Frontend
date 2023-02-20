@@ -64,7 +64,7 @@ const OCPollBuilder: ForwardRefRenderFunction<
     <Collapse in={isShow}>
       <Box className={classes.pollBuilderBox}>
         {pollItems.map((value, index) => (
-          <Box className={classes.pollItemBox}>
+          <Box className={classes.pollItemBox} key={index}>
             <TextField
               name={`option${index}`}
               type="text"
@@ -98,7 +98,7 @@ const OCPollBuilder: ForwardRefRenderFunction<
                 icon={CloseIcon}
                 color={onClassColorTheme.grey}
                 size={"30px"}
-                type="transparent"
+                bgColor={'alpha(color, 0.1)'}
                 onClick={() => handleUpdatePollItem("remove")}
               />
             )}
@@ -107,7 +107,7 @@ const OCPollBuilder: ForwardRefRenderFunction<
                 icon={PlusIcon}
                 color={onClassColorTheme.grey}
                 size={"30px"}
-                type="transparent"
+                bgColor={'alpha(color, 0.1)'}
                 onClick={() => handleUpdatePollItem("add")}
               />
             )}

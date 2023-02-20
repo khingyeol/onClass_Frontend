@@ -68,9 +68,9 @@ const ClassLayout: FC = (props) => {
   };
 
   useEffect(() => {
-    console.log("classid", classid);
     if (classid) {
       fetchGetFromClass(classid);
+      console.log('q', classDetail?.teacher[0]?.optional_contact && classDetail?.teacher[0]?.optional_contact?.length > 1);
     }
   }, []);
 

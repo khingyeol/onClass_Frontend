@@ -13,6 +13,8 @@ import { updateUserEmail } from "../../store/userdata/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
+import { createAvatar } from "@dicebear/core";
+import { croodles } from "@dicebear/collection";
 
 interface AuthCardProps {
   type: "login" | "register";
@@ -25,6 +27,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   const navigate = useNavigate();
   const [loginTF, setLoginTF] = useState<cognitoUserDataModel>();
   const [cfPassword, setCfPassword] = useState("");
+  // const [svgUri, setSvgUri] = useState("");
   const [isPwError, setIsPwError] = useState(false);
   const [registerTF, setRegisterTF] = useState<onClassRegisterModel>({
     username: "",
@@ -34,7 +37,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
       firstname: "",
       lastname: "",
     },
-    profile_pic: "61a4cb8ecbdaf9c5449507f3",
+    profile_pic: "",
   });
   const { type, onClick } = props;
 
@@ -112,42 +115,66 @@ const AuthCard: FC<AuthCardProps> = (props) => {
   const onTappedLogin = async () => {
     console.log("ontap loggin");
     if (type === "login") {
+      // type Login
       dispatch(updateUserEmail(loginTF?.username!));
       try {
         await signIn(loginTF!.username, loginTF!.password);
         console.log("[onTappedLogin] login pass!");
-        // navigate("/home");
+        navigate("/home");
       } catch (err: any) {
         if (err.code === "UserNotConfirmedException") {
           console.log("[onTappedLogin] need to confirm code");
           navigate("/otp");
         } else {
-          console.log('[!!]', err);
-          dispatch(displayDialog({
-            id: 'onTappedLogin',
-            isShow: true,
-            title: "Login",
-            message: err.message || err.response.status,
-            primaryLabel: 'Close',
-            onPrimaryAction: () => { dispatch(hideDialog()) },
-          }))
+          console.log("[!!]", err);
+          dispatch(
+            displayDialog({
+              id: "onTappedLogin",
+              isShow: true,
+              title: "Login",
+              message: err.message || err.response.status,
+              primaryLabel: "Close",
+              onPrimaryAction: () => {
+                dispatch(hideDialog());
+              },
+            })
+          );
         }
       }
     } else {
+      // type Register
+      const avatar = createAvatar(croodles, {
+        seed: registerTF.name.firstname,
+        size: 64,
+      });
+
+      const data: string = await avatar.toDataUri();
+      console.log("data uri", data);
+
       dispatch(updateUserEmail(registerTF?.username));
       try {
         await signUp({
           ...registerTF,
+          profile_pic: data,
           optional_contact: registerTF.optional_contact
             ? registerTF.optional_contact!
             : " ",
         });
         navigate("/otp");
         console.log("[onTappedLogin] regis");
-      } catch (err) {
-        if (err) {
-          console.log("error regis", err);
-        }
+      } catch (err: any) {
+        dispatch(
+          displayDialog({
+            id: "onTappedRegister",
+            isShow: true,
+            title: "Register",
+            message: err.message || err.response.status,
+            primaryLabel: "Close",
+            onPrimaryAction: () => {
+              dispatch(hideDialog());
+            },
+          })
+        );
       }
     }
   };
@@ -180,8 +207,8 @@ const AuthCard: FC<AuthCardProps> = (props) => {
               onChange={(e) => handleChange(e)}
               label={"Password"}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  onTappedLogin()
+                if (e.key === "Enter") {
+                  onTappedLogin();
                 }
               }}
               fullWidth
@@ -255,7 +282,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
               name="optional_contact"
               value={registerTF?.optional_contact}
               onChange={(e) => handleChange(e)}
-              label={"Contact (optional)"}
+              label={"Phone no. (optional)"}
             />
           </Box>
           // </form>

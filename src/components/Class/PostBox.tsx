@@ -12,7 +12,6 @@ import {
 import { ChangeEvent, FC, memo, useState, useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
-import dummyPic from "../../assets/image/dummypic.png";
 import IconSend from "../../assets/svg/icon_send.svg";
 import IconClose from "../../assets/svg/icon_close.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +26,8 @@ import { getfromClass, postPublish } from "../../services/class/api_class";
 import OCTextField from "../../common/OCTextfield";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
 import { updateClassDetail } from "../../store/classsdetail/action";
+import OCAvatar from "../../common/OCAvatar";
+import { getUserData } from "../../store/userdata/selector";
 
 const PostBox: FC = () => {
   // const classid = useSelector(getClassId);
@@ -34,6 +35,7 @@ const PostBox: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const userData = useSelector(getUserData);
   const [openPostBox, setOpenPostBox] = useState(false);
   const [content, setContent] = useState("");
   const [pollItems, setPollItems] = useState<string[]>(["", ""]);
@@ -62,7 +64,7 @@ const PostBox: FC = () => {
     pollBuilderRef?.current?.onClickShow();
     setIsPollBuilderShow(!isPollBuilderShow);
     if (isPollBuilderShow) {
-      setPollItems(["", ""])
+      setPollItems(["", ""]);
     }
   };
 
@@ -75,12 +77,12 @@ const PostBox: FC = () => {
     let flag = false;
     pollItems.map((val) => {
       if (val === "") {
-        return flag = true;
+        return (flag = true);
       }
-      return flag = false;
+      return (flag = false);
     }, {});
-    console.log('MYLOG flag', flag)
-    return flag
+    console.log("MYLOG flag", flag);
+    return flag;
   };
 
   const handleClickDialog = () => {
@@ -105,7 +107,7 @@ const PostBox: FC = () => {
     };
     postPublish(reqBody).then(() => {
       // window.location.reload();
-      setContent('');
+      setContent("");
       // if (classid) fetchGetFromClass(classid);
     });
   };
@@ -152,7 +154,7 @@ const PostBox: FC = () => {
   const PostButton = () => {
     return (
       <Button
-        disabled={isPollBuilderShow ? (!content || isPollArrayEmpty()) : !content}
+        disabled={isPollBuilderShow ? !content || isPollArrayEmpty() : !content}
         onClick={onClickSend}
         sx={{
           width: { xs: "40px", sm: "60px" },
@@ -184,16 +186,11 @@ const PostBox: FC = () => {
   return isDesktop ? (
     // SM Postbox
     <Box className={classes.postbox}>
-      <Avatar
-        sx={{
-          width: isDesktop ? 60 : 28,
-          height: isDesktop ? 60 : 28,
-          boxSizing: "border-box",
-          border: "1px solid #707070",
-          alignSelf: isPollBuilderShow ? "start" : "center",
-        }}
-        alt="profile-image"
-        src={dummyPic}
+      <OCAvatar
+        sx={{ alignSelf: isPollBuilderShow ? "start" : "center" }}
+        width={isDesktop ? 60 : 28}
+        height={isDesktop ? 60 : 28}
+        src={userData.profile_pic ?? ""}
       />
       {/* <textarea className={classes.input} placeholder="say something..."></textarea> */}
       <Box width="100%">
@@ -204,9 +201,9 @@ const PostBox: FC = () => {
           placeholder="say something..."
           value={content}
           onChange={(e) => handleChange(e)}
-          // rows={3}
+          // rows={1}
           // minRows={3}
-          // maxRows={10}
+          // maxRows={1}
           multiline
         />
         <OCPollBuilder
@@ -230,7 +227,7 @@ const PostBox: FC = () => {
             color={onClassColorTheme.grey}
             size={"39px"}
             type="square"
-            onClick={() => { }}
+            onClick={() => {}}
           />
         </Box>
       </Box>

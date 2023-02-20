@@ -1,4 +1,11 @@
-import { Avatar, Box, Theme, Typography, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { FC } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
@@ -6,6 +13,7 @@ import OCIconButton from "../../common/OCIconButton";
 import IconMail from "../../assets/svg/icon_mail.svg";
 import IconPhone from "../../assets/svg/icon_phone.svg";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
+import OCAvatar from "../../common/OCAvatar";
 
 interface ClassDetailProps {
   classDetail: GetClassResponseData;
@@ -19,42 +27,64 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
   return (
     <Box>
       <Box className={classes.class_list}>
-        <Box height="100%" position="relative">
-          <Box position="absolute" padding="1.2rem">
+        <Box position="relative" paddingBottom="10px">
+          <Box
+            className={classes.head}
+            padding="1.2rem"
+            sx={{
+              backgroundSize: "cover",
+              backgroundImage: `url(${
+                classDetail?.class_thumbnail ??
+                "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"
+              })`,
+            }}
+          >
             <Typography variant="h2">{classDetail?.class_name}</Typography>
             <Typography variant="description">
               {classDetail?.class_section}
             </Typography>
           </Box>
-          <img
-            src={
-              classDetail?.class_thumbnail ??
-              "https://img.freepik.com/free-vector/christmas-holiday-golden-pattern-background-template-greeting-card-design_206636-74.jpg?size=626&ext=jpg"
-            }
-            className={classes.coverImg}
-            alt="cover-img"
-          />
         </Box>
 
         <Box display="grid" paddingX="1.2rem" gap="15px">
-          <div style={{ wordBreak: "break-all" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "7px",
+              wordBreak: "break-all",
+            }}
+          >
             <Typography variant="h4" display="inline">
-              class code:{' '}
+              class code:{" "}
             </Typography>
             {classDetail?.class_code}
+            <OCIconButton
+              icon={IconMail}
+              bgColor={'alpha(color, 0.1)'}
+              color={onClassColorTheme.grey}
+              size="25px"
+              onClick={() =>
+                navigator.clipboard.writeText(classDetail?.class_code)
+              }
+            />
           </div>
-          <div style={{ wordBreak: "break-all" }}>
-            <Typography variant="h4" display="inline">
-              subject:{" "}
-            </Typography>
-            {classDetail?.class_subject}
-          </div>
-          <div style={{ wordBreak: "break-all" }}>
-            <Typography variant="h4" display="inline">
-              room:{" "}
-            </Typography>
-            {classDetail?.class_room}
-          </div>
+          {classDetail?.class_subject && (
+            <div style={{ wordBreak: "break-all" }}>
+              <Typography variant="h4" display="inline">
+                subject:{" "}
+              </Typography>
+              {classDetail?.class_subject}
+            </div>
+          )}
+          {classDetail?.class_room && (
+            <div style={{ wordBreak: "break-all" }}>
+              <Typography variant="h4" display="inline">
+                room:{" "}
+              </Typography>
+              {classDetail?.class_room}
+            </div>
+          )}
           {classDetail?.class_description && (
             <div style={{ wordBreak: "break-all" }}>
               <Typography variant="h4" display="inline">
@@ -65,7 +95,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
           )}
         </Box>
 
-        <Box bottom={0} padding="1.2em">
+        <Box bottom={0} paddingY="1.2em">
           <Box
             display="flex"
             flexDirection="column"
@@ -73,15 +103,12 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             flexGrow={1}
             gap={1}
           >
-            <Avatar
+            <OCAvatar
+              width={isDesktop ? 90 : 28}
+              height={isDesktop ? 90 : 28}
               sx={{
-                width: isDesktop ? 90 : 28,
-                height: isDesktop ? 90 : 28,
-                boxSizing: "border-box",
-                border: "1px solid #707070",
                 alignSelf: "center",
               }}
-              alt="profile-image"
               src={classDetail?.teacher[0]?.profile_pic ?? ""}
             />
             <Typography fontSize="auto">{`${classDetail?.teacher[0]?.name?.firstname} ${classDetail?.teacher[0]?.name?.lastname}`}</Typography>
@@ -104,7 +131,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                   size={"35px"}
                 />
                 <Typography fontSize="20" color={onClassColorTheme.grey}>
-                  {/* {classDetail?.teacher.} */}
+                  {classDetail?.teacher[0]?.optional_contact}
                 </Typography>
               </Box>
             </Box>
@@ -135,5 +162,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     objectFit: "cover",
     width: "100%",
     height: "100%",
+  },
+  head: {
+    wordBreak: "break-word",
+    whiteSpace: "pre-line",
+    height: "auto",
   },
 }));

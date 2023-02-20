@@ -9,6 +9,7 @@ interface OCIconButtonProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   type?: "square" | "circle" | "transparent";
   disabled?: boolean;
+  bgColor?: string;
 }
 
 const OCIconButton: FC<OCIconButtonProps> = (props) => {
@@ -19,6 +20,7 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
     onClick,
     type = "circle",
     disabled = false,
+    bgColor,
   } = props;
 
   // https://codepen.io/sosuke/pen/Pjoqqp
@@ -44,7 +46,7 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
       width={size}
       height={size}
       borderRadius={type === "circle" ? size : "25%"}
-      bgcolor={type !== "transparent" ? alpha(color, 0.1) : alpha(color, 0)}
+      bgcolor={bgColor ? bgColor : alpha(color, 0.1)}
       position="relative"
       onClick={onClick}
       sx={{

@@ -32,6 +32,7 @@ import {
 } from "../../services/class/api_class";
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { PollModel } from "../../services/types/ClassModel";
+import OCAvatar from "../../common/OCAvatar";
 
 interface FeedPostProps {
   type: string;
@@ -81,33 +82,24 @@ const FeedPost: FC<FeedPostProps> = (props) => {
     switch (type) {
       case "post": {
         return (
-          <Typography
-            variant="title3"
-            color={onClassColorTheme.green}
-          >
-            {`${data.post_author.firstname} ${data.post_author.lastname} ${`(${data.post_author.optional_name ?? ""})` ?? ""
-              }`}
+          <Typography variant="title3" color={onClassColorTheme.green}>
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${data.post_author.optional_name && `(${data.post_author.optional_name})`}`}
           </Typography>
         );
       }
       case "poll": {
         return (
-          <Typography
-            variant="title3"
-            color={onClassColorTheme.green}
-          >
-            {`${data.post_author.firstname} ${data.post_author.lastname} ${`(${data.post_author.optional_name ?? ""})` ?? ""
-              }`}
+          <Typography variant="title3" color={onClassColorTheme.green}>
+            {`${data.post_author.firstname} ${data.post_author.lastname} ${
+              `(${data.post_author.optional_name ?? ""})` ?? ""
+            }`}
           </Typography>
         );
       }
 
       case "assignment": {
         return (
-          <Typography
-            variant="title3"
-            color={onClassColorTheme.green}
-          >
+          <Typography variant="title3" color={onClassColorTheme.green}>
             {data.assignment_name}
           </Typography>
         );
@@ -123,7 +115,8 @@ const FeedPost: FC<FeedPostProps> = (props) => {
           className={classes.headline}
           onClick={() => {
             navigate(
-              `/${classid}/${type === "assignment" ? "assignment" : "post"}/${data.id
+              `/${classid}/${type === "assignment" ? "assignment" : "post"}/${
+                data.id
               }`
             ); // <<< Navigate to each POST
             dispatch(updateCurrentStage(AllStageType.POST));
@@ -131,26 +124,16 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             dispatch(updateSelectedId(data.id));
           }}
         >
-          {data.profile_pic ? (
-            // Profile Pic
-            <Avatar
-              sx={{
-                width: isDesktop ? 60 : 45,
-                height: isDesktop ? 60 : 45,
-                boxSizing: "border-box",
-                border: "1px solid #707070",
-                alignSelf: "center",
-              }}
-              alt="profile-image"
-              src={data.profile_pic}
-            />
-          ) : (
+          {type === "assignment" ? (
             // Assignment Pic
             <OCIconButton
               icon={IconASM}
               color={onClassColorTheme.green}
               size={isDesktop ? "60px" : "45px"}
             />
+          ) : (
+            // Profile Pic
+            <OCAvatar src={data.profile_pic} sx={{ alignSelf: "center" }} />
           )}
 
           <Box style={{ alignSelf: "center" }}>
@@ -229,7 +212,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             onChange={(e) => handleChange(e)}
             placeholder="Comments…"
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 onClickSend();
               }
             }}
@@ -263,7 +246,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: "13px 18px",
       borderRadius: "28px",
       borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
-    }
+    },
   },
   headline: {
     justifyContent: "flex-start",
@@ -272,8 +255,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     gap: "20px",
     cursor: "pointer",
     [theme.breakpoints.down("sm")]: {
-      gap: "10px"
-    }
+      gap: "10px",
+    },
   },
   contents: {
     wordBreak: "break-word",
@@ -281,8 +264,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "0.75rem 0",
     margin: "0.75rem 0 0 0",
     [theme.breakpoints.down("sm")]: {
-      fontSize: "14px"
-    }
+      fontSize: "14px",
+    },
   },
   comments: {
     marginTop: "10px",
