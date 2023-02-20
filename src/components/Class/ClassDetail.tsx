@@ -1,4 +1,11 @@
-import { Avatar, Box, Theme, Typography, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { FC } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
@@ -40,11 +47,27 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
         </Box>
 
         <Box display="grid" paddingX="1.2rem" gap="15px">
-          <div style={{ wordBreak: "break-all" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "7px",
+              wordBreak: "break-all",
+            }}
+          >
             <Typography variant="h4" display="inline">
               class code:{" "}
             </Typography>
             {classDetail?.class_code}
+            <OCIconButton
+              icon={IconMail}
+              bgColor={'alpha(color, 0.1)'}
+              color={onClassColorTheme.grey}
+              size="25px"
+              onClick={() =>
+                navigator.clipboard.writeText(classDetail?.class_code)
+              }
+            />
           </div>
           {classDetail?.class_subject && (
             <div style={{ wordBreak: "break-all" }}>
@@ -108,7 +131,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                   size={"35px"}
                 />
                 <Typography fontSize="20" color={onClassColorTheme.grey}>
-                  {/* {classDetail?.teacher.} */}
+                  {classDetail?.teacher[0]?.optional_contact}
                 </Typography>
               </Box>
             </Box>

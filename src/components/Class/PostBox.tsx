@@ -201,9 +201,9 @@ const PostBox: FC = () => {
           placeholder="say something..."
           value={content}
           onChange={(e) => handleChange(e)}
-          // rows={3}
+          // rows={1}
           // minRows={3}
-          // maxRows={10}
+          // maxRows={1}
           multiline
         />
         <OCPollBuilder

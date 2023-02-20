@@ -120,7 +120,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
       try {
         await signIn(loginTF!.username, loginTF!.password);
         console.log("[onTappedLogin] login pass!");
-        // navigate("/home");
+        navigate("/home");
       } catch (err: any) {
         if (err.code === "UserNotConfirmedException") {
           console.log("[onTappedLogin] need to confirm code");
@@ -282,7 +282,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
               name="optional_contact"
               value={registerTF?.optional_contact}
               onChange={(e) => handleChange(e)}
-              label={"Contact (optional)"}
+              label={"Phone no. (optional)"}
             />
           </Box>
           // </form>
