@@ -7,7 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,10 +19,37 @@ import {
   GridColumns,
 } from "@mui/x-data-grid";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
 import { getTodo } from "../../services/class/api_class";
 import OCButton from "../../common/OCButton";
+
+const GRADES_QUERY = gql`
+  query Grades($classCode: String!) {
+    grades(class_code: $classCode) {
+      student_id
+      firstname
+      lastname
+      optional_name
+      assignment {
+        grade_id
+        title
+        type
+        score
+        max_score
+        percentage
+      }
+      exam {
+        grade_id
+        title
+        type
+        score
+        max_score
+        percentage
+      }
+    }
+  }
+`;
 
 const GradingPage: FC = () => {
   const classes = useStyles();
@@ -32,33 +59,6 @@ const GradingPage: FC = () => {
   const { classid, id } = useParams();
   const [qData, setQData] = useState([]);
   const [allAsm, setAllAsm] = useState<getAllAssignmentsResponse[]>([]);
-
-  const GRADES_QUERY = gql`
-    query GradesQuery($classCode: String!) {
-      grades(class_code: $classCode) {
-        id
-        firstname
-        lastname
-        optional_name
-        assignment {
-          id
-          type
-          title
-          score
-          max_score
-          percentage
-        }
-        exam {
-          id
-          type
-          title
-          score
-          max_score
-          percentage
-        }
-      }
-    }
-  `;
 
   const gridStyles = {
     fontSize: "17px",
@@ -91,7 +91,7 @@ const GradingPage: FC = () => {
 
     data.map((item, index) => {
       const temp = {
-        id: item.id,
+        id: item.student_id,
         name: `${item.firstname} ${item.lastname}`,
       };
       myArray2.push({
@@ -107,7 +107,7 @@ const GradingPage: FC = () => {
     return data.reduce(
       (obj, item) =>
         Object.assign(obj, {
-          [item.id]: item.score,
+          [item.grade_id]: item.score,
         }),
       {}
     );
@@ -143,33 +143,26 @@ const GradingPage: FC = () => {
     }
   };
 
-  const { loading: loadingQ, data: dataQ, refetch } = useQuery(GRADES_QUERY, {
-    variables: { classCode: classid },
+  const { loading, error, data } = useQuery(GRADES_QUERY, {
+    variables: { classCode: classid! },
+    fetchPolicy: "network-only",
   });
-
-  const fetchAgain = () => {
-    refetch({classCode: classid})
-  }
 
   useEffect(() => {
     fetchGetAllAsm();
-    if (classid && !loadingQ && dataQ) {
-      console.log("qq", dataQ.grades);
-      setQData(dataQ.grades)
-      // dispatch(updateClassFeed(dataQ.feeds));
-    }
-
-    // if (window.performance) {
-    //     if (performance.navigation.type == 1) {
-    //         refetch({classCode: classid})
-    //     } else {
-    //     //   alert( "This page is not reloaded");
-    //     }
-    //   }
-    // return () => {
-    //     window.removeEventListener("beforeunload", fetchAgain())
+    // if (classid && !loading && data && !error) {
+    //   console.log("qq", data);
+    //   setQData(data.grades);
     // }
   }, []);
+
+  useMemo(()=>{
+    if(data) {
+      console.log('MYLOG: ', data);
+      setQData(data.grades);
+    }
+  },[data])
+
 
   return (
     <>
