@@ -5,6 +5,7 @@ import { GetAllClassResponse } from "../types/getAllClassResponse";
 import { GetAssignmentResponse } from "../types/getAssignmentResponse";
 import { GetClassResponse } from "../types/getClassResponse";
 import { GetPostResponse } from "../types/getPostResponse";
+import { AssignmentStdSubmit } from "../types/patchAssignmentStdSubmit";
 import { JoinClassRequest } from "../types/patchClassJoinRequest";
 import { CreateClassRequest } from "../types/postClassCreateRequest";
 import { PostPublishRequest } from "../types/postPostPublishRequest";
@@ -55,9 +56,9 @@ export const assignmentAllClass = async () => {
 // }
 
 // // class/assignment/submit
-// export const assignmentStdSubmit = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.ASM_STD_SUBMIT, values);
-// }
+export const assignmentStdSubmit = async (values: AssignmentStdSubmit) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.ASM_STD_SUBMIT, values);
+}
 
 // // class/assignment/score/submit
 // export const assignmentScoreSubmit = async (values) => {

@@ -12,6 +12,7 @@ import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCIconButton from "../../common/OCIconButton";
 import IconMail from "../../assets/svg/icon_mail.svg";
 import IconPhone from "../../assets/svg/icon_phone.svg";
+import IconClipboard from "../../assets/svg/icon_clipboard.svg";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
 import OCAvatar from "../../common/OCAvatar";
 
@@ -60,7 +61,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             </Typography>
             {classDetail?.class_code}
             <OCIconButton
-              icon={IconMail}
+              icon={IconClipboard}
               bgColor={'alpha(color, 0.1)'}
               color={onClassColorTheme.grey}
               size="25px"

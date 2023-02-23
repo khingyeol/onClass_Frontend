@@ -41,7 +41,6 @@ const MultiplePoll = ({
     if (isVoted) {
       countPercentage(results);
       if (isFirstRender) {
-        console.log("MYLOG: render");
         animateAnswers(results, answerRefs, theme, isVotedId);
       }
       setIsFirstRender(false);
