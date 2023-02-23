@@ -79,12 +79,12 @@ const OCPollBuilder: ForwardRefRenderFunction<
                   },
                 },
                 "& .MuiInputBase-root": {
-                  borderRadius: "23px",
+                  borderRadius: "16px",
                   backgroundColor: alpha(onClassColorTheme.darkGrey, 0.3),
                   "& input": {
                     height: "33px",
                     padding: "5px 25px",
-                    borderRadius: "23px",
+                    borderRadius: "16px",
                     backgroundColor: onClassColorTheme.white,
                   },
                   "&.Mui-focused fieldset": {
@@ -136,10 +136,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "space-between",
     alignContent: "center",
     backgroundColor: onClassColorTheme.white,
-    borderRadius: "35px",
+    borderRadius: "20px",
     border: "1px solid",
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
-    padding: "20px 30px",
+    padding: "16px",
     display: "flex",
     flexDirection: "column",
     transition: "all 0.4s ease",
