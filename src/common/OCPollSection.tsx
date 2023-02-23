@@ -11,19 +11,20 @@ import { getUserData } from "../store/userdata/selector";
 interface OCPollSectionProps {
   pollItems: PollModel[];
   voteAuthor: VoteAuthorModel[];
+  postAuthor: String;
   handleOnClickVote: (votedPoll: PollModel) => void;
 }
 
 const OCPollSection: FC<OCPollSectionProps> = (props) => {
   const classes = useStyles();
-  const { pollItems, voteAuthor, handleOnClickVote } = props;
+  const { pollItems, voteAuthor, postAuthor, handleOnClickVote } = props;
   const userData = useSelector(getUserData);
 
-  // const resultData = () => {
-  //   return pollItems.map((item, index) => {
-  //     return { id: index, text: item.choice_name, votes: item.vote, percentage: item.percentage};
-  //   });
-  // };
+  const isPostAuthor = () => {
+    console.log('MYLOG: author', postAuthor)
+    console.log('MYLOG: current user', userData.user_id)
+    return postAuthor === userData.user_id;
+  }
 
   const customTheme = {
     mainColor: `${onClassColorTheme.green}`,
@@ -55,6 +56,7 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
       <MultiplePoll
         results={pollItems}
         theme={customTheme}
+        isPostAuthor={isPostAuthor()}
         isVoted={isVoted().isVoted}
         isVotedId={isVoted().isVoted ? isVoted().isVotedId : undefined}
         onVote={vote}

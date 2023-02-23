@@ -9,6 +9,7 @@ export interface UserClassModel {
 }
 
 export interface UserModel {
+  user_id?: string;
   username?: string;
   email?: string;
   profile_pic?: string;
@@ -61,7 +62,7 @@ export const clearUserData = (): ClearUserDataAction => {
   };
 };
 
-export const UpdateUsername = (username: string): UpdateUsernameAction => {
+export const updateUsername = (username: string): UpdateUsernameAction => {
   return {
     type: UserDataActionType.UpdateUsername,
     payload: { username },

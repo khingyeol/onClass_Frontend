@@ -4,6 +4,7 @@ import React, {
   useRef,
   createRef,
   RefObject,
+  useCallback,
 } from "react";
 import styles from "./MultiplePoll.module.css";
 import { Typography } from "@mui/material";
@@ -18,6 +19,7 @@ interface MultiplePollProps {
   question?: string;
   results: PollModel[];
   theme?: Theme;
+  isPostAuthor?: boolean;
   isVoted?: boolean;
   isVotedId?: number;
   onVote?(item: PollModel, results: PollModel[]): void;
@@ -27,20 +29,46 @@ const MultiplePoll = ({
   question,
   results,
   theme,
+  isPostAuthor,
   onVote,
   isVoted,
   isVotedId,
 }: MultiplePollProps) => {
   const [voted, setVoted] = useState<boolean>(false);
   const [isClickable, setIsClickable] = useState<boolean>(false);
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const [previous, setPrevious] = useState<PollModel[]>([]);
   const answerRefs = useRef<RefObject<HTMLDivElement>[]>(
     results.map(() => createRef<HTMLDivElement>())
   );
 
+
+  const arraysEqual = (a1: any[], a2: any[]) => 
+   a1.length === a2.length && a1.every((o: any, idx: any) => JSON.stringify(o) === JSON.stringify(a2[idx]));
+
+  const reAnimateAnswers = (current: PollModel[]) => {
+    if (previous.length === 0) {
+        setPrevious(current);
+    } else if (!arraysEqual(previous, current)) {
+        animateAnswers(results, answerRefs, theme, isVotedId);
+        setPrevious(current);
+    } 
+  };
+
   useEffect(() => {
-    if (isVoted) {
+    if (previous.length !== 0) {
+        reAnimateAnswers(results);
+    }
+  }, [previous])
+
+  useEffect(() => {
+    if (isVoted || isPostAuthor) {
       //   countPercentage(results);
-      animateAnswers(results, answerRefs, theme, isVotedId);
+      if (isFirstRender) {
+        animateAnswers(results, answerRefs, theme, isVotedId);
+        reAnimateAnswers(results);
+      }
+      setIsFirstRender(false);
       setVoted(true);
       //   setTimeout(() => {
       //     setVoted(true);
@@ -92,7 +120,7 @@ const MultiplePoll = ({
               {result.choice_name}
             </Typography>
           </div>
-          {voted && (
+          {(voted || isPostAuthor) && (
             <span style={{ color: theme?.textColor }}>
               {result.percentage}%
             </span>
