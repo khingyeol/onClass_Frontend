@@ -42,29 +42,26 @@ const MultiplePoll = ({
     results.map(() => createRef<HTMLDivElement>())
   );
 
-
-  const arraysEqual = (a1: any[], a2: any[]) => 
-   a1.length === a2.length && a1.every((o: any, idx: any) => JSON.stringify(o) === JSON.stringify(a2[idx]));
+  const arraysEqual = (a1: any[], a2: any[]) =>
+    a1.length === a2.length &&
+    a1.every(
+      (o: any, idx: any) => JSON.stringify(o) === JSON.stringify(a2[idx])
+    );
 
   const reAnimateAnswers = (current: PollModel[]) => {
     if (previous.length === 0) {
-        setPrevious(current);
+      setPrevious(current);
     } else if (!arraysEqual(previous, current)) {
-        animateAnswers(results, answerRefs, theme, isVotedId);
-        setPrevious(current);
-    } 
+      animateAnswers(results, answerRefs, theme, isVotedId);
+      setPrevious(current);
+    }
   };
 
   useEffect(() => {
-    setPrevious([]);
-  }, [])
-
-
-  useEffect(() => {
     if (previous.length !== 0) {
-        reAnimateAnswers(results);
+      reAnimateAnswers(results);
     }
-  }, [previous])
+  }, [results]);
 
   useEffect(() => {
     if (isVoted || isPostAuthor) {
