@@ -13,15 +13,24 @@ import OCIconButton from "../../common/OCIconButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
-import { assignmentGet, postGet } from "../../services/class/api_class";
+import {
+  assignmentGet,
+  postGet,
+  postPollVote,
+} from "../../services/class/api_class";
 import { getSelectedId, getSelectedType } from "../../store/stage/selector";
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import CommentSection from "../../components/Post/Comment";
 import NotFoundPage from "../common/NotFoundPage";
-import { AssignmentModel, PostModel } from "../../services/types/ClassModel";
+import {
+  AssignmentModel,
+  PollModel,
+  PostModel,
+} from "../../services/types/ClassModel";
 import { gql, useSubscription } from "@apollo/client";
 import OCAvatar from "../../common/OCAvatar";
+import OCPollSection from "../../common/OCPollSection";
 
 const ONASSIGNMENTUPDATED_SUBSCRIPTION = gql`
   subscription OnAssignmentUpdate($classCode: String!, $assignmentId: String!) {
@@ -135,6 +144,19 @@ const Content: FC = () => {
     });
   }
 
+  const handleOnClickVote = async (votedPoll: PollModel) => {
+    const reqBody = {
+      class_code: classid!,
+      post_id: id!,
+      choice_name: votedPoll.choice_name,
+    };
+    const response = await postPollVote(
+      reqBody.class_code,
+      reqBody.post_id,
+      reqBody.choice_name
+    );
+  };
+
   const fetchGetPost = async () => {
     if (type === "ASSIGNMENT") {
       assignmentGet(classid!, id!)
@@ -222,6 +244,13 @@ const Content: FC = () => {
             >
               {asmContent?.assignment_description ?? postContent?.post_content}
             </Box>
+            {postContent?.type === "poll" && (
+              <OCPollSection
+                pollItems={postContent?.poll}
+                voteAuthor={postContent?.vote_author!}
+                handleOnClickVote={handleOnClickVote}
+              />
+            )}
           </Box>
           <Box padding={{ xs: 1, sm: 1.5 }} />
           <CommentSection
@@ -275,5 +304,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: "15px",
       borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
     },
+  },
+  comments: {
+    borderTop: "1px solid rgba(191, 191,191, 0.2)",
+    display: "flex",
+    paddingTop: "10px",
+    gap: "15px",
+    bottom: "0",
   },
 }));

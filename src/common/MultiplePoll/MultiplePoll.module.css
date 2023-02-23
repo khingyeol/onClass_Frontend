@@ -1,0 +1,43 @@
+.container {
+    color: #19181f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .answer {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    border-color: rgba(112, 112, 112, 0.3);
+    position: relative;
+    transition: background-color 0.3s ease-out;
+  }
+  .answer_hover:hover {
+    background-color: #efefef !important;
+  }
+  .answer:hover {
+    cursor: pointer;
+  }
+  .answerInner {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    border-radius: 0.5rem;
+    /* border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem; */
+    text-align: left;
+  }
+  .answerInner p {
+    margin: 0;
+    padding: 1rem;
+    font-weight: medium;
+  }
+  .answer span {
+    position: absolute;
+    right: 1rem;
+    top: 25%;
+    font-size: 1.2rem;
+  }
+  
