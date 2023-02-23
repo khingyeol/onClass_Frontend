@@ -62,7 +62,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             {classDetail?.class_code}
             <OCIconButton
               icon={IconClipboard}
-              bgColor={'alpha(color, 0.1)'}
+              bgColor={"alpha(color, 0.1)"}
               color={onClassColorTheme.grey}
               size="25px"
               onClick={() =>
@@ -139,6 +139,33 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
           </Box>
         </Box>
       </Box>
+      <Box padding={1.5}></Box>
+      <Box className={classes.class_list}>
+        <Box className={classes.content}>
+          <Typography variant="h4" display="inline">
+            {`Attendees (${classDetail?.student.length})`}
+          </Typography>
+          <Box className={classes.attendees}>
+            {classDetail?.student.map((item) => {
+              return (
+                <>
+                  <Box className={classes.student}>
+                    <OCAvatar
+                      width={45}
+                      height={45}
+                      sx={{
+                        alignSelf: "center",
+                      }}
+                      src={item?.profile_pic ?? ""}
+                    />
+                    {`${item.name.firstname} ${item.name.lastname}`}
+                  </Box>
+                </>
+              );
+            })}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };
@@ -168,5 +195,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: "break-word",
     whiteSpace: "pre-line",
     height: "auto",
+  },
+  content: {
+    padding: "1.2rem",
+  },
+  attendees: {
+    padding: "10px 0 0 0",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  student: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    fontSize: "auto",
+    // alignSelf: "center"
   },
 }));

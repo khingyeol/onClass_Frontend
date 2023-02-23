@@ -32,24 +32,19 @@ const MultiplePoll = ({
   isVotedId,
 }: MultiplePollProps) => {
   const [voted, setVoted] = useState<boolean>(false);
-  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
   const [isClickable, setIsClickable] = useState<boolean>(false);
   const answerRefs = useRef<RefObject<HTMLDivElement>[]>(
     results.map(() => createRef<HTMLDivElement>())
   );
 
-
   useEffect(() => {
     if (isVoted) {
-    //   countPercentage(results);
-      if (isFirstRender) {
-        animateAnswers(results, answerRefs, theme, isVotedId);
-      }
+      //   countPercentage(results);
+      animateAnswers(results, answerRefs, theme, isVotedId);
       setVoted(true);
-      setIsFirstRender(false);
-    //   setTimeout(() => {
-    //     setVoted(true);
-    //   }, 4000);
+      //   setTimeout(() => {
+      //     setVoted(true);
+      //   }, 4000);
     } else {
       setTimeout(() => {
         setIsClickable(true);
@@ -77,8 +72,8 @@ const MultiplePoll = ({
           }}
           onClick={() => {
             if (!voted && !isVoted && isClickable) {
-            //   setVoted(true);
-            //   manageVote(results, result, answerRefs, theme);
+              //   setVoted(true);
+              //   manageVote(results, result, answerRefs, theme);
               onVote?.(result, results);
             }
           }}
