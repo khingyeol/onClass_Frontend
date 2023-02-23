@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
 import { MultiplePoll } from "./MultiplePoll/MultiplePoll";
 import { getUserData } from "../store/userdata/selector";
-import { Result } from "./MultiplePoll/types/result";
+// import { Result } from "./MultiplePoll/types/result";
 
 interface OCPollSectionProps {
   pollItems: PollModel[];
@@ -19,11 +19,11 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
   const { pollItems, voteAuthor, handleOnClickVote } = props;
   const userData = useSelector(getUserData);
 
-  const resultData = () => {
-    return pollItems.map((item, index) => {
-      return { id: index, text: item.choice_name, votes: item.vote };
-    });
-  };
+  // const resultData = () => {
+  //   return pollItems.map((item, index) => {
+  //     return { id: index, text: item.choice_name, votes: item.vote, percentage: item.percentage};
+  //   });
+  // };
 
   const customTheme = {
     mainColor: `${onClassColorTheme.green}`,
@@ -31,8 +31,8 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
     alignment: "center",
   };
 
-  const vote = (item: Result) => {
-    handleOnClickVote({ choice_name: item.text, vote: item.votes + 1 });
+  const vote = (item: PollModel) => {
+    handleOnClickVote({ choice_name: item.choice_name, vote: item.vote + 1 });
   };
 
   const isVoted = () => {
@@ -53,7 +53,7 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
   return (
     <Box className={classes.pollSectionBox}>
       <MultiplePoll
-        results={resultData()}
+        results={pollItems}
         theme={customTheme}
         isVoted={isVoted().isVoted}
         isVotedId={isVoted().isVoted ? isVoted().isVotedId : undefined}

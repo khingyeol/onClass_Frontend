@@ -37,6 +37,7 @@ const ClassLayout: FC = (props) => {
     {
       variables: { classCode: classid },
       onData: ({ data }) => {
+        console.log('MYLOG',data.data);
         if (!data.loading) dispatch(updateClassFeed(data.data.feeds));
       }
     }

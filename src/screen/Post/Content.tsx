@@ -68,8 +68,10 @@ const ONPOSTUPDATED_SUBSCRIPTION = gql`
         }
 
         poll {
+          id
           choice_name
           vote
+          percentage
         }
         created
         profile_pic
@@ -183,9 +185,9 @@ const Content: FC = () => {
     fetchGetPost();
   }, []);
 
-  useEffect(() => {
-    forceUpdate();
-  }, [postContent])
+  // useEffect(() => {
+  //   forceUpdate();
+  // }, [postContent])
 
   return (
     <>

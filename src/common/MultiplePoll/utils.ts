@@ -1,27 +1,28 @@
 import { RefObject, MutableRefObject } from 'react'
-import { Result } from './types/result'
+// import { Result } from './types/result'
 import { Theme } from './types/theme'
+import { PollModel } from '../../services/types/ClassModel'
 
-function manageVote(
-  results: Result[],
-  item: Result,
-  refs: MutableRefObject<RefObject<HTMLDivElement>[]>,
-  theme?: Theme
-): void {
-  item.votes++
-  countPercentage(results)
-  animateAnswers(results, refs, theme, item.id)
-}
+// function manageVote(
+//   results: Result[],
+//   item: Result,
+//   refs: MutableRefObject<RefObject<HTMLDivElement>[]>,
+//   theme?: Theme
+// ): void {
+//   item.votes++
+//   countPercentage(results)
+//   animateAnswers(results, refs, theme, item.id)
+// }
 
 function animateAnswers(
-  results: Result[],
+  results: PollModel[],
   refs: MutableRefObject<RefObject<HTMLDivElement>[]>,
   theme?: Theme,
   index?: number,
   isVotedId?: number
 ): void {
   const answers: HTMLElement[] = []
-  let restOfAnswers: Result[] = []
+  let restOfAnswers: PollModel[] = []
 
   for (const result of results) {
     if (index !== undefined) {
@@ -29,7 +30,7 @@ function animateAnswers(
     } else {
       restOfAnswers = results
     }
-    const answerBuffer: HTMLElement | null = refs.current[result.id].current
+    const answerBuffer: HTMLElement | null = refs.current[result.id!].current
     answerBuffer && answers.push(answerBuffer)
   }
 
@@ -53,7 +54,7 @@ function animateAnswers(
 
   // animate rest of answers (not clicked)
   for (const ans of restOfAnswers) {
-    answers[ans.id].animate(
+    answers[ans.id!].animate(
       [
         { width: 0, easing: 'ease-out', backgroundColor: 'white' },
         {
@@ -66,25 +67,26 @@ function animateAnswers(
       ],
       500
     )
-    answers[ans.id].style.width = `${ans.percentage}%`
-    answers[ans.id].style.backgroundColor = `${
+    answers[ans.id!].style.width = `${ans.percentage}%`
+    answers[ans.id!].style.backgroundColor = `${
       ans.id === isVotedId ? theme?.mainColor : '#efefef'
     }`
   }
 }
 
-function countPercentage(results: Result[]): void {
-  const votes: number[] = []
-  let sum: number = 0
+// function countPercentage(results: Result[]): void {
+//   const votes: number[] = []
+//   let sum: number = 0
 
-  for (const result of results) {
-    votes.push(result.votes)
-    sum += result.votes
-  }
+//   for (const result of results) {
+//     votes.push(result.votes)
+//     sum += result.votes
+//   }
 
-  for (let i = 0; i < votes.length; i++) {
-    results[i].percentage = sum === 0 ? 0 : Math.floor((votes[i] / sum) * 100)
-  }
-}
+//   for (let i = 0; i < votes.length; i++) {
+//     results[i].percentage = sum === 0 ? 0 : Math.floor((votes[i] / sum) * 100)
+//   }
+// }
 
-export { manageVote, countPercentage, animateAnswers }
+export { animateAnswers }
+// export { manageVote, countPercentage, animateAnswers }

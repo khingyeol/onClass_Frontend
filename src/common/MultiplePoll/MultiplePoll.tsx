@@ -8,18 +8,19 @@ import React, {
 import styles from "./MultiplePoll.module.css";
 import { Typography } from "@mui/material";
 import { onClassColorTheme } from "../theme/onClassColorTheme";
-import { manageVote, countPercentage, animateAnswers } from "./utils";
-//import { manageVote } from './utils'
-import type { Result } from "./types/result";
+import { animateAnswers } from "./utils";
+// import { manageVote, countPercentage, animateAnswers } from "./utils";
+// import type { Result } from "./types/result";
 import type { Theme } from "./types/theme";
+import { PollModel } from "../../services/types/ClassModel";
 
 interface MultiplePollProps {
   question?: string;
-  results: Result[];
+  results: PollModel[];
   theme?: Theme;
   isVoted?: boolean;
   isVotedId?: number;
-  onVote?(item: Result, results: Result[]): void;
+  onVote?(item: PollModel, results: PollModel[]): void;
 }
 
 const MultiplePoll = ({
@@ -37,22 +38,24 @@ const MultiplePoll = ({
     results.map(() => createRef<HTMLDivElement>())
   );
 
+
   useEffect(() => {
     if (isVoted) {
-      countPercentage(results);
+    //   countPercentage(results);
       if (isFirstRender) {
         animateAnswers(results, answerRefs, theme, isVotedId);
       }
+      setVoted(true);
       setIsFirstRender(false);
-      setTimeout(() => {
-        setVoted(true);
-      }, 4000);
+    //   setTimeout(() => {
+    //     setVoted(true);
+    //   }, 4000);
     } else {
       setTimeout(() => {
         setIsClickable(true);
-      }, 4000);
+      }, 500);
     }
-  }, [results, answerRefs]);
+  }, [isVoted]);
 
   return (
     <article
@@ -74,14 +77,14 @@ const MultiplePoll = ({
           }}
           onClick={() => {
             if (!voted && !isVoted && isClickable) {
-              setVoted(true);
-              manageVote(results, result, answerRefs, theme);
+            //   setVoted(true);
+            //   manageVote(results, result, answerRefs, theme);
               onVote?.(result, results);
             }
           }}
         >
           <div
-            ref={answerRefs.current[result.id]}
+            ref={answerRefs.current[result.id!]}
             className={styles.answerInner}
           >
             <Typography
@@ -91,7 +94,7 @@ const MultiplePoll = ({
               color={onClassColorTheme.black}
               width={100}
             >
-              {result.text}
+              {result.choice_name}
             </Typography>
           </div>
           {voted && (

@@ -88,8 +88,10 @@ export interface FileModel {
   }
   
   export interface PollModel {
+    id?: number;
     choice_name: string;
     vote: number; // vote count
+    percentage?: number;
   }
 
   

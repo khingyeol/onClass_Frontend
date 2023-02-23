@@ -38,9 +38,10 @@ const CommentSection: FC<CommentProps> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
   const onClickSend = () => {
+    console.log('MYLOG: TYPE', type)
     if (type === "ASSIGNMENT") {
       assignmentComment(classid!, id!, comment).then(() => {});
-    } else if (type === "POST") {
+    } else if (type === "POST" || type === "POLL") {
       postComment(classid!, id!, comment).then(() => {});
     }
     setComment("");
