@@ -22,6 +22,9 @@ import ClassAssignments from "./screen/Classroom/ClassAssignments";
 import AssignmentCreate from "./screen/Classroom/AssignmentCreate";
 import ClassExam from "./screen/Classroom/ClassExam";
 import ExamCreate from "./screen/Classroom/ExamCreate";
+import AsmResultScore from "./screen/Post/AsmResultScore";
+import GradingPage from "./screen/Grading/GradingPage";
+import GradeLayout from "./layout/GradeLayout";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
@@ -95,17 +98,28 @@ function AppRoutes() {
         </Route>
 
         <Route path="/:classid/post" element={<PostLayout />}>
-            <Route path="/:classid/post/:id" element={<Content />}></Route>
-          </Route>
+          <Route path="/:classid/post/:id" element={<Content />}></Route>
+        </Route>
 
         <Route path="/:classid/assignment" element={<PostLayout />}>
-          <Route path="/:classid/assignment/create" element={<AssignmentCreate />}></Route>
+          <Route
+            path="/:classid/assignment/create"
+            element={<AssignmentCreate />}
+          ></Route>
           <Route path="/:classid/assignment/:id" element={<Content />}></Route>
+          <Route
+            path="/:classid/assignment/:id/score"
+            element={<AsmResultScore />}
+          ></Route>
         </Route>
 
         <Route path="/:classid/exam" element={<ClassLayout />}>
           <Route path="/:classid/exam/create" element={<ExamCreate />}></Route>
           <Route path="/:classid/exam" element={<ClassExam />}></Route>
+        </Route>
+
+        <Route path="/:classid/grading" element={<GradeLayout />}>
+          <Route path="/:classid/grading" element={<GradingPage />}></Route>
         </Route>
 
         <Route path="/playground" element={<Playground />} />

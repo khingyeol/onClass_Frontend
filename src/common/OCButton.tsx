@@ -4,7 +4,8 @@ import { onClassColorTheme } from "./theme/onClassColorTheme";
 
 interface OCButtonProps extends Omit<ButtonProps, "variant"> {
   label: string;
-  variant?: "primary" | "outline" | "error" | "black";
+  bgColor?: string;
+  variant?: "primary" | "outline" | "error" | "black" | "grey";
   btnStyle?: "round" | "corner";
   cornerRadius?: string;
   height?: string;
@@ -79,6 +80,24 @@ const black = {
   },
 };
 
+const grey = {
+  border: `solid ${onClassColorTheme.grey}`,
+  backgroundColor: onClassColorTheme.white,
+  color: onClassColorTheme.grey,
+  " .MuiTypography-root": {
+    color: onClassColorTheme.grey,
+  },
+  ":hover": {
+    backgroundColor: alpha(onClassColorTheme.grey, 0.2),
+  },
+  "&:disabled": {
+    border: `2px solid rgba(139,139,139, 0.3)`,
+    " .MuiTypography-root": {
+      color: alpha(onClassColorTheme.grey, 0.5),
+    },  
+  },
+};
+
 const OCButton: FC<OCButtonProps> = (props) => {
   const {
     label,
@@ -107,6 +126,7 @@ const OCButton: FC<OCButtonProps> = (props) => {
         ...(variant === "outline" && outline),
         ...(variant === "error" && error),
         ...(variant === "black" && black),
+        ...(variant === "grey" && grey),
         // ...(btnStyle === "corner" && {  }),
       }}
       {...otherProps}

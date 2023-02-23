@@ -25,37 +25,37 @@ const FEEDS_SUBSCRIPTION = gql`
   }
 `;
 
-const ClassLayout: FC = (props) => {
+const GradeLayout: FC = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { classid } = useParams();
   const classDetail = useSelector(getClassDetail);
-  const subscriptionClassFeed = useSubscription(
-    FEEDS_SUBSCRIPTION,
-    {
-      variables: { classCode: classid },
-      onData: ({ data }) => {
-        console.log('MYLOG',data.data);
-        if (!data.loading) dispatch(updateClassFeed(data.data.feeds));
-      }
-    }
-  );
 
-  const fetchGetFromClass = async (id: string) => {
-    try {
-      const res = await getfromClass(id);
-      const data: GetClassResponseData = res.data.data;
-      dispatch(updateClassDetail(data));
-    } catch (err: any) {
-      navigate("/home");
-    }
-  };
+//   const subscriptionClassFeed = useSubscription(
+//     FEEDS_SUBSCRIPTION,
+//     {
+//       variables: { classCode: classid },
+//       onData: ({ data }) => {
+//         if (!data.loading) dispatch(updateClassFeed(data.data.feeds));
+//       }
+//     }
+//   );
+
+//   const fetchGetFromClass = async (id: string) => {
+//     try {
+//       const res = await getfromClass(id);
+//       const data: GetClassResponseData = res.data.data;
+//       dispatch(updateClassDetail(data));
+//     } catch (err: any) {
+//       navigate("/home");
+//     }
+//   };
 
   useEffect(() => {
     if (classid) {
-      fetchGetFromClass(classid);
+    //   fetchGetFromClass(classid);
       console.log('q', classDetail?.teacher[0]?.optional_contact && classDetail?.teacher[0]?.optional_contact?.length > 1);
     }
   }, []);
@@ -75,12 +75,11 @@ const ClassLayout: FC = (props) => {
             <Outlet />
           </Box>
         </Box>
-        {isDesktop ? <ClassDetail classDetail={classDetail} /> : null}
       </Box>
     </>
   );
 };
-export default memo(ClassLayout);
+export default memo(GradeLayout);
 
 const useStyles = makeStyles((theme: Theme) => ({
   navBox: {

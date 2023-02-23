@@ -50,6 +50,8 @@ export interface AssignmentModel {
     assignment_description: string;
     score: number;
     assignment_optional_file?: FileModel[];
+    assignment_student_result?: any[];
+    assignment_student_score?: any[];
     assignment_start_date: string;
     assignment_end_date: string;
     can_submit: boolean;
@@ -86,8 +88,10 @@ export interface FileModel {
   }
   
   export interface PollModel {
+    id?: number;
     choice_name: string;
     vote: number; // vote count
+    percentage?: number;
   }
 
   
