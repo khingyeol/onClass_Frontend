@@ -4,7 +4,10 @@ import { useParams } from "react-router";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
-import { assignmentGet, assignmentStdSubmit } from "../../services/class/api_class";
+import {
+  assignmentGet,
+  assignmentStdSubmit,
+} from "../../services/class/api_class";
 import { AssignmentModel } from "../../services/types/ClassModel";
 import { async } from "q";
 import { response } from "express";
@@ -44,27 +47,28 @@ const UploadBox: FC = () => {
     // console.log(e);
   };
 
-  const onChangeAnswer = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChangeAnswer = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setAnswerResult(e.target.value);
-  }
+  };
 
   const onSubmit = async () => {
-              const reqBody: AssignmentStdSubmit = {
-              class_code: classid!,
-              assignment_id: id!,
-              data: {
-                  file_result: [""],
-                  answer_result: answerResult ?? '',
-                  url_result: '',
-              }
-          }
-                    const res = await assignmentStdSubmit(reqBody);
-          if(res.data.result == 'OK') {
-              window.location.reload()
-          }
-          else {
-              console.log('submit error');
-          }
+    const reqBody: AssignmentStdSubmit = {
+      class_code: classid!,
+      assignment_id: id!,
+      data: {
+        file_result: [],
+        answer_result: answerResult ?? "",
+        url_result: "",
+      },
+    };
+    const res = await assignmentStdSubmit(reqBody);
+    if (res.data.result === "OK") {
+      window.location.reload();
+    } else {
+      console.log("submit error");
+    }
 
     // const data = new FormData();
     // for (let i = 0; i < files.length; i++) {
@@ -134,11 +138,12 @@ const UploadBox: FC = () => {
             {/* <Box width="100%" > */}
             {asmContent?.can_submit && (
               <>
-              <OCTextField 
-              name="answer_result"
-              value={answerResult}
-              onChange={(e) => onChangeAnswer(e)}
-              placeholder={"Answer Result"} />
+                <OCTextField
+                  name="answer_result"
+                  value={answerResult}
+                  onChange={(e) => onChangeAnswer(e)}
+                  placeholder={"Answer Result"}
+                />
                 {/* <Box className={classes.title}>
                   <OCButton
                     label="Insert Link"
@@ -165,7 +170,7 @@ const UploadBox: FC = () => {
                   onClick={onSubmit}
                   height="36px"
                   cornerRadius="10px"
-                  disabled={answerResult === ''}
+                  disabled={answerResult === ""}
                 />
               </>
             )}
