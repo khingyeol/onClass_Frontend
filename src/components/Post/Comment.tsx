@@ -20,6 +20,7 @@ import { getSelectedId, getSelectedType } from "../../store/stage/selector";
 import { formatDate, formatTime } from "../../utils/formatDate";
 import { useParams } from "react-router-dom";
 import { CommentModel } from "../../services/types/ClassModel";
+import OCAvatar from "../../common/OCAvatar";
 
 interface CommentProps {
   comment_data: CommentModel[];
@@ -38,11 +39,9 @@ const CommentSection: FC<CommentProps> = (props) => {
 
   const onClickSend = () => {
     if (type === "ASSIGNMENT") {
-      assignmentComment(classid!, id!, comment).then(() => {
-      });
+      assignmentComment(classid!, id!, comment).then(() => {});
     } else if (type === "POST") {
-      postComment(classid!, id!, comment).then(() => {
-      });
+      postComment(classid!, id!, comment).then(() => {});
     }
     setComment("");
   };
@@ -57,25 +56,15 @@ const CommentSection: FC<CommentProps> = (props) => {
     comment_data &&
     comment_data.map((item) => (
       <Box className={classes.commentbox} key={item.create}>
-        <Avatar
-          sx={{
-            width: isDesktop ? 60 : 50,
-            height: isDesktop ? 60 : 50,
-            boxSizing: "border-box",
-            border: "1px solid #707070",
-            //   alignSelf: "center",
-          }}
-          alt="profile-image"
-          src={item.profile_pic}
-        />
+        <OCAvatar src={item.profile_pic} />
 
         <Box className={classes.contentBox}>
           <Box style={{ display: "flex", gap: "16px" }}>
-            <Typography variant="body2" color={onClassColorTheme.black}>
+            <Typography variant="title3" color={onClassColorTheme.black}>
               {`${item.comment_author.firstname} ${item.comment_author.lastname}`}
             </Typography>
 
-            <Typography variant="body1" color={onClassColorTheme.grey}>
+            <Typography variant="description" color={onClassColorTheme.grey}>
               {`${formatDate(item.create ?? "")} ${formatTime(
                 item.create ?? ""
               )}`}
@@ -96,23 +85,31 @@ const CommentSection: FC<CommentProps> = (props) => {
         <Box
           className={classes.comments}
           display="flex"
-          sx={{
-            borderTop: `${
-              comment_data && comment_data.length !== 0
-                ? "1px solid #BFBFBF"
-                : "0px"
-            }`,
-            paddingTop: `${
-              comment_data && comment_data.length !== 0 ? "10px" : "0px"
-            }`,
-          }}
+          borderTop={
+            comment_data && comment_data.length !== 0
+              ? {
+                  xs: "1px solid rgba(112,112,112, 0.2)",
+                  sm: "1px solid rgba(112,112,112, 0.3)",
+                }
+              : "0px"
+          }
+          // borderTop={{xs:"1px solid rgba(112,112,112, 0.2)", sm:"1px solid rgba(112,112,112, 0.3)"}}
+          paddingTop={
+            comment_data && comment_data.length !== 0 ? "10px" : "0px"
+          }
+          // sx={{
+          //   borderTop: `${comment_data && comment_data.length !== 0
+          //       ? "1px solid"
+          //       : "0px"
+          //     }`,
+          // }}
         >
           <OCTextField
             value={comment}
             onChange={(e) => handleChange(e)}
             placeholder="Comments…"
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 onClickSend();
               }
             }}
@@ -140,31 +137,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     gap: "24px",
     backgroundColor: onClassColorTheme.white,
     borderRadius: "35px",
-    border: "1px solid ",
+    border: "1px solid",
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
     padding: "20px 30px",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      padding: "13px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+      gap: "8px",
+    },
   },
   commentbox: {
     display: "flex",
+    gap: "20px",
+    [theme.breakpoints.down("sm")]: {
+      gap: "10px",
+    },
   },
   contentBox: {
     padding: "5px",
   },
   contents: {
+    padding: "0.5rem 0",
     wordBreak: "break-word",
     whiteSpace: "pre-line",
+    fontweight: "regular",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "15px",
+    },
   },
   comments: {
-    // position: "sticky",
-    // height: "50px",
-    marginTop: "10px",
-    // paddingTop: "10px",
     display: "flex",
-    // whiteSpace: "nowrap",
     gap: "15px",
-    // width: "90%",
     bottom: "0",
-    // overflowX: "auto",
   },
 }));

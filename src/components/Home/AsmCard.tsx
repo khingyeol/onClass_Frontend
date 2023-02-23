@@ -1,4 +1,11 @@
-import { alpha, Box, Theme, Typography, useMediaQuery } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Grid,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { FC } from "react";
 import OCIconButton from "../../common/OCIconButton";
@@ -16,51 +23,72 @@ interface AsmCardProps {
 }
 
 const AsmCard: FC<AsmCardProps> = (props) => {
-  const { icon, title, desc, midText, trailText, trailTextColor, onClick } = props;
+  const { icon, title, desc, midText, trailText, trailTextColor, onClick } =
+    props;
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const classes = useStyles();
 
   return (
     <>
       <Box display="flex" onClick={onClick}>
-        <Box className={classes.asmBox}>
+        <Grid container className={classes.asmBox}>
           {/* LEFT SIDE */}
-          <Box display="flex" flexWrap="wrap" alignContent="center" gap={2}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            display="flex"
+            flexWrap="wrap"
+            alignContent="center"
+            gap={{ xs: 1.5, sm: 2 }}
+          >
             <OCIconButton
               icon={icon ?? AsmIcon}
               color={onClassColorTheme.green}
-              size="56px"
+              size={isDesktop ? "56px" : "45px"}
             />
 
             <Box alignSelf="center">
-              <Typography variant="h4">{title}</Typography>
+              <Typography variant="title3">{title}</Typography>
               <Typography variant="description" color={onClassColorTheme.grey}>
                 {desc}
               </Typography>
             </Box>
-          </Box>
+          </Grid>
 
-          <Box
-            display="flex"
-            alignSelf="center"
-            flexGrow="1"
-            justifyContent={{ xs: "space-between", sm: "space-around" }}
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            textAlign={{ xs: "left", sm: "center" }}
+            className={classes.box}
           >
             {/* MIDDLE */}
-            <Typography variant="h4" alignSelf="center" color={trailTextColor ?? onClassColorTheme.green}>
-              {midText}
-            </Typography>
-
-            {/* RIGHT SIDE */}
             <Typography
               variant="description"
-              color={trailTextColor ?? onClassColorTheme.green}
               alignSelf="center"
+              color={trailTextColor ?? onClassColorTheme.green}
+            >
+              {midText}
+            </Typography>
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            textAlign={{ xs: "end", sm: "right" }}
+            className={classes.box}
+          >
+            {/* RIGHT SIDE */}
+            <Typography
+              variant="title3"
+              color={trailTextColor ?? onClassColorTheme.green}
             >
               {trailText}
             </Typography>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );
@@ -88,10 +116,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderColor: alpha(onClassColorTheme.green, 0.3),
     },
     [theme.breakpoints.down("sm")]: {
-      // display: "grid",
       minHeight: "108px",
-      padding: "0px 20px",
-      borderRadius: "31.5px",
+      padding: "0px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+    },
+  },
+  box: {
+    paddingTop: "0",
+    alignSelf: "center",
+    flexGrow: 1,
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: "5px",
+      alignSelf: "end",
     },
   },
 }));

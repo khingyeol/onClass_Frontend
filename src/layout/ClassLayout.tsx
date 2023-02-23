@@ -16,15 +16,6 @@ import { getClassDetail } from "../store/classsdetail/selector";
 import { GetClassResponseData } from "../services/types/getClassResponse";
 import { gql, useQuery, useSubscription } from "@apollo/client";
 
-const FEEDS_QUERY = gql`
-  query FeedsQuery($classCode: String!) {
-    feeds(class_code: $classCode) {
-      type
-      data
-    }
-  }
-`;
-
 const FEEDS_SUBSCRIPTION = gql`
   subscription NewFeedUpdate($classCode: String!) {
     feeds(class_code: $classCode) {
@@ -41,12 +32,6 @@ const ClassLayout: FC = (props) => {
   const dispatch = useDispatch();
   const { classid } = useParams();
   const classDetail = useSelector(getClassDetail);
-  const {
-    loading: loadingQ,
-    data: dataQ,
-  } = useQuery(FEEDS_QUERY, {
-    variables: { classCode: classid },
-  });
   const subscriptionClassFeed = useSubscription(
     FEEDS_SUBSCRIPTION,
     {
@@ -68,17 +53,11 @@ const ClassLayout: FC = (props) => {
   };
 
   useEffect(() => {
-    console.log("classid", classid);
     if (classid) {
       fetchGetFromClass(classid);
+      console.log('q', classDetail?.teacher[0]?.optional_contact && classDetail?.teacher[0]?.optional_contact?.length > 1);
     }
   }, []);
-
-  useEffect(() => {
-    if (classid && !loadingQ && dataQ) {
-      dispatch(updateClassFeed(dataQ.feeds));
-    }
-  }, [loadingQ])
 
 
   return (

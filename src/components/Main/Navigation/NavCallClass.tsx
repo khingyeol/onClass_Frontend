@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("sm")]: {
       minHeight: "50px",
       paddingY: "10px",
+      padding: "5px 0px 5px 20%",
     },
   },
 }));

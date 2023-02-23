@@ -20,15 +20,20 @@ const ClassAssignments: FC = () => {
   const navigate = useNavigate();
   const { role } = useSelector(getClassDetail);
 
-  const isTeacher = () => { if (role === 'teacher') { return true } return false };
+  const isTeacher = () => {
+    if (role === "teacher") {
+      return true;
+    }
+    return false;
+  };
 
   const fetchGetAllAsm = async () => {
     try {
       const res = await getTodo(classid!);
-      console.log('[assignmentAllClass] ERROR', classid);
-      setContent(res.data.data)
+      console.log("[assignmentAllClass] ERROR", classid);
+      setContent(res.data.data);
     } catch (err) {
-      console.log('[assignmentAllClass] ERROR');
+      console.log("[assignmentAllClass] ERROR");
     }
   };
 
@@ -42,11 +47,11 @@ const ClassAssignments: FC = () => {
       case "ส่งช้า":
         return onClassColorTheme.error;
     }
-  }
+  };
 
   const onClickASM = (id: string) => {
     navigate(`/${classid}/assignment/${id}`);
-  }
+  };
 
   useEffect(() => {
     fetchGetAllAsm();
@@ -81,7 +86,7 @@ const ClassAssignments: FC = () => {
           ) : null}
         </Box>
         <Box className={classes.contentBox}>
-
+          {content.length < 1 && <Typography>ไม่พบงานมอบหมาย</Typography>}
           {content.map((item: getAllAssignmentsResponse) => (
             <AsmCard
               title={item.assignment_name}
@@ -113,5 +118,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     gap: "21px",
-  }
+  },
 }));

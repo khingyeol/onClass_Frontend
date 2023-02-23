@@ -2,7 +2,11 @@ import { Theme, alpha, Box } from "@mui/material";
 import { onClassColorTheme } from "./theme/onClassColorTheme";
 import { PollModel, VoteAuthorModel } from "../services/types/ClassModel";
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
+import { MultiplePoll } from "./MultiplePoll/MultiplePoll";
+import { getUserData } from "../store/userdata/selector";
+import { Result } from "./MultiplePoll/types/result";
 
 interface OCPollSectionProps {
   pollItems: PollModel[];
@@ -13,12 +17,50 @@ interface OCPollSectionProps {
 const OCPollSection: FC<OCPollSectionProps> = (props) => {
   const classes = useStyles();
   const { pollItems, voteAuthor, handleOnClickVote } = props;
+  const userData = useSelector(getUserData);
 
-  const vote = (item: PollModel) => {
-    handleOnClickVote({ choice_name: item.choice_name, vote: item.vote + 1 });
+  const resultData = () => {
+    return pollItems.map((item, index) => {
+      return { id: index, text: item.choice_name, votes: item.vote };
+    });
   };
 
-  return <Box className={classes.pollSectionBox}></Box>;
+  const customTheme = {
+    mainColor: `${onClassColorTheme.green}`,
+    backgroundColor: `${onClassColorTheme.white}`,
+    alignment: "center",
+  };
+
+  const vote = (item: Result) => {
+    handleOnClickVote({ choice_name: item.text, vote: item.votes + 1 });
+  };
+
+  const isVoted = () => {
+    const data = {
+      isVoted: false,
+      isVotedId: -1,
+    };
+
+    for (let i = 0; i < voteAuthor.length; i++) {
+      if (voteAuthor[i].username === userData.username) {
+        data.isVoted = true;
+        data.isVotedId = voteAuthor[i].vote;
+      }
+    }
+    return data;
+  };
+
+  return (
+    <Box className={classes.pollSectionBox}>
+      <MultiplePoll
+        results={resultData()}
+        theme={customTheme}
+        isVoted={isVoted().isVoted}
+        isVotedId={isVoted().isVoted ? isVoted().isVotedId : undefined}
+        onVote={vote}
+      />
+    </Box>
+  );
 };
 
 export default OCPollSection;

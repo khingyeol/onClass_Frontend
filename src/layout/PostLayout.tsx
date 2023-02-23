@@ -27,7 +27,7 @@ const PostLayout: FC = (props) => {
           </Box>
         </Box>
         {/* If type = asignment -> show asmbox */}
-        {type === "ASSIGNMENT" ? <UploadBox /> : null}
+        {type === "ASSIGNMENT" && isDesktop ? <UploadBox /> : null}
       </Box>
     </>
   );

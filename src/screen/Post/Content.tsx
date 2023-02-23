@@ -13,14 +13,24 @@ import OCIconButton from "../../common/OCIconButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
-import { assignmentGet, postGet } from "../../services/class/api_class";
+import {
+  assignmentGet,
+  postGet,
+  postPollVote,
+} from "../../services/class/api_class";
 import { getSelectedId, getSelectedType } from "../../store/stage/selector";
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import CommentSection from "../../components/Post/Comment";
 import NotFoundPage from "../common/NotFoundPage";
-import { AssignmentModel, PostModel } from "../../services/types/ClassModel";
+import {
+  AssignmentModel,
+  PollModel,
+  PostModel,
+} from "../../services/types/ClassModel";
 import { gql, useSubscription } from "@apollo/client";
+import OCAvatar from "../../common/OCAvatar";
+import OCPollSection from "../../common/OCPollSection";
 
 const ONASSIGNMENTUPDATED_SUBSCRIPTION = gql`
   subscription OnAssignmentUpdate($classCode: String!, $assignmentId: String!) {
@@ -106,29 +116,46 @@ const Content: FC = () => {
 
   if (type === "ASSIGNMENT") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const subscriptionSingleAssignment = useSubscription(ONASSIGNMENTUPDATED_SUBSCRIPTION, {
-      variables: { classCode: classid, assignmentId: id! },
-      onData: ({ data }) => {
-        if (!data.loading) {
-          console.log('MYLOG: ', data.data.onAssignmentUpdate)
-          const asmContentTemp = asmContent
-          asmContentTemp!.comment = data.data.onAssignmentUpdate.singleAssignment.comment
-          setAsmContent(asmContentTemp);
-        }
+    const subscriptionSingleAssignment = useSubscription(
+      ONASSIGNMENTUPDATED_SUBSCRIPTION,
+      {
+        variables: { classCode: classid, assignmentId: id! },
+        onData: ({ data }) => {
+          if (!data.loading) {
+            console.log("MYLOG: ", data.data.onAssignmentUpdate);
+            const asmContentTemp = asmContent;
+            asmContentTemp!.comment =
+              data.data.onAssignmentUpdate.singleAssignment.comment;
+            setAsmContent(asmContentTemp);
+          }
+        },
       }
-    })
+    );
   } else if (type === "POST") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const subscriptionSinglePost = useSubscription(ONPOSTUPDATED_SUBSCRIPTION, {
       variables: { classCode: classid, postId: id! },
       onData: ({ data }) => {
         if (!data.loading) {
-          console.log('MYLOG: ', data.data.onPostUpdate)
+          console.log("MYLOG: ", data.data.onPostUpdate);
           setPostContent(data.data.onPostUpdate.singlePost);
         }
       },
     });
   }
+
+  const handleOnClickVote = async (votedPoll: PollModel) => {
+    const reqBody = {
+      class_code: classid!,
+      post_id: id!,
+      choice_name: votedPoll.choice_name,
+    };
+    const response = await postPollVote(
+      reqBody.class_code,
+      reqBody.post_id,
+      reqBody.choice_name
+    );
+  };
 
   const fetchGetPost = async () => {
     if (type === "ASSIGNMENT") {
@@ -167,15 +194,8 @@ const Content: FC = () => {
             <Box className={classes.boxhead}>
               <Box className={classes.headline}>
                 {type === "POST" ? (
-                  <Avatar
-                    sx={{
-                      width: isDesktop ? 60 : 50,
-                      height: isDesktop ? 60 : 50,
-                      boxSizing: "border-box",
-                      border: "1px solid #707070",
-                      alignSelf: "center",
-                    }}
-                    alt="profile-image"
+                  <OCAvatar
+                    sx={{ alignSelf: "center" }}
                     src={postContent?.profile_pic ?? ""}
                   />
                 ) : (
@@ -188,8 +208,7 @@ const Content: FC = () => {
                 {/*  */}
                 <Box style={{ alignSelf: "center" }}>
                   <Typography
-                    variant="h3"
-                    fontSize="21px"
+                    variant="title3"
                     color={
                       type === "POST"
                         ? onClassColorTheme.black
@@ -214,23 +233,26 @@ const Content: FC = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Typography
-                variant="h3"
-                fontSize="21px"
-                color={onClassColorTheme.black}
-              >
+              <Typography variant="title3" color={onClassColorTheme.black}>
                 {type === "POST" ? null : `${asmContent?.score} pts.`}
               </Typography>
             </Box>
             {/* Content */}
             <Box
               className={classes.contents}
-              sx={{ borderTop: "1px solid rgba(139, 139,139, 0.2)" }}
+              // sx={{ borderTop: "1px solid rgba(139, 139,139, 0.2)" }}
             >
               {asmContent?.assignment_description ?? postContent?.post_content}
             </Box>
+            {postContent?.type === "poll" && (
+              <OCPollSection
+                pollItems={postContent?.poll}
+                voteAuthor={postContent?.vote_author!}
+                handleOnClickVote={handleOnClickVote}
+              />
+            )}
           </Box>
-          <Box padding={1.5} />
+          <Box padding={{ xs: 1, sm: 1.5 }} />
           <CommentSection
             comment_data={asmContent?.comment ?? postContent?.comment!}
           />
@@ -251,6 +273,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
     padding: "20px 30px",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      padding: "13px 18px",
+      borderRadius: "28px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+    },
   },
   boxhead: {
     display: "flex",
@@ -262,24 +289,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     gap: "20px",
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      gap: "10px",
+    },
   },
   contents: {
     wordBreak: "break-word",
     whiteSpace: "pre-line",
     padding: "0.75rem 0",
-    margin: "0.75rem 0",
-    // borderTop: 1,
+    margin: "0.75rem 0 0 0",
+    borderTop: "1px solid ",
+    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "15px",
+      borderColor: alpha(onClassColorTheme.darkGrey, 0.2),
+    },
   },
   comments: {
-    // position: "sticky",
-    // height: "50px",
     borderTop: "1px solid rgba(191, 191,191, 0.2)",
     display: "flex",
-    // whiteSpace: "nowrap",
     paddingTop: "10px",
     gap: "15px",
-    // width: "90%",
     bottom: "0",
-    // overflowX: "auto",
   },
 }));

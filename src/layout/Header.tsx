@@ -15,13 +15,13 @@ import { onClassColorTheme } from "../common/theme/onClassColorTheme";
 import { appBarHeightSm, appBarHeightXs } from "./HomeLayout";
 import { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
-import dummyPic from "../assets/image/dummypic.png";
 import NavAddBtn from "../components/Main/Navigation/NavAddBtn";
 import { logout } from "../services/auth/api_auth";
 import { useDispatch, useSelector } from "react-redux";
 import { AllStageType, updateCurrentStage } from "../store/stage/action";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../store/userdata/selector";
+import OCAvatar from "../common/OCAvatar";
 
 const Header: FC<{ handleDrawer: () => void }> = (props) => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -90,15 +90,10 @@ const Header: FC<{ handleDrawer: () => void }> = (props) => {
 
           {/* AppBar ProfilePic */}
           <IconButton onClick={(e) => handleUserProfile(e)}>
-            <Avatar
-              sx={{
-                width: isDesktop ? 60 : 28,
-                height: isDesktop ? 60 : 28,
-                boxSizing: "border-box",
-                border: "1px solid #707070",
-              }}
-              alt="profile-image"
-              src={userData.profile_pic}
+            <OCAvatar
+              width={isDesktop ? 60 : 28}
+              height={isDesktop ? 60 : 28}
+              src={userData.profile_pic ?? ""}
             />
           </IconButton>
           <Menu

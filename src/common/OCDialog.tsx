@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
             backgroundColor: "white",
             [theme.breakpoints.down("sm")]: {
+                borderRadius: "25px",
                 padding: "0 20px",
                 margin: "10px 40px",
                 height: "auto",
@@ -84,15 +85,24 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: "center",
         // justifyItems: "center",
-
         gap: "30px",
+        [theme.breakpoints.down("sm")]: {
+            padding: "20px",
+            gap: "20px",
+        },
     },
     title: {
         textAlign: "center",
+        [theme.breakpoints.down("sm")]: {
+            fontSize: '24px',
+        },
     },
     message: {
         fontSize: '27px',
         textAlign: "center",
+        [theme.breakpoints.down("sm")]: {
+            fontSize: '16px',
+        },
     },
     btnBox: {
         maxWidth: '385px',
