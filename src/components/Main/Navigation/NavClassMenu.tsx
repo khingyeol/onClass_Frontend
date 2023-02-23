@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { onClassColorTheme } from "../../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getClassId } from "../../../store/classsdetail/selector";
+import {
+  getClassDetail,
+  getClassId,
+} from "../../../store/classsdetail/selector";
 import { updateCurrentStage, AllStageType } from "../../../store/stage/action";
 import { useParams } from "react-router-dom";
 
@@ -15,6 +18,7 @@ const NavClassMenu: FC = () => {
   const currentPath = window.location.pathname.substring(
     window.location.pathname.lastIndexOf("/")
   );
+  const role = useSelector(getClassDetail).role;
   // const classid = useSelector(getClassId);
   const { classid } = useParams();
 
@@ -72,6 +76,24 @@ const NavClassMenu: FC = () => {
       >
         <Typography variant="body1">examination</Typography>
       </Box>
+      {role === "teacher" && (
+        <Box
+          className={classes.class_list}
+          onClick={() => navigate(`/${classid}/grading`)}
+          borderLeft={
+            "/grading" === currentPath
+              ? "6px solid #41B094"
+              : "0px solid #41B094"
+          }
+          bgcolor={
+            "/grading" === currentPath
+              ? alpha(onClassColorTheme.green, 0.1)
+              : "clear"
+          }
+        >
+          <Typography variant="body1">grading</Typography>
+        </Box>
+      )}
     </>
   );
 };
