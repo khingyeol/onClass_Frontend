@@ -4,11 +4,14 @@ import { useParams } from "react-router";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCButton from "../../common/OCButton";
-import { assignmentGet } from "../../services/class/api_class";
+import { assignmentGet, assignmentStdSubmit } from "../../services/class/api_class";
 import { AssignmentModel } from "../../services/types/ClassModel";
 import { async } from "q";
 import { response } from "express";
 import { uploadFile } from "../../services/class/api_file";
+import OCTextField from "../../common/OCTextfield";
+import { AssignmentStdSubmit } from "../../services/types/patchAssignmentStdSubmit";
+import { formatShortDate } from "../../utils/formatDate";
 
 const UploadBox: FC = () => {
   const classes = useStyles();
@@ -17,6 +20,7 @@ const UploadBox: FC = () => {
   const [asmContent, setAsmContent] = useState<AssignmentModel>();
   const [files, setFiles] = useState([]);
   const [status, setStatus] = useState("nOK");
+  const [answerResult, setAnswerResult] = useState("");
 
   const fetchGetPost = async () => {
     await assignmentGet(classid!, id!)
@@ -40,12 +44,33 @@ const UploadBox: FC = () => {
     // console.log(e);
   };
 
+  const onChangeAnswer = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setAnswerResult(e.target.value);
+  }
+
   const onSubmit = async () => {
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("file", files[i]);
-    }
-    console.log(files);
+              const reqBody: AssignmentStdSubmit = {
+              class_code: classid!,
+              assignment_id: id!,
+              data: {
+                  file_result: [""],
+                  answer_result: answerResult ?? '',
+                  url_result: '',
+              }
+          }
+                    const res = await assignmentStdSubmit(reqBody);
+          if(res.data.result == 'OK') {
+              window.location.reload()
+          }
+          else {
+              console.log('submit error');
+          }
+
+    // const data = new FormData();
+    // for (let i = 0; i < files.length; i++) {
+    //   data.append("file", files[i]);
+    // }
+
     // const res = await uploadFile(data)
     // if (res.data.result === 'OK') {
     //     console.log(res)
@@ -103,23 +128,45 @@ const UploadBox: FC = () => {
             <Box className={classes.title}>
               <Typography variant="h4">Due date:</Typography>
               <Typography variant="h4" color={onClassColorTheme.green}>
-                Due date:
+                {formatShortDate(asmContent?.assignment_end_date)}
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
             {asmContent?.can_submit && (
               <>
-                <Button variant="contained" component="label">
+              <OCTextField 
+              name="answer_result"
+              value={answerResult}
+              onChange={(e) => onChangeAnswer(e)}
+              placeholder={"Answer Result"} />
+                {/* <Box className={classes.title}>
+                  <OCButton
+                    label="Insert Link"
+                    variant="outline"
+                    fontSize=""
+                    height="36px"
+                    cornerRadius="10px"
+                  />
+                                    <OCButton
+                    label="Insert Text"
+                    variant="outline"
+                    fontSize=""
+                    height="36px"
+                    cornerRadius="10px"
+                  />
+                </Box> */}
+                {/* Upload file */}
+                {/* <Button variant="contained" component="label">
                   Upload File
                   <input type="file" onChange={onInputUpload} multiple hidden />
-                </Button>
+                </Button> */}
                 <OCButton
                   label={"Submit"}
                   onClick={onSubmit}
                   height="36px"
                   cornerRadius="10px"
+                  disabled={answerResult === ''}
                 />
-                {/* <OCButton variant='outline' label={'Unsubmit'} height="36px" cornerRadius="10px" /> */}
               </>
             )}
             {/* {files.length ? <>
