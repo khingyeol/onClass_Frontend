@@ -136,6 +136,7 @@ export async function signIn(username: string, password: string) {
           console.log("[Login] Success", res.data.data);
           store.dispatch(updateUserData(res.data.data));
           store.dispatch(updateAuthentication(true));
+          // currentUser
           resolve(res.data);
         } else {
           console.log("[Login] fail", res);

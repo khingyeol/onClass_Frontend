@@ -9,7 +9,7 @@ import {
   cognitoUserDataModel,
   onClassRegisterModel,
 } from "../../services/auth/api_auth";
-import { updateUserEmail } from "../../store/userdata/action";
+import { UpdateUsername } from "../../store/userdata/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
@@ -116,7 +116,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
     console.log("ontap loggin");
     if (type === "login") {
       // type Login
-      dispatch(updateUserEmail(loginTF?.username!));
+      dispatch(UpdateUsername(loginTF?.username!));
       try {
         await signIn(loginTF!.username, loginTF!.password);
         console.log("[onTappedLogin] login pass!");
@@ -151,7 +151,7 @@ const AuthCard: FC<AuthCardProps> = (props) => {
       const data: string = await avatar.toDataUri();
       console.log("data uri", data);
 
-      dispatch(updateUserEmail(registerTF?.username));
+      dispatch(UpdateUsername(registerTF?.username));
       try {
         await signUp({
           ...registerTF,
