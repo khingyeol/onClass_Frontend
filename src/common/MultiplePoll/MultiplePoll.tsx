@@ -56,6 +56,11 @@ const MultiplePoll = ({
   };
 
   useEffect(() => {
+    setPrevious([]);
+  }, [])
+
+
+  useEffect(() => {
     if (previous.length !== 0) {
         reAnimateAnswers(results);
     }
