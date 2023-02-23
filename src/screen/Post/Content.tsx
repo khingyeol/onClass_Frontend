@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useReducer, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCIconButton from "../../common/OCIconButton";
@@ -113,6 +113,7 @@ const Content: FC = () => {
   const [postContent, setPostContent] = useState<PostModel>();
   const { classid, id } = useParams();
   const [error, setError] = useState<boolean | null>();
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   if (type === "ASSIGNMENT") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -179,9 +180,12 @@ const Content: FC = () => {
   };
 
   useEffect(() => {
-    console.log("");
     fetchGetPost();
   }, []);
+
+  useEffect(() => {
+    forceUpdate();
+  }, [postContent])
 
   return (
     <>
