@@ -33,6 +33,7 @@ import {
 import IconASM from "../../assets/svg/icon_asm.svg";
 import { PollModel } from "../../services/types/ClassModel";
 import OCAvatar from "../../common/OCAvatar";
+import { getUserData } from "../../store/userdata/selector";
 
 interface FeedPostProps {
   type: string;
@@ -166,6 +167,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             <OCPollSection
               pollItems={data.poll}
               voteAuthor={data.vote_author}
+              postAuthor={data.post_author.user_id.toString()}
               handleOnClickVote={handleOnClickVote}
             />
           </Box>

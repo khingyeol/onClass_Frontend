@@ -19,7 +19,7 @@ function animateAnswers(
   refs: MutableRefObject<RefObject<HTMLDivElement>[]>,
   theme?: Theme,
   index?: number,
-  isVotedId?: number
+  isVotedId?: number,
 ): void {
   const answers: HTMLElement[] = []
   let restOfAnswers: PollModel[] = []

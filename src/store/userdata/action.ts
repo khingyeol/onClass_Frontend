@@ -9,6 +9,7 @@ export interface UserClassModel {
 }
 
 export interface UserModel {
+  user_id?: string;
   username?: string;
   email?: string;
   profile_pic?: string;
@@ -18,6 +19,7 @@ export interface UserModel {
 
 export enum UserDataActionType {
   UpdateUserData = "USER/UPDATE_USERDATA",
+  UpdateUsername = "USER/UPDATE_USERNAME",
   UpdateUserEmail = "USER/UPDATE_EMAIL",
   ClearUserData = "USER/CLEAR_USERDATA",
 }
@@ -25,6 +27,11 @@ export enum UserDataActionType {
 export interface UpdateUserDataAction {
   type: UserDataActionType.UpdateUserData;
   payload: UserModel;
+}
+
+export interface UpdateUsernameAction {
+  type: UserDataActionType.UpdateUsername;
+  payload: { username: string };
 }
 
 export interface UpdateUserEmailAction {
@@ -38,6 +45,7 @@ export interface ClearUserDataAction {
 
 export type UserDataAction =
   | UpdateUserDataAction
+  | UpdateUsernameAction
   | UpdateUserEmailAction
   | ClearUserDataAction;
 
@@ -51,6 +59,13 @@ export const updateUserData = (data: UserModel): UpdateUserDataAction => {
 export const clearUserData = (): ClearUserDataAction => {
   return {
     type: UserDataActionType.ClearUserData,
+  };
+};
+
+export const updateUsername = (username: string): UpdateUsernameAction => {
+  return {
+    type: UserDataActionType.UpdateUsername,
+    payload: { username },
   };
 };
 

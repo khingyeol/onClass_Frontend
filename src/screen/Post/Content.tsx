@@ -31,6 +31,7 @@ import {
 import { gql, useSubscription } from "@apollo/client";
 import OCAvatar from "../../common/OCAvatar";
 import OCPollSection from "../../common/OCPollSection";
+import { getUserData } from "../../store/userdata/selector";
 
 const ONASSIGNMENTUPDATED_SUBSCRIPTION = gql`
   subscription OnAssignmentUpdate($classCode: String!, $assignmentId: String!) {
@@ -115,6 +116,7 @@ const Content: FC = () => {
   const [postContent, setPostContent] = useState<PostModel>();
   const { classid, id } = useParams();
   const [error, setError] = useState<boolean | null>();
+  const userData = useSelector(getUserData);
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   if (type === "ASSIGNMENT") {
@@ -254,6 +256,7 @@ const Content: FC = () => {
               <OCPollSection
                 pollItems={postContent?.poll}
                 voteAuthor={postContent?.vote_author!}
+                postAuthor={postContent?.post_author.user_id!.toString()}
                 handleOnClickVote={handleOnClickVote}
               />
             )}

@@ -12,6 +12,9 @@ export const userDataReducer: Reducer<UserModel, UserDataAction> = (
         case UserDataActionType.UpdateUserData: {
             return { ...action.payload }
         }
+        case UserDataActionType.UpdateUsername: {
+            return { ...state, email: action.payload.username};
+        }
         case UserDataActionType.UpdateUserEmail: {
             return { ...state, email: action.payload.email};
         }

@@ -6,7 +6,7 @@ import { updateAuthentication } from "../../store/authentication/action";
 import { clearStore, store } from "../../store";
 import { useDispatch } from "react-redux";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
-import { updateUserData } from "../../store/userdata/action";
+import { updateUserData, updateUserEmail } from "../../store/userdata/action";
 
 let currentUser: AmazonCognitoIdentity.CognitoUser | null =
   UserPool.getCurrentUser();
@@ -77,7 +77,7 @@ export interface cognitoUserDataModel {
 //           message: err.message || JSON.stringify(err),
 //           primaryLabel: 'Close',
 //           onPrimaryAction: () => { dispatch(hideDialog()) },
-//         }))  
+//         }))
 //         return;
 //       }
 //       var cognitoUser = result?.user;
@@ -125,7 +125,7 @@ export async function signIn(username: string, password: string) {
       new AmazonCognitoIdentity.AuthenticationDetails(
         cognitoAuthenticationData
       );
-      
+
     currentUser = getCognitoUser(username);
     currentUser.authenticateUser(authenticationDetails, {
       onSuccess: async (result) => {
@@ -187,16 +187,20 @@ export async function signUp(values: onClassRegisterModel) {
         if (err) {
           //err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
           const dispatch = useDispatch();
-          dispatch(displayDialog({
-            id: 'UserPoolSignUp',
-            isShow: true,
-            title: "OTP",
+          dispatch(
+            displayDialog({
+              id: "UserPoolSignUp",
+              isShow: true,
+              title: "OTP",
               // err.message มาจาก cognito || lambda ถ้า domain ไม่ถูกจะสมัครไม่ได้
-            message: err.message || JSON.stringify(err),
-            primaryLabel: 'Close',
-            onPrimaryAction: () => { dispatch(hideDialog()) },
-          }))  
-            reject(err);
+              message: err.message || JSON.stringify(err),
+              primaryLabel: "Close",
+              onPrimaryAction: () => {
+                dispatch(hideDialog());
+              },
+            })
+          );
+          reject(err);
         } else {
           var cognitoUser = result?.user;
           console.log("user name is " + cognitoUser?.getUsername());
