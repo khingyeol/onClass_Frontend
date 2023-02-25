@@ -7,6 +7,7 @@ import { GetClassResponse } from "../types/getClassResponse";
 import { GetPostResponse } from "../types/getPostResponse";
 import { AssignmentStdSubmit } from "../types/patchAssignmentStdSubmit";
 import { JoinClassRequest } from "../types/patchClassJoinRequest";
+import { CreateAssignmentRequest } from "../types/postAssignmentCreate";
 import { CreateClassRequest } from "../types/postClassCreateRequest";
 import { PostPublishRequest } from "../types/postPostPublishRequest";
 
@@ -77,6 +78,12 @@ export const assignmentComment = async (
     data: { content: comment },
   });
 };
+
+// // class/assignment/create
+export const createAssigment = async (body: CreateAssignmentRequest) => {
+  return await httpClient.post(server.CLASS_URL + api_class.ASM_CREATE, body);
+};
+
 
 // // class/nickname
 // export const setClassNickname = async (values) => {
