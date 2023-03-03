@@ -9,12 +9,15 @@ import { createAssigment } from "../../services/class/api_class";
 import { displayDialog, hideDialog } from "../../store/dialog/action";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import OCChip from "../../common/OCChip";
 
 const AssignmentCreate: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classid } = useParams();
+  const chipData = [{ label: "ได้", value: "YES" }, { label: "ไม่ได้", value: "NO" }];
+
   const [isAsmError, setIsAsmError] = useState({
     assignment_name: true,
     assignment_description: false,
@@ -175,7 +178,7 @@ const AssignmentCreate: FC = () => {
         <Grid container columnSpacing={1} rowSpacing="20px">
           <Grid item xs={12} lg={5} className={classes.row}>
             <Typography variant="h4">นักเรียนสามารถส่งช้า :</Typography>
-            **INSERT CHIPS**
+            <OCChip data={chipData} />
           </Grid>
 
           <Grid item xs={12} lg={5} className={classes.row}>
