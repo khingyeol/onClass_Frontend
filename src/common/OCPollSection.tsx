@@ -27,7 +27,7 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
   }
 
   const customTheme = {
-    mainColor: `${onClassColorTheme.green}`,
+    mainColor: `${alpha(onClassColorTheme.green, 0.8)}`,
     backgroundColor: `${onClassColorTheme.white}`,
     alignment: "center",
   };
@@ -86,8 +86,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("sm")]: {
       cursor: "pointer",
       minHeight: "69px",
-      padding: "0px 35px",
-      borderRadius: "35px",
+      padding: "15px 20px 0px 20px",
+      borderRadius: "28px",
       color: onClassColorTheme.grey,
     },
   },

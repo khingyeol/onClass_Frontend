@@ -108,7 +108,7 @@ const CommentSection: FC<CommentProps> = (props) => {
           <OCTextField
             value={comment}
             onChange={(e) => handleChange(e)}
-            placeholder="Comments…"
+            placeholder="Comment…"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 onClickSend();

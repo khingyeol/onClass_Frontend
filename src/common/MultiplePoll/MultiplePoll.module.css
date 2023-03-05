@@ -7,7 +7,7 @@
   .answer {
     width: 100%;
     margin-bottom: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.8rem;
     border: 1px solid;
     border-color: rgba(112, 112, 112, 0.3);
     position: relative;
@@ -24,14 +24,14 @@
     height: 100%;
     left: 0;
     margin: 0;
-    border-radius: 0.5rem;
+    border-radius: 0.8rem;
     /* border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem; */
     text-align: left;
   }
   .answerInner p {
     margin: 0;
-    padding: 1rem;
+    padding: 0.5rem 0.8rem;
     font-weight: medium;
   }
   .answer span {
