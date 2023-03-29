@@ -67,10 +67,10 @@ const UploadBox: FC = () => {
                 type === "file"
                   ? FileIcon
                   : type === "text"
-                  ? TextIcon
-                  : type === "url"
-                  ? UrlIcon
-                  : UrlIcon
+                    ? TextIcon
+                    : type === "url"
+                      ? UrlIcon
+                      : UrlIcon
               }
               style={{
                 width: "13px",
@@ -179,33 +179,38 @@ const UploadBox: FC = () => {
   return (
     <>
       <Dialog
+        className={classes.root}
         open={openDialog}
         onClose={handleClickDialog}
-        PaperProps={{
-          style: {
-            borderRadius: "28px",
-            width: "100%",
-            height: "50%",
-          },
-        }}
+      // PaperProps={{
+      //   style: {
+      //     borderRadius: "28px",
+      //     width: "100%",
+      //     height: "50%",
+      //   },
+      // }}
       >
         {dialogType === "text" ? (
           <Box className={classes.dialog}>
+            <Typography variant="h4">Add Text</Typography>
             <OCTextField
               name="answer_result"
               value={answerResult}
               onChange={(e) => onChangeAnswer(e)}
               placeholder={"Answer Result"}
             />
+            <OCButton label={"Submit"} onClick={() => handleClickDialog('text')} />
           </Box>
         ) : (
           <Box className={classes.dialog}>
+            <Typography variant="h4">Add Url</Typography>
             <OCTextField
               name="url_result"
               value={urlResult}
               onChange={(e) => onChangeAnswer(e)}
               placeholder={"Url Result"}
             />
+            <OCButton label={"Submit"} onClick={() => handleClickDialog('url')} />
           </Box>
         )}
       </Dialog>
@@ -285,7 +290,7 @@ const UploadBox: FC = () => {
                   }
                   height="36px"
                   cornerRadius="10px"
-                  // disabled={isDisabledBtn()}
+                // disabled={isDisabledBtn()}
                 />
               </>
             )}
@@ -334,7 +339,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: "10px",
     padding: "8px 12px",
   },
-  dialog: {
-    padding: "20px",
+  root: {
+    '& .MuiPaper-root': {
+      borderRadius: "35px",
+      width: "80%",
+      boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
+      backgroundColor: "white",
+      [theme.breakpoints.down("sm")]: {
+        borderRadius: "25px",
+        padding: "0 20px",
+        margin: "10px 40px",
+        height: "auto",
+      },
+    },
+    justifyContent: "center",
+
   },
+  dialog: {
+    padding: "40px",
+    // width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: 'center',
+    justifyContent: "center",
+    // justifyItems: "center",
+    gap: "30px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "20px",
+      gap: "20px",
+    },
+  },
+
 }));
