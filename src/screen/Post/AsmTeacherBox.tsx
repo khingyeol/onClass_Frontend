@@ -94,7 +94,7 @@ const AsmTeacherBox: FC = () => {
         //   disabled={answerResult === ""}
         disabled
       />
-      <OCButton
+      <OCButton  
         label={"ตรวจงาน"}
           onClick={() => navigate(`${currentPath}/score`)}
         height="36px"
