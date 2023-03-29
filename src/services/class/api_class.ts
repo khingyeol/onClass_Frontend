@@ -62,6 +62,11 @@ export const assignmentStdSubmit = async (values: AssignmentStdSubmit) => {
 }
 
 // // class/assignment/score/submit
+// {
+//   classcode: string 
+//   assignment_id: string
+//   score_data: [{student_id: string, score: number}]
+// }
 // export const assignmentScoreSubmit = async (values) => {
 //     return await httpClient.patch(server.CLASS_URL+api_class.ASM_SCORE_SUBMIT, values);
 // }

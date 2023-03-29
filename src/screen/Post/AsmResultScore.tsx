@@ -38,7 +38,9 @@ import {
   GridColDef,
   GridActionsCellItem,
   GridColumns,
+  GridRowModel,
 } from "@mui/x-data-grid";
+import OCButton from "../../common/OCButton";
 
 const AsmResultScore: FC = () => {
   const classes = useStyles();
@@ -49,6 +51,7 @@ const AsmResultScore: FC = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const [asmContent, setAsmContent] = useState<AssignmentModel>();
   const { classid, id } = useParams();
+  const [dataContent, setDataContent] = useState<any[]>([]);
 
   const gridStyles = {
     fontSize: "17px",
@@ -118,7 +121,7 @@ const AsmResultScore: FC = () => {
   };
 
   const figmaColumns = [
-    { field: "name", editable: false, flex: 1 },
+    { field: "id", editable: false, flex: 1 },
     {
       field: "status",
       headerName: "สถานะ",
@@ -144,15 +147,93 @@ const AsmResultScore: FC = () => {
       type: "actions",
       // valueOp
       getActions: (i: any) => [
-        <Button onClick={() => {}}>โหลด</Button>,
+        <Button onClick={() => { }}>โหลด</Button>,
         // <GridActionsCellItem label="ดู" onClick={() => {}} />
       ],
     },
   ];
 
+  const MappedData = (data: any[]) => {
+    const myArray2 = new Array();
+
+    data.map((item, index) => {
+      const temp = {
+        ...item,
+        id: item.student_id,
+        // name: `${item.firstname} ${item.lastname}`,
+      };
+      myArray2.push({
+        ...temp,
+
+        // ...MappedASMscore(item.assignment),
+      });
+    });
+    console.log("temp", myArray2);
+    return myArray2;
+  };
+
+  const columns = [
+    { field: "id", editable: false },
+    // {
+    //   field: "status",
+    //   headerName: "สถานะ",
+    //   editable: false,
+    //   flex: 1,
+    //   renderCell: (params: any) => {
+    //     return (
+    //       <Box
+    //         sx={{ width: "100%", textAlign: "center", wordBreak: "break-word" }}
+    //       >
+    //         {renderStatus(params.row.status)}
+    //       </Box>
+    //     );
+    //   },
+    // },
+    // { field: "score", headerName: "คะแนน (10 pts.)", editable: true, flex: 1 },
+    { field: "answer_result", headerName: 'คำตอบ (text)', flex: 1},
+    { field: "url_result", headerName: 'คำตอบ (url)', flex: 1},
+  //   { field: "file_result", headerName: 'ไฟล์',
+  //   editable: false,
+  //   type: "actions",
+  //   getActions: (i: any) => [
+  //     <Box>
+  //       {i[0].file_name}
+  //       <Button onClick={() => { }}>โหลด</Button>,
+  //     </Box>
+  //   ],
+  // },
+
+    // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
+  ];
+
+  const dataContentUpdate = (newRow: GridRowModel) => {
+    const updatedRow = { ...newRow };
+    setDataContent(
+      dataContent.map((row) => (row.id === newRow.id ? updatedRow : row))
+    );
+    return updatedRow;
+  };
+
+  const onClickSubmit = () => {
+    console.log("== onclick", dataContent);
+  };
+
+  const fetchGetPost = async () => {
+    assignmentGet(classid!, id!)
+      .then((response) => {
+        setAsmContent(response.data.data);
+        setDataContent(MappedData(response.data.data.assignment_student_result))
+        // if (asmContent && asmContent?.assignment_student_result) {;}
+
+      })
+      .catch((error) => {
+        // setError(true);
+      });
+  };
+
   useEffect(() => {
-    console.log("");
-    }, []);
+    fetchGetPost();
+  }, []);
 
   return (
     <>
@@ -164,7 +245,7 @@ const AsmResultScore: FC = () => {
               {/*  */}
               <Box style={{ alignSelf: "center" }}>
                 <Typography variant="title3" color={onClassColorTheme.green}>
-                  titleeeeee
+                  {asmContent?.assignment_name}
                 </Typography>
               </Box>
             </Box>
@@ -176,15 +257,18 @@ const AsmResultScore: FC = () => {
           <Box className={classes.contents}>
             <DataGrid
               isRowSelectable={() => false}
-              rows={figmaRows}
-              columns={figmaColumns}
+              rows={dataContent}
+              columns={columns}
+              // columns={figmaColumns}
               autoHeight={true}
               getRowHeight={() => "auto"}
+              processRowUpdate={dataContentUpdate}
               sx={{ ...gridStyles }}
             />
           </Box>
         </Box>
         <Box padding={{ xs: 1, sm: 1.5 }} />
+        {/* <OCButton label={"click"} onClick={onClickSubmit} /> */}
       </>
     </>
   );
