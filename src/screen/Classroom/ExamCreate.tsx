@@ -4,9 +4,12 @@ import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCTextField from "../../common/OCTextfield";
 import OCButton from "../../common/OCButton";
+import OCChip from "../../common/OCChip";
 
 const ExamCreate: FC = () => {
   const classes = useStyles();
+  const chipDataOne = [{ label: "ข้อกา", value: "YES" }, { label: "ข้อเขียน", value: "NO" }];
+  const chipDataTwo = [{ label: "ไม่มี", value: "NONE" }, { label: "ข้อกา", value: "YES" }, { label: "ข้อเขียน", value: "NO" }];
 
   return (
     <>
@@ -20,34 +23,34 @@ const ExamCreate: FC = () => {
         </Box>
 
         <Grid container columnSpacing={1} rowSpacing="10px">
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={6} className={classes.row}>
             <Typography variant="h4">Part 1:</Typography>
-            **INSERT CHIPS**
+            <OCChip data={chipDataOne} />
           </Grid>
 
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={3} className={classes.row}>
             <Typography variant="body1">จำนวนข้อ :</Typography>
             <OCTextField variant="outline" maxWidth="100px" />
           </Grid>
 
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={3} className={classes.row}>
             <Typography variant="body1">คะแนนรวม :</Typography>
             <OCTextField variant="outline" maxWidth="100px" />
           </Grid>
         </Grid>
 
         <Grid container columnSpacing={1} rowSpacing="10px">
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={6} className={classes.row}>
             <Typography variant="h4">Part 2:</Typography>
-            **INSERT CHIPS**
+            <OCChip data={chipDataTwo} />
           </Grid>
 
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={3} className={classes.row}>
             <Typography variant="body1">จำนวนข้อ :</Typography>
             <OCTextField variant="outline" maxWidth="100px" />
           </Grid>
 
-          <Grid item xs={12} lg={4} className={classes.row}>
+          <Grid item xs={12} lg={3} className={classes.row}>
             <Typography variant="body1">คะแนนรวม :</Typography>
             <OCTextField variant="outline" maxWidth="100px" />
           </Grid>

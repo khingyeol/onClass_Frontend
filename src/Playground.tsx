@@ -9,11 +9,13 @@ import { OCPollBuilderFunction } from "./common/OCPollBuilder";
 import OCPollBuilder from "./common/OCPollBuilder";
 import { onClassColorTheme } from "./common/theme/onClassColorTheme";
 import { ReactComponent as AddIcon } from "./assets/svg/icon_plus.svg";
+import OCChip from "./common/OCChip";
 
 const Playground = () => {
   // poll
   const [pollItems, setPollItems] = useState<string[]>(["", ""]);
   const pollBuilderRef = useRef<OCPollBuilderFunction>(null);
+  const chipData = [{ label: "A A", value: "AAA" }, { label: "B B", value: "BBB" }];
 
   const handlePollItemsChange = (value: string, index: number) => {
     const temp = [...pollItems];
@@ -98,6 +100,10 @@ const Playground = () => {
               handleOnCancel={handleOnPollCancel}
               ref={pollBuilderRef}
             />
+          </div>
+          <div>
+            OCChip
+            <OCChip data={chipData} />
           </div>
         </Box>
       </Container>

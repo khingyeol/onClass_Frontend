@@ -59,6 +59,7 @@ export interface AssignmentModel {
       file_result?: [];
       answer_result?: string;
       isLate: boolean;
+      url_result?: string;
     };
     status: string;
     comment: CommentModel[];

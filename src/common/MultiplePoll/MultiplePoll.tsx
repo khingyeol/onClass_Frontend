@@ -123,7 +123,7 @@ const MultiplePoll = ({
             </Typography>
           </div>
           {(voted || isPostAuthor) && (
-            <span style={{ color: theme?.textColor }}>
+            <span style={{ color: theme?.textColor, fontSize: "15px" }}>
               {result.percentage}%
             </span>
           )}
