@@ -18,16 +18,17 @@ interface OCChipData {
 
 interface OCChipProps extends ChipProps {
   data: OCChipData[];
-  onSelect?: () => void;
+  selectedValue?: string;
+  handleOnSelect?: (value: string) => void;
 }
 
 const OCChip: FC<OCChipProps> = (props) => {
-  const { data, onSelect, ...otherProps } = props;
-  const [selected, setSelected] = useState("");
+  const { data, selectedValue, handleOnSelect, ...otherProps } = props;
+  const [selected, setSelected] = useState(selectedValue);
 const [isSelect, setIsSelect] = useState(false);
 
   const handleClick = (value: string) => {
-    onSelect && onSelect();
+    handleOnSelect && handleOnSelect(value);
     setSelected(value);
   };
 
