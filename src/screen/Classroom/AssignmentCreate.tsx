@@ -120,6 +120,16 @@ const AssignmentCreate: FC = () => {
     return isAsmError.assignment_name || isAsmError.assignment_description;
   };
 
+  const handleChipChange = (value: string) => {
+    setContent({
+      ...content,
+      data: {
+        ...content.data,
+        "turnin_late": value === "YES" ? true : false,
+      },
+    });
+  }
+ 
   const onTappedCreate = async () => {
     console.log("MYLOG: create assignment", content);
     try {
@@ -178,7 +188,7 @@ const AssignmentCreate: FC = () => {
         <Grid container columnSpacing={1} rowSpacing="20px">
           <Grid item xs={12} lg={5} className={classes.row}>
             <Typography variant="h4">นักเรียนสามารถส่งช้า :</Typography>
-            <OCChip data={chipData} />
+            <OCChip data={chipData} selectedValue={"NO"} handleOnSelect={handleChipChange}/>
           </Grid>
 
           <Grid item xs={12} lg={5} className={classes.row}>
