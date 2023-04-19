@@ -230,7 +230,7 @@ const UploadBox: FC = () => {
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
-            {!asmContent?.already_submit ? (
+            {(!asmContent?.already_submit && asmContent.can_submit) ? (
               <>
                 {/* <FileNamePreview acceptedFiles={acceptedFiles} /> */}
                 {/* {mapFile()} */}
