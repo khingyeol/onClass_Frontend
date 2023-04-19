@@ -67,10 +67,10 @@ const UploadBox: FC = () => {
                 type === "file"
                   ? FileIcon
                   : type === "text"
-                    ? TextIcon
-                    : type === "url"
-                      ? UrlIcon
-                      : UrlIcon
+                  ? TextIcon
+                  : type === "url"
+                  ? UrlIcon
+                  : UrlIcon
               }
               style={{
                 width: "13px",
@@ -182,13 +182,13 @@ const UploadBox: FC = () => {
         className={classes.root}
         open={openDialog}
         onClose={handleClickDialog}
-      // PaperProps={{
-      //   style: {
-      //     borderRadius: "28px",
-      //     width: "100%",
-      //     height: "50%",
-      //   },
-      // }}
+        // PaperProps={{
+        //   style: {
+        //     borderRadius: "28px",
+        //     width: "100%",
+        //     height: "50%",
+        //   },
+        // }}
       >
         {dialogType === "text" ? (
           <Box className={classes.dialog}>
@@ -199,7 +199,10 @@ const UploadBox: FC = () => {
               onChange={(e) => onChangeAnswer(e)}
               placeholder={"Answer Result"}
             />
-            <OCButton label={"Submit"} onClick={() => handleClickDialog('text')} />
+            <OCButton
+              label={"Submit"}
+              onClick={() => handleClickDialog("text")}
+            />
           </Box>
         ) : (
           <Box className={classes.dialog}>
@@ -210,7 +213,10 @@ const UploadBox: FC = () => {
               onChange={(e) => onChangeAnswer(e)}
               placeholder={"Url Result"}
             />
-            <OCButton label={"Submit"} onClick={() => handleClickDialog('url')} />
+            <OCButton
+              label={"Submit"}
+              onClick={() => handleClickDialog("url")}
+            />
           </Box>
         )}
       </Dialog>
@@ -224,7 +230,7 @@ const UploadBox: FC = () => {
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
-            {asmContent?.can_submit ? (
+            {!asmContent?.already_submit ? (
               <>
                 {/* <FileNamePreview acceptedFiles={acceptedFiles} /> */}
                 {/* {mapFile()} */}
@@ -279,19 +285,21 @@ const UploadBox: FC = () => {
                   asmContent?.submit_result?.answer_result,
                   asmContent?.submit_result?.url_result
                 )}
-                <OCButton
-                  variant="outline"
-                  label={"Unsubmit"}
-                  onClick={() =>
-                    setAsmContent({
-                      ...asmContent,
-                      can_submit: true,
-                    })
-                  }
-                  height="36px"
-                  cornerRadius="10px"
-                // disabled={isDisabledBtn()}
-                />
+                {asmContent?.can_submit && (
+                  <OCButton
+                    variant="outline"
+                    label={"Unsubmit"}
+                    onClick={() =>
+                      setAsmContent({
+                        ...asmContent,
+                        already_submit: true,
+                      })
+                    }
+                    height="36px"
+                    cornerRadius="10px"
+                    // disabled={isDisabledBtn()}
+                  />
+                )}
               </>
             )}
           </Box>
@@ -340,7 +348,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "8px 12px",
   },
   root: {
-    '& .MuiPaper-root': {
+    "& .MuiPaper-root": {
       borderRadius: "35px",
       width: "80%",
       boxShadow: "0px 10px 19px rgba(0, 0, 0, 0.16)",
@@ -353,14 +361,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     justifyContent: "center",
-
   },
   dialog: {
     padding: "40px",
     // width: "100%",
     display: "flex",
     flexDirection: "column",
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "center",
     // justifyItems: "center",
     gap: "30px",
@@ -369,5 +376,4 @@ const useStyles = makeStyles((theme: Theme) => ({
       gap: "20px",
     },
   },
-
 }));

@@ -55,6 +55,7 @@ export interface AssignmentModel {
     assignment_start_date: string;
     assignment_end_date: string;
     can_submit: boolean;
+    already_submit: boolean;
     submit_result?: {
       file_result?: [];
       answer_result?: string;
