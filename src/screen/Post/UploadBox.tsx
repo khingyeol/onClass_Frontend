@@ -292,7 +292,7 @@ const UploadBox: FC = () => {
                     onClick={() =>
                       setAsmContent({
                         ...asmContent,
-                        already_submit: true,
+                        already_submit: false,
                       })
                     }
                     height="36px"
