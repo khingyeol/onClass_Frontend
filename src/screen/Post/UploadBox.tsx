@@ -98,9 +98,9 @@ const UploadBox: FC = () => {
   };
 
   const renderRightTitle = () => {
-    if (asmContent?.can_submit) {
+    if (!asmContent?.already_submit && asmContent?.can_submit) {
       return formatShortDate(asmContent?.assignment_end_date);
-    } else if (!asmContent?.can_submit) {
+    } else {
       return asmContent?.status;
     }
   };
@@ -230,7 +230,7 @@ const UploadBox: FC = () => {
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
-            {(!asmContent?.already_submit && asmContent.can_submit) ? (
+            {(!asmContent?.already_submit && asmContent?.can_submit) ? (
               <>
                 {/* <FileNamePreview acceptedFiles={acceptedFiles} /> */}
                 {/* {mapFile()} */}
