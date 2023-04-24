@@ -25,6 +25,7 @@ import ExamCreate from "./screen/Classroom/ExamCreate";
 import AsmResultScore from "./screen/Post/AsmResultScore";
 import GradingPage from "./screen/Grading/GradingPage";
 import GradeLayout from "./layout/GradeLayout";
+import ClassSetting from "./screen/Classroom/ClassSetting";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
@@ -120,6 +121,13 @@ function AppRoutes() {
 
         <Route path="/:classid/grading" element={<GradeLayout />}>
           <Route path="/:classid/grading" element={<GradingPage />}></Route>
+        </Route>
+
+        <Route path="/:classid/setting" element={<ClassLayout />}>
+          <Route
+            path="/:classid/setting"
+            element={<ClassSetting />}
+          ></Route>
         </Route>
 
         <Route path="/playground" element={<Playground />} />

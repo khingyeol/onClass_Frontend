@@ -10,6 +10,8 @@ import { JoinClassRequest } from "../types/patchClassJoinRequest";
 import { CreateAssignmentRequest } from "../types/postAssignmentCreate";
 import { CreateClassRequest } from "../types/postClassCreateRequest";
 import { PostPublishRequest } from "../types/postPostPublishRequest";
+import { LeaveClassRequest } from "../types/patchClassLeaveReqeust";
+import { ClassEditDetailsRequest } from "../types/patchClassEditDetails";
 
 // class/get/all
 export const getAllClass = async (): Promise<
@@ -90,10 +92,10 @@ export const createAssigment = async (body: CreateAssignmentRequest) => {
 };
 
 
-// // class/nickname
-// export const setClassNickname = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.NICKNAME, values);
-// }
+// class/nickname
+export const setClassNickname = async (body: JoinClassRequest) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.NICKNAME, body);
+}
 
 // // class/create
 export const createClass = async (body: CreateClassRequest) => {
@@ -105,15 +107,15 @@ export const joinClass = async (body: JoinClassRequest) => {
   return await httpClient.patch(server.CLASS_URL + api_class.JOIN, body);
 };
 
-// // class/leave
-// export const leaveClass = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.LEAVE, values);
-// }
+// class/leave
+export const leaveClass = async (body: LeaveClassRequest) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.LEAVE, body);
+}
 
-// // class/edit/details
-// export const editClassDetail = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.EDIT_DETAILS, values);
-// }
+// class/edit/details
+export const editClassDetail = async (class_code: string, data: ClassEditDetailsRequest) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.EDIT_DETAILS, {class_code, data});
+}
 
 // // class/edit/roles
 // export const editClassRole = async (values) => {
