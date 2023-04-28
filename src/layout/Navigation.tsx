@@ -30,7 +30,7 @@ import NavClassMenu from "../components/Main/Navigation/NavClassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentStage, AllStageType } from "../store/stage/action";
 import { getClassDetail } from "../store/classsdetail/selector";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const { type } = props;
@@ -41,6 +41,7 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
   const [open, setOpen] = useState(false);
   const [openDesktop, setOpenDesktop] = useState(true);
   const classDetail = useSelector(getClassDetail);
+  const { classid } = useParams();
 
   const drawerManage = isDesktop ? openDesktop : true;
 
@@ -108,7 +109,7 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
             size={"60px"}
           />
           <OCIconButton
-            onClick={() => navigate("/setting")}
+            onClick={() => navigate(`/${classid}/setting`)}
             icon={NavSetting}
             color={onClassColorTheme.grey}
             size={"60px"}
@@ -135,8 +136,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           <Box display="flex" alignItems="center">
             <Button
               onClick={() => {
-                navigate("/home")
-                dispatch(updateCurrentStage(AllStageType.HOME))
+                navigate("/home");
+                dispatch(updateCurrentStage(AllStageType.HOME));
               }}
               sx={{
                 borderRadius: "36px",
@@ -213,8 +214,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           {type === "home"
             ? drawerContent
             : type === "class"
-              ? drawerClass
-              : drawerContent}
+            ? drawerClass
+            : drawerContent}
         </Drawer>
       </Hidden>
 
@@ -234,8 +235,8 @@ const Navigation: FC<{ type: "home" | "class" }> = (props) => {
           {type === "home"
             ? drawerContent
             : type === "class"
-              ? drawerClass
-              : drawerContent}
+            ? drawerClass
+            : drawerContent}
         </Drawer>
       </Hidden>
     </>
