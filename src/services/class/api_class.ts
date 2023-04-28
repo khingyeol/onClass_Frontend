@@ -12,6 +12,7 @@ import { CreateClassRequest } from "../types/postClassCreateRequest";
 import { PostPublishRequest } from "../types/postPostPublishRequest";
 import { LeaveClassRequest } from "../types/patchClassLeaveReqeust";
 import { ClassEditDetailsRequest } from "../types/patchClassEditDetails";
+import { ClassEditRolesRequest } from "../types/patchClassEditRoles";
 
 // class/get/all
 export const getAllClass = async (): Promise<
@@ -117,10 +118,10 @@ export const editClassDetail = async (class_code: string, data: ClassEditDetails
     return await httpClient.patch(server.CLASS_URL+api_class.EDIT_DETAILS, {class_code, data});
 }
 
-// // class/edit/roles
-// export const editClassRole = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.EDIT_ROLES, values);
-// }
+// class/edit/roles
+export const editClassRole = async (body: ClassEditRolesRequest) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.EDIT_ROLES, body);
+}
 
 // // class/post/publish
 export const postPublish = async (body: PostPublishRequest) => {
