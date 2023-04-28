@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Button,
   Typography,
@@ -26,6 +26,10 @@ const OCChip: FC<OCChipProps> = (props) => {
   const { data, selectedValue, handleOnSelect, ...otherProps } = props;
   const [selected, setSelected] = useState(selectedValue);
 const [isSelect, setIsSelect] = useState(false);
+
+  useEffect(() => {
+    setSelected(selectedValue)
+  }, [selectedValue])
 
   const handleClick = (value: string) => {
     handleOnSelect && handleOnSelect(value);

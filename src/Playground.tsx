@@ -1,4 +1,4 @@
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, SelectChangeEvent } from "@mui/material";
 import React, { ChangeEvent, FC, memo, useState, useRef } from "react";
 import OCButton from "./common/OCButton";
 import OCIconButton from "./common/OCIconButton";
@@ -10,12 +10,17 @@ import OCPollBuilder from "./common/OCPollBuilder";
 import { onClassColorTheme } from "./common/theme/onClassColorTheme";
 import { ReactComponent as AddIcon } from "./assets/svg/icon_plus.svg";
 import OCChip from "./common/OCChip";
+import OCDropDown from "./common/OCDropDown";
 
 const Playground = () => {
   // poll
   const [pollItems, setPollItems] = useState<string[]>(["", ""]);
   const pollBuilderRef = useRef<OCPollBuilderFunction>(null);
-  const chipData = [{ label: "A A", value: "AAA" }, { label: "B B", value: "BBB" }];
+  const chipData = [
+    { label: "A A", value: "AAA" },
+    { label: "B B", value: "BBB" },
+  ];
+  const [selectedDropdown, setSelectedDropdown] = useState<string>("");
 
   const handlePollItemsChange = (value: string, index: number) => {
     const temp = [...pollItems];
@@ -105,6 +110,15 @@ const Playground = () => {
             OCChip
             <OCChip data={chipData} />
           </div>
+          <OCDropDown
+            label="ปรับบทบาท"
+            items={["TEST1", "TEST2"]}
+            placeholder="กรุณาเลือกชื่อ"
+            handleChange={(e) => {
+              setSelectedDropdown(e.target.value as string);
+            }}
+            value={selectedDropdown}
+          />
         </Box>
       </Container>
     </div>

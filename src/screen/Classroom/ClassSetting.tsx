@@ -1,12 +1,14 @@
-import { Box, Grid, Theme, Typography } from "@mui/material";
+import { Box, Grid, Theme, Typography, alpha } from "@mui/material";
 import React, { FC, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCTextField from "../../common/OCTextfield";
 import OCButton from "../../common/OCButton";
+import OCDropDown from "../../common/OCDropDown";
 import {
-    editClassDetail,
+  editClassDetail,
+  editClassRole,
   getfromClass,
   leaveClass,
   setClassNickname,
@@ -20,6 +22,8 @@ import { JoinClassRequest } from "../../services/types/patchClassJoinRequest";
 import { updateClassDetail } from "../../store/classsdetail/action";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
 import { ClassEditDetailsRequest } from "../../services/types/patchClassEditDetails";
+import OCChip from "../../common/OCChip";
+import { current } from "@reduxjs/toolkit";
 
 const ClassSetting: FC = () => {
   const classes = useStyles();
@@ -44,6 +48,12 @@ const ClassSetting: FC = () => {
     lastname: "",
     optional_name: "",
   });
+
+  const [selectedDropdown, setSelectedDropdown] = useState<string>("");
+  const chipData = [
+    { label: "teacher", value: "teacher" },
+    { label: "student", value: "student" },
+  ];
 
   useEffect(() => {
     classData.teacher.map((val, index) => {
@@ -172,9 +182,104 @@ const ClassSetting: FC = () => {
     );
   };
 
+  const roleUpdaterArr = () => {
+    const arr: string[] = [];
+    classData.teacher.map((val) => {
+      return arr.push(`${val.name.firstname} ${val.name.lastname}`);
+    });
+
+    classData.student.map((val) => {
+      return arr.push(`${val.name.firstname} ${val.name.lastname}`);
+    });
+    return arr;
+  };
+
+  const [previousRole, setPreviousRole] = useState<string>("");
+  const [currentRole, setCurrentRole] = useState<string>("");
+  const [currentRoleUserId, setCurrentRoleUserId] = useState<string>("");
+
+  const roleUpdaterValue = () => {
+    classData.teacher.map((val) => {
+      if (selectedDropdown === `${val.name.firstname} ${val.name.lastname}`) {
+        setCurrentRoleUserId(val.user_id);
+        setCurrentRole("teacher");
+        setPreviousRole("teacher");
+      }
+    });
+
+    classData.student.map((val) => {
+      if (selectedDropdown === `${val.name.firstname} ${val.name.lastname}`) {
+        setCurrentRoleUserId(val.user_id);
+        setCurrentRole("student");
+        setPreviousRole("student");
+      }
+    });
+  };
+
+  useEffect(() => {
+    roleUpdaterValue();
+  }, [selectedDropdown]);
+
+  const handleChipChange = (value: string) => {
+    setCurrentRole(value);
+  };
+
+  const onTappedUpdateRole = async () => {
+    try {
+      const res = await editClassRole({
+        class_code: classid ?? "",
+        data: { user_id: currentRoleUserId, role: currentRole },
+      });
+      if (res.status === 200 && res.data.result === "OK") {
+        fetchGetFromClass(classid!);
+      } else {
+        dispatch(
+          displayDialog({
+            id: "classEditRoles",
+            isShow: true,
+            title: "Class",
+            message: res.data.message,
+            primaryLabel: "Close",
+            onPrimaryAction: () => {
+              dispatch(hideDialog());
+            },
+          })
+        );
+      }
+    } catch (err: any) {
+      if (err.response.status === 403) {
+        dispatch(
+            displayDialog({
+              id: "classEditRoles",
+              isShow: true,
+              title: "Class",
+              message: "You must have at least one teacher in a class.",
+              primaryLabel: "Close",
+              onPrimaryAction: () => {
+                dispatch(hideDialog());
+              },
+            })
+          );
+      } else {
+        dispatch(
+            displayDialog({
+              id: "classEditRoles",
+              isShow: true,
+              title: "Class",
+              message: err.response.data.result,
+              primaryLabel: "Close",
+              onPrimaryAction: () => {
+                dispatch(hideDialog());
+              },
+            })
+          );
+      }
+    }
+  };
+
   const onTappedSaveClass = async () => {
     try {
-      const res = await editClassDetail(classid ?? '', classContent);
+      const res = await editClassDetail(classid ?? "", classContent);
       if (res.status === 200 && res.data.result === "OK") {
         fetchGetFromClass(classid!);
       } else {
@@ -287,6 +392,45 @@ const ClassSetting: FC = () => {
                 disabled={isDisabledSaveClassButton()}
               />
             </Box>
+            <Grid
+              container
+              columnSpacing={1}
+              rowSpacing="20px"
+              borderBottom={1}
+              alignItems={"center"}
+            >
+              <Grid item xs={12} lg={12}>
+                <Typography variant="h3">Role Setting</Typography>
+              </Grid>
+            </Grid>
+            <Grid container columnSpacing={1} rowSpacing="20px">
+              <Grid item xs={12} lg={7} className={classes.row}>
+                <OCDropDown
+                  label=""
+                  items={roleUpdaterArr()}
+                  placeholder="กรุณาเลือกชื่อ"
+                  handleChange={(e) => {
+                    setSelectedDropdown(e.target.value as string);
+                  }}
+                  value={selectedDropdown}
+                />
+              </Grid>
+              <Grid item xs={12} lg={5} className={classes.row}>
+                <OCChip
+                  data={chipData}
+                  selectedValue={currentRole}
+                  handleOnSelect={handleChipChange}
+                />
+              </Grid>
+              <Grid item xs={12} lg={12} className={classes.row}>
+                <OCButton
+                  variant="primary"
+                  label="Update"
+                  onClick={onTappedUpdateRole}
+                  disabled={currentRole === "" || currentRole === previousRole}
+                />
+              </Grid>
+            </Grid>
           </>
         )}
         <Grid
@@ -365,5 +509,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "10px",
+  },
+  roleUpdateBox: {
+    gap: "10px",
+    justifyContent: "space-between",
+    alignContent: "center",
+    backgroundColor: onClassColorTheme.white,
+    borderRadius: "20px",
+    border: "1px solid",
+    borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
   },
 }));
