@@ -35,9 +35,10 @@ axios.interceptors.response.use(
       logout()
       return 401
     }
-    else if(error.response.status === 403) {
-      return 403;
-    }
+    // handle 403 case by case
+    // else if(error.response.status === 403) {
+    //   return 403;
+    // }
     
 
     if (axios.isCancel(error)) {
