@@ -113,17 +113,17 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
 
   const [sendPrivateMessage] = useMutation(SENDPRIVATEMESSAGE_MUTAION);
 
-  if (classDetail.role === "teacher") {
-    for (let i = 0; i < classDetail.nickname.length; i++) {
-      if (userData.user_id === classDetail.nickname[i].user_id) continue;
+  if (classDetail?.role === "teacher") {
+    for (let i = 0; i < classDetail?.nickname?.length; i++) {
+      if (userData.user_id === classDetail?.nickname[i]?.user_id) continue;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const subscriptionOnNewMessage = useSubscription(
         ONNEWMESSAGE_SUBSCRIPTION,
         {
           variables: {
             teacherId: classDetail?.teacher[0]?.user_id,
-            studentId: classDetail.nickname[i].user_id,
-            classCode: classDetail.class_code,
+            studentId: classDetail?.nickname[i]?.user_id,
+            classCode: classDetail?.class_code,
           },
           onData: ({ data }) => {
             if (!data.loading) {
@@ -133,7 +133,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
 
               var tempHideBadge = [...hideBadge];
               for (let j = 0; j < hideBadge.length; j++) {
-                if (hideBadge[j].user_id === classDetail.nickname[i].user_id) {
+                if (hideBadge[j].user_id === classDetail?.nickname[i]?.user_id) {
                   tempHideBadge[j].hide = chatOpen;
                 }
               }
@@ -152,7 +152,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
         variables: {
           teacherId: classDetail?.teacher[0]?.user_id,
           studentId: userData.user_id,
-          classCode: classDetail.class_code,
+          classCode: classDetail?.class_code,
         },
         onData: ({ data }) => {
           if (!data.loading) {
@@ -184,7 +184,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
     for (let i = 0; i < hideBadge.length; i++) {
       if (
         hideBadge[i].user_id ===
-        (classDetail.role === "student"
+        (classDetail?.role === "student"
           ? classDetail?.teacher[0]?.user_id
           : receiver_id)
       ) {
@@ -197,8 +197,8 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
       variables: {
         teacherId: classDetail?.teacher[0]?.user_id,
         studentId:
-          classDetail.role === "teacher" ? receiver_id : userData.user_id,
-        classCode: classDetail.class_code,
+          classDetail?.role === "teacher" ? receiver_id : userData.user_id,
+        classCode: classDetail?.class_code,
       },
       fetchPolicy: "network-only",
     });
@@ -212,7 +212,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
         senderId: userData.user_id,
         teacherId,
         content,
-        classCode: classDetail.class_code,
+        classCode: classDetail?.class_code,
       },
     });
   };
@@ -224,12 +224,12 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
   }, [data]);
 
   useEffect(() => {
-    if (classDetail.role === "student") {
-      setHideBadge([{ user_id: classDetail.teacher[0].user_id, hide: true }]);
+    if (classDetail?.role === "student") {
+      setHideBadge([{ user_id: classDetail?.teacher[0]?.user_id, hide: true }]);
     } else {
       const tempBadge = [];
-      for (let i = 0; i < classDetail.student.length; i++) {
-        tempBadge.push({ user_id: classDetail.student[i].user_id, hide: true });
+      for (let i = 0; i < classDetail?.student?.length; i++) {
+        tempBadge.push({ user_id: classDetail?.student[i]?.user_id, hide: true });
       }
       setHideBadge(tempBadge);
     }
@@ -331,7 +331,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                 }}
                 src={classDetail?.teacher[0]?.profile_pic ?? ""}
               />
-              {classDetail.role === "student" && (
+              {classDetail?.role === "student" && (
                 <Badge
                   color="error"
                   variant="dot"
@@ -399,7 +399,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                     />
                     {`${item.name.firstname} ${item.name.lastname}`}
                   </Box>
-                  {classDetail.role === "teacher" && (
+                  {classDetail?.role === "teacher" && (
                     <Box>
                       <Badge
                         color="error"
