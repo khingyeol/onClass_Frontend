@@ -71,16 +71,8 @@ const GETPRIVATEMESSAGES_QUERY = gql`
 `;
 
 const ONNEWMESSAGE_SUBSCRIPTION = gql`
-  subscription OnNewMessage(
-    $teacherId: String!
-    $studentId: String!
-    $classCode: String!
-  ) {
-    onNewMessage(
-      teacher_id: $teacherId
-      student_id: $studentId
-      class_code: $classCode
-    ) {
+  subscription OnNewMessage($userId: String!, $classCode: String!) {
+    onNewMessage(user_id: $userId, class_code: $classCode) {
       message {
         id
         sender_id
@@ -113,66 +105,46 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
 
   const [sendPrivateMessage] = useMutation(SENDPRIVATEMESSAGE_MUTAION);
 
-  if (classDetail?.role === "teacher") {
-    for (let i = 0; i < classDetail?.nickname?.length; i++) {
-      if (userData.user_id === classDetail?.nickname[i]?.user_id) continue;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const subscriptionOnNewMessage = useSubscription(
-        ONNEWMESSAGE_SUBSCRIPTION,
-        {
-          variables: {
-            teacherId: classDetail?.teacher[0]?.user_id,
-            studentId: classDetail?.nickname[i]?.user_id,
-            classCode: classDetail?.class_code,
-          },
-          onData: ({ data }) => {
-            if (!data.loading) {
-              const temp = qData;
-              temp.push(data.data.onNewMessage.message);
-              setQData(temp);
-
-              var tempHideBadge = [...hideBadge];
-              for (let j = 0; j < hideBadge.length; j++) {
-                if (hideBadge[j].user_id === classDetail?.nickname[i]?.user_id) {
-                  tempHideBadge[j].hide = chatOpen;
-                }
-              }
-              setHideBadge(tempHideBadge);
-              console.log("MYLOG", tempHideBadge);
-            }
-          },
+  const subscriptionOnNewMessage = useSubscription(ONNEWMESSAGE_SUBSCRIPTION, {
+    variables: {
+      userId: userData.user_id,
+      classCode: classDetail?.class_code,
+    },
+    onData: ({ data }) => {
+      if (!data.loading) {
+        console.log(
+          "MYLOG: SUB",
+          data.data.onNewMessage.participants.includes(userData.user_id)
+        );
+        if (
+          (classDetail?.role === "teacher" &&
+            (data.data.onNewMessage.message.sender_id === receiverId ||
+              data.data.onNewMessage.message.sender_id === userData.user_id)) ||
+          (classDetail?.role === "student" &&
+            data.data.onNewMessage.participants.includes(userData.user_id))
+        ) {
+          const temp = qData;
+          temp.push(data.data.onNewMessage.message);
+          setQData(temp);
         }
-      );
-    }
-  } else {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const subscriptionOnNewMessage = useSubscription(
-      ONNEWMESSAGE_SUBSCRIPTION,
-      {
-        variables: {
-          teacherId: classDetail?.teacher[0]?.user_id,
-          studentId: userData.user_id,
-          classCode: classDetail?.class_code,
-        },
-        onData: ({ data }) => {
-          if (!data.loading) {
-            const temp = qData;
-            temp.push(data.data.onNewMessage.message);
-            setQData(temp);
-
-            var tempHideBadge = [...hideBadge];
-            for (let i = 0; i < hideBadge.length; i++) {
-              if (hideBadge[i].user_id === classDetail?.teacher[0]?.user_id) {
-                tempHideBadge[i].hide = chatOpen;
-              }
-            }
-            setHideBadge(tempHideBadge);
-            console.log("MYLOG", tempHideBadge);
-          }
-        },
       }
-    );
-  }
+      if (data.data.onNewMessage.participants.includes(userData.user_id)) {
+        var tempHideBadge = [...hideBadge];
+        for (let j = 0; j < hideBadge.length; j++) {
+          if (
+            hideBadge[j].user_id === data.data.onNewMessage.message.sender_id
+          ) {
+            tempHideBadge[j].hide =
+              data.data.onNewMessage.message.sender_id === receiverId
+                ? chatOpen
+                : false;
+          }
+        }
+        setHideBadge(tempHideBadge);
+        console.log("MYLOG", tempHideBadge);
+      }
+    },
+  });
 
   const handleOnOpenChat = (receiver_id: string, chatName: string) => {
     setChatName(chatName);
@@ -229,11 +201,14 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
     } else {
       const tempBadge = [];
       for (let i = 0; i < classDetail?.student?.length; i++) {
-        tempBadge.push({ user_id: classDetail?.student[i]?.user_id, hide: true });
+        tempBadge.push({
+          user_id: classDetail?.student[i]?.user_id,
+          hide: true,
+        });
       }
       setHideBadge(tempBadge);
     }
-  }, []);
+  }, [classDetail?.class_code]);
   // badge visible get from subscription onNewMessage -> with sender id as a key
 
   return (
@@ -335,7 +310,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                 <Badge
                   color="error"
                   variant="dot"
-                  invisible={hideBadge.length > 0 && hideBadge[0].hide}
+                  invisible={hideBadge.length > 0 ? hideBadge[0].hide : true}
                 >
                   <OCIconButton
                     icon={IconComment}
@@ -405,7 +380,9 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                         color="error"
                         variant="dot"
                         invisible={
-                          hideBadge.length > 0 && hideBadge[index].hide
+                          hideBadge.length > index
+                            ? hideBadge[index].hide
+                            : true
                         }
                       >
                         <OCIconButton
