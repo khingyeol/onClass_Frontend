@@ -24,6 +24,8 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
   } = props;
 
   // https://codepen.io/sosuke/pen/Pjoqqp
+  const whiteFilter =
+    "brightness(0) saturate(100%) invert(98%) sepia(8%) hue-rotate(179deg) contrast(100%)";
   const greenFilter =
     "invert(55%) sepia(60%) saturate(366%) hue-rotate(114deg) brightness(96%) contrast(93%)";
   const greyFilter =
@@ -76,6 +78,8 @@ const OCIconButton: FC<OCIconButtonProps> = (props) => {
               ? greyFilter
               : color === onClassColorTheme.grey50
               ? grey50Filter
+              : color === onClassColorTheme.white
+              ? whiteFilter
               : ""
           }`,
         }}

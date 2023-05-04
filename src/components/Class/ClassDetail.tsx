@@ -1,12 +1,13 @@
 import {
   Avatar,
+  Badge,
   Box,
   IconButton,
   Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { FC } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import OCIconButton from "../../common/OCIconButton";
@@ -15,18 +16,235 @@ import IconPhone from "../../assets/svg/icon_phone.svg";
 import IconClipboard from "../../assets/svg/icon_clipboard.svg";
 import { GetClassResponseData } from "../../services/types/getClassResponse";
 import OCAvatar from "../../common/OCAvatar";
+import ChatPopUpDialog from "../Main/ChatPopUp";
+import IconComment from "../../assets/svg/icon_comment.svg";
+import {
+  gql,
+  useLazyQuery,
+  useMutation,
+  useSubscription,
+} from "@apollo/client";
+import { useSelector } from "react-redux";
+import { getUserData } from "../../store/userdata/selector";
 
 interface ClassDetailProps {
   classDetail: GetClassResponseData;
 }
 
+const SENDPRIVATEMESSAGE_MUTAION = gql`
+  mutation SendPrivateMessage(
+    $receiverId: String!
+    $senderId: String!
+    $teacherId: String!
+    $content: String!
+    $classCode: String!
+  ) {
+    sendPrivateMessage(
+      receiver_id: $receiverId
+      sender_id: $senderId
+      teacher_id: $teacherId
+      content: $content
+      class_code: $classCode
+    )
+  }
+`;
+
+const GETPRIVATEMESSAGES_QUERY = gql`
+  query GetPrivateMessages(
+    $teacherId: String!
+    $studentId: String!
+    $classCode: String!
+  ) {
+    getPrivateMessages(
+      teacher_id: $teacherId
+      student_id: $studentId
+      class_code: $classCode
+    ) {
+      id
+      sender_id
+      conversation_id
+      content
+      sender_name
+      created
+    }
+  }
+`;
+
+const ONNEWMESSAGE_SUBSCRIPTION = gql`
+  subscription OnNewMessage(
+    $teacherId: String!
+    $studentId: String!
+    $classCode: String!
+  ) {
+    onNewMessage(
+      teacher_id: $teacherId
+      student_id: $studentId
+      class_code: $classCode
+    ) {
+      message {
+        id
+        sender_id
+        conversation_id
+        content
+        sender_name
+        created
+      }
+      participants
+    }
+  }
+`;
+
 const ClassDetail: FC<ClassDetailProps> = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { classDetail } = props;
+  const [chatOpen, setChatOpen] = useState<boolean>(false);
+  const [chatName, setChatName] = useState<string>("");
+  const [receiverId, setReceiverId] = useState<string>("");
+  const [hideBadge, setHideBadge] = useState<
+    { user_id: string; hide: boolean }[]
+  >([]);
+  const userData = useSelector(getUserData);
+
+  const [qData, setQData] = useState<any[]>([]);
+  const [getPrivateMessages, { data, loading, error }] = useLazyQuery(
+    GETPRIVATEMESSAGES_QUERY
+  );
+
+  const [sendPrivateMessage] = useMutation(SENDPRIVATEMESSAGE_MUTAION);
+
+  if (classDetail.role === "teacher") {
+    for (let i = 0; i < classDetail.nickname.length; i++) {
+      if (userData.user_id === classDetail.nickname[i].user_id) continue;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const subscriptionOnNewMessage = useSubscription(
+        ONNEWMESSAGE_SUBSCRIPTION,
+        {
+          variables: {
+            teacherId: classDetail?.teacher[0]?.user_id,
+            studentId: classDetail.nickname[i].user_id,
+            classCode: classDetail.class_code,
+          },
+          onData: ({ data }) => {
+            if (!data.loading) {
+              const temp = qData;
+              temp.push(data.data.onNewMessage.message);
+              setQData(temp);
+
+              var tempHideBadge = [...hideBadge];
+              for (let j = 0; j < hideBadge.length; j++) {
+                if (hideBadge[j].user_id === classDetail.nickname[i].user_id) {
+                  tempHideBadge[j].hide = chatOpen;
+                }
+              }
+              setHideBadge(tempHideBadge);
+              console.log("MYLOG", tempHideBadge);
+            }
+          },
+        }
+      );
+    }
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const subscriptionOnNewMessage = useSubscription(
+      ONNEWMESSAGE_SUBSCRIPTION,
+      {
+        variables: {
+          teacherId: classDetail?.teacher[0]?.user_id,
+          studentId: userData.user_id,
+          classCode: classDetail.class_code,
+        },
+        onData: ({ data }) => {
+          if (!data.loading) {
+            const temp = qData;
+            temp.push(data.data.onNewMessage.message);
+            setQData(temp);
+
+            var tempHideBadge = [...hideBadge];
+            for (let i = 0; i < hideBadge.length; i++) {
+              if (hideBadge[i].user_id === classDetail?.teacher[0]?.user_id) {
+                tempHideBadge[i].hide = chatOpen;
+              }
+            }
+            setHideBadge(tempHideBadge);
+            console.log("MYLOG", tempHideBadge);
+          }
+        },
+      }
+    );
+  }
+
+  const handleOnOpenChat = (receiver_id: string, chatName: string) => {
+    setChatName(chatName);
+    setReceiverId(receiver_id);
+    setChatOpen(true);
+
+    //badge
+    var tempHideBadge = [...hideBadge];
+    for (let i = 0; i < hideBadge.length; i++) {
+      if (
+        hideBadge[i].user_id ===
+        (classDetail.role === "student"
+          ? classDetail?.teacher[0]?.user_id
+          : receiver_id)
+      ) {
+        tempHideBadge[i].hide = true;
+      }
+    }
+    setHideBadge(tempHideBadge);
+
+    getPrivateMessages({
+      variables: {
+        teacherId: classDetail?.teacher[0]?.user_id,
+        studentId:
+          classDetail.role === "teacher" ? receiver_id : userData.user_id,
+        classCode: classDetail.class_code,
+      },
+      fetchPolicy: "network-only",
+    });
+  };
+
+  const onTappedSendMessage = async (content: string) => {
+    const teacherId = classDetail?.teacher[0].user_id;
+    sendPrivateMessage({
+      variables: {
+        receiverId,
+        senderId: userData.user_id,
+        teacherId,
+        content,
+        classCode: classDetail.class_code,
+      },
+    });
+  };
+
+  useMemo(() => {
+    if (data) {
+      setQData(data.getPrivateMessages);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (classDetail.role === "student") {
+      setHideBadge([{ user_id: classDetail.teacher[0].user_id, hide: true }]);
+    } else {
+      const tempBadge = [];
+      for (let i = 0; i < classDetail.student.length; i++) {
+        tempBadge.push({ user_id: classDetail.student[i].user_id, hide: true });
+      }
+      setHideBadge(tempBadge);
+    }
+  }, []);
+  // badge visible get from subscription onNewMessage -> with sender id as a key
 
   return (
     <Box>
+      <ChatPopUpDialog
+        open={chatOpen}
+        chatName={chatName}
+        messages={qData}
+        onClose={() => setChatOpen(false)}
+        onSendMessage={(c) => onTappedSendMessage(c)}
+      />
       <Box className={classes.class_list}>
         <Box position="relative" paddingBottom="10px">
           <Box
@@ -104,14 +322,35 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             flexGrow={1}
             gap={1}
           >
-            <OCAvatar
-              width={isDesktop ? 90 : 28}
-              height={isDesktop ? 90 : 28}
-              sx={{
-                alignSelf: "center",
-              }}
-              src={classDetail?.teacher[0]?.profile_pic ?? ""}
-            />
+            <Box sx={{ display: "flex" }}>
+              <OCAvatar
+                width={isDesktop ? 90 : 28}
+                height={isDesktop ? 90 : 28}
+                sx={{
+                  alignSelf: "center",
+                }}
+                src={classDetail?.teacher[0]?.profile_pic ?? ""}
+              />
+              {classDetail.role === "student" && (
+                <Badge
+                  color="error"
+                  variant="dot"
+                  invisible={hideBadge.length > 0 && hideBadge[0].hide}
+                >
+                  <OCIconButton
+                    icon={IconComment}
+                    color={onClassColorTheme.grey}
+                    size={"45px"}
+                    onClick={() =>
+                      handleOnOpenChat(
+                        classDetail?.teacher[0].user_id,
+                        `${classDetail?.teacher[0].name.firstname} ${classDetail?.teacher[0].name.lastname}`
+                      )
+                    }
+                  />
+                </Badge>
+              )}
+            </Box>
             <Typography fontSize="auto">{`${classDetail?.teacher[0]?.name?.firstname} ${classDetail?.teacher[0]?.name?.lastname}`}</Typography>
 
             <Box justifyContent="flex-start" display="grid" gap="8px">
@@ -146,9 +385,9 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
             {`Attendees (${classDetail?.student.length})`}
           </Typography>
           <Box className={classes.attendees}>
-            {classDetail?.student.map((item) => {
+            {classDetail?.student.map((item, index) => {
               return (
-                <>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Box className={classes.student}>
                     <OCAvatar
                       width={45}
@@ -160,7 +399,30 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
                     />
                     {`${item.name.firstname} ${item.name.lastname}`}
                   </Box>
-                </>
+                  {classDetail.role === "teacher" && (
+                    <Box>
+                      <Badge
+                        color="error"
+                        variant="dot"
+                        invisible={
+                          hideBadge.length > 0 && hideBadge[index].hide
+                        }
+                      >
+                        <OCIconButton
+                          icon={IconComment}
+                          color={onClassColorTheme.grey}
+                          size={"45px"}
+                          onClick={() =>
+                            handleOnOpenChat(
+                              item.user_id,
+                              `${item.name.firstname} ${item.name.lastname}`
+                            )
+                          }
+                        />
+                      </Badge>
+                    </Box>
+                  )}
+                </Box>
               );
             })}
           </Box>
