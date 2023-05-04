@@ -41,9 +41,12 @@ const ChatPopUpDialog: FC<ChatPopUpDialogProps> = (props) => {
 
   useEffect(() => {
     setMessage(messages);
-    scrollToBottom();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [message])
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
