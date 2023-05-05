@@ -7,12 +7,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { FC, useState, useEffect, useRef, ForwardRefRenderFunction, forwardRef, useImperativeHandle } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import { Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import OCTextField from "../../common/OCTextfield";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
-import OCButton from "../../common/OCButton";
 import CloseIcon from "../../assets/svg/icon_close.svg";
 import OCIconButton from "../../common/OCIconButton";
 import IconSend from "../../assets/svg/icon_send.svg";
@@ -34,7 +33,6 @@ const ChatPopUpDialog: FC<ChatPopUpDialogProps> = (props) => {
   const theme = useTheme();
   const isLargerThanMd = useMediaQuery(theme.breakpoints.up("md"));
   const messagesEndRef = useRef<HTMLInputElement | null>(null);
-  // const [message, setMessage] = useState(messages);
   const userData = useSelector(getUserData);
 
   const [content, setContent] = useState<string>("");
