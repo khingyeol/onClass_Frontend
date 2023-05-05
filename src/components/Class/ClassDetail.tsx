@@ -112,10 +112,6 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
     },
     onData: ({ data }) => {
       if (!data.loading) {
-        console.log(
-          "MYLOG: SUB",
-          data.data.onNewMessage.participants.includes(userData.user_id)
-        );
         if (
           (classDetail?.role === "teacher" &&
             (data.data.onNewMessage.message.sender_id === receiverId ||

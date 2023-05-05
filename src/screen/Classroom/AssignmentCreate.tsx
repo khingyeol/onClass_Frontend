@@ -131,7 +131,6 @@ const AssignmentCreate: FC = () => {
   }
  
   const onTappedCreate = async () => {
-    console.log("MYLOG: create assignment", content);
     try {
       const res = await createAssigment(content!);
       if (res.status === 200 && res.data.result === "OK") {

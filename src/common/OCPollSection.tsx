@@ -21,8 +21,6 @@ const OCPollSection: FC<OCPollSectionProps> = (props) => {
   const userData = useSelector(getUserData);
 
   const isPostAuthor = () => {
-    console.log('MYLOG: author', postAuthor)
-    console.log('MYLOG: current user', userData.user_id)
     return postAuthor === userData.user_id;
   }
 
