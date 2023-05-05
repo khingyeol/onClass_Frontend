@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { FC, useState, useEffect, useRef } from "react";
+import React, { FC, useState, useEffect, useRef, ForwardRefRenderFunction, forwardRef, useImperativeHandle } from "react";
 import { Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import OCTextField from "../../common/OCTextfield";
@@ -34,23 +34,20 @@ const ChatPopUpDialog: FC<ChatPopUpDialogProps> = (props) => {
   const theme = useTheme();
   const isLargerThanMd = useMediaQuery(theme.breakpoints.up("md"));
   const messagesEndRef = useRef<HTMLInputElement | null>(null);
-  const [message, setMessage] = useState(messages);
+  // const [message, setMessage] = useState(messages);
   const userData = useSelector(getUserData);
 
   const [content, setContent] = useState<string>("");
 
   useEffect(() => {
-    setMessage(messages);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
-
-  useEffect(() => {
     scrollToBottom();
-  }, [message])
+  }, [messages.length])
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView();
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth"
+      });
     }
   };
 
@@ -159,7 +156,7 @@ const ChatPopUpDialog: FC<ChatPopUpDialogProps> = (props) => {
               message will delete after 1 day
             </Typography>
             <List sx={{ maxHeight: "91.5%", marginLeft: 2, overflow: "auto" }}>
-              {message.map((val, index) =>
+              {messages.map((val, index) =>
                 MessageBubble(
                   val.id,
                   val.sender_id === userData.user_id ? "right" : "left",
