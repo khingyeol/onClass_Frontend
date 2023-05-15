@@ -30,6 +30,7 @@ import CloseIcon from "../../assets/svg/icon_close.svg";
 import FileIcon from "../../assets/svg/icon_clip.svg";
 import TextIcon from "../../assets/svg/icon_text.svg";
 import UrlIcon from "../../assets/svg/icon_text.svg";
+import { Link } from "react-router-dom";
 
 const UploadBox: FC = () => {
   const classes = useStyles();
@@ -67,10 +68,10 @@ const UploadBox: FC = () => {
                 type === "file"
                   ? FileIcon
                   : type === "text"
-                  ? TextIcon
-                  : type === "url"
-                  ? UrlIcon
-                  : UrlIcon
+                    ? TextIcon
+                    : type === "url"
+                      ? UrlIcon
+                      : UrlIcon
               }
               style={{
                 width: "13px",
@@ -110,7 +111,9 @@ const UploadBox: FC = () => {
       <>
         {files &&
           files.map((file, index) => (
-            <Preview name={file.name ?? file.file_name} type={"file"} />
+            <a href={file.file_path} download={file.file_name} style={{ textDecoration: 'none', color: 'black' }}>
+              <Preview name={file.name ?? file.file_name} type={"file"} />
+            </a>
           ))}
         {!openDialog && text && <Preview name={text} type="text" />}
         {!openDialog && url && <Preview name={url} type="text" />}
@@ -182,13 +185,13 @@ const UploadBox: FC = () => {
         className={classes.root}
         open={openDialog}
         onClose={handleClickDialog}
-        // PaperProps={{
-        //   style: {
-        //     borderRadius: "28px",
-        //     width: "100%",
-        //     height: "50%",
-        //   },
-        // }}
+      // PaperProps={{
+      //   style: {
+      //     borderRadius: "28px",
+      //     width: "100%",
+      //     height: "50%",
+      //   },
+      // }}
       >
         {dialogType === "text" ? (
           <Box className={classes.dialog}>
@@ -297,7 +300,7 @@ const UploadBox: FC = () => {
                     }
                     height="36px"
                     cornerRadius="10px"
-                    // disabled={isDisabledBtn()}
+                  // disabled={isDisabledBtn()}
                   />
                 )}
               </>
