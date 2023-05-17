@@ -118,7 +118,7 @@ function AppRoutes() {
         <Route path="/:classid/exam" element={<ClassLayout />}>
           <Route path="/:classid/exam/create" element={<ExamCreate />}></Route>
           <Route path="/:classid/exam" element={<ClassExam />}></Route>
-          <Route path="/:classid/exam/:id" element={<ExamCreateQuestions />}></Route>
+          {/* <Route path="/:classid/exam/:id" element={<ExamCreateQuestions />}></Route> */}
         </Route>
 
         <Route path="/:classid/grading" element={<GradeLayout />}>
