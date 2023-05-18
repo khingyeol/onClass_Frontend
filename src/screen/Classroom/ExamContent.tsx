@@ -36,16 +36,14 @@ const ExamContent: FC = () => {
   const [content, setContent] = useState<GetExamResponseData>();
   const [resMesg, setResMesg] = useState("");
   const [timer, setTimer] = useState("19:00:00s");
-//   const [stdAnswer, setStdAnswer] = useState(Array.from(Array(content?.part_list.length), content?.part_list.map((v, i) => new Array(v.item?.length))))
-//   const [stdAnswer, setStdAnswer] = useState(Array.from(Array(content?.part_list.length), () => content?.part_list.map((v, i) => new Array(2))))
-
-  const [stdAnswer, setStdAnswer] = useState(Array.from(Array(2), () =>  new Array(2)));
+  const [stdAnswer, setStdAnswer] = useState<any[][]>([[]]);
 
   const role = useSelector(getClassDetail).role;
 
   const fetchGetExam = async () => {
     try {
       const res = await getExam(classid!, id!);
+      setStdAnswer(Array.from(Array(res.data.data.part_list.length), () =>  new Array(1)))
       setResMesg(res.data.message);
       setContent(res.data.data);
     } catch (err) {
@@ -63,46 +61,12 @@ const ExamContent: FC = () => {
   }
 
   const handleChipChange = (part: number, index: number, value: string) => {
-    console.log(value);
-    
-    const temp = stdAnswer.map((row, i) => {
-            row.map((choice, j) => {
-                if (i === part && j === index) {
-                    return value
-                }
-            })
-        })
-
-    // setStdAnswer((item) => {
-    //       item.map((row, i) => {
-    //          row.map((choice, j) => {
-    //             if (i === part && j === index) {
-    //                 console.log('')
-    //                 return value
-    //             }
-    //         })
-    //     })
-    // })
-    console.log(temp);
-
-    // stdAnswer[part][index] = value
-
-    // setContent({
-    //   ...content,
-    //   data: {
-    //     ...content.data,
-    //     "turnin_late": value === "YES" ? true : false,
-    //   },
-    // });
+    stdAnswer[part][index] = value
   }
 
 
   useEffect(() => {
     fetchGetExam();
-    // stdAnswer[1][2] = "aee"
-    // setStdAnswer({
-    //     ...stdAnswer[0][0], "aee"
-    // })
     console.log('stdAnswer', stdAnswer)
   }, []);
 
@@ -175,8 +139,7 @@ const ExamContent: FC = () => {
                         <Typography variant="title3">
                             {index+1}. {item.question}
                         </Typography>
-                        <OCChip data={mappedChip(item.choice!)} selectedValue={stdAnswer[part][index]} handleOnSelect={(value) => handleChipChange(part, index, value)} />
-                        {/* {item.choice && item.choice.ma} */}
+                        <OCChip data={mappedChip(item.choice!)} handleOnSelect={(value) => handleChipChange(part, index, value)} />
                     </Box>
                   ))}
                 </Box>
