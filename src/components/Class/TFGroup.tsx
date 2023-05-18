@@ -70,6 +70,7 @@ const TFGroup: FC<TFGroupProps> = (props) => {
         onChange={onChange}
         name={name}
         fullWidth
+        multiline
         sx={{
           "& .MuiOutlinedInput-root": {
             "& fieldset": {

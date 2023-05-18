@@ -36,6 +36,27 @@ const ClassExam: FC = () => {
     }
   };
 
+  const mappedTextColor = (status: string) => {
+    // if (isTeacher()) {
+    //   const newDate = new Date(status);
+    //   const today = new Date();
+    //   if (today > newDate) {
+    //     return onClassColorTheme.error
+    //   }
+    //   return onClassColorTheme.green;
+    // }
+    switch (status) {
+      case "ยังไม่ถึงช่วงสอบ":
+        return onClassColorTheme.grey;
+      case "อยู่ในช่วงสอบ":
+        return onClassColorTheme.green;
+      case "ส่งช้า":
+        return onClassColorTheme.error;
+      default:
+        return onClassColorTheme.black;
+    }
+  };
+
   const onClickExam = (id: string) => {
     navigate(`/${classid}/exam/${id}`);
   };
@@ -80,7 +101,7 @@ const ClassExam: FC = () => {
               title={item.exam_name}
               midText={`${formatDateTime(item.exam_start_date)} - ${formatDateTime(item.exam_end_date)}`}
               trailText={item.status}
-              // trailTextColor={mappedTextColor(isTeacher() ? item.assignment_end_date : item.status)}
+              trailTextColor={mappedTextColor(item.status)}
               onClick={() => onClickExam(item.id)}
             />
           ))}

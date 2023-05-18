@@ -30,7 +30,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
 
   const { classid, id } = useParams();
   // const [content, setContent] = useState<GetExamResponseData>();
-  const [selected, setSelected] = useState(Array(5).fill(0));
+  const [selected, setSelected] = useState(Array(data.exam.part_list[0].question).fill(0));
+  const [selectedSec, setSelectedSec] = useState(Array(data.exam.part_list[1].question).fill(0));
   const [content, setContent] = useState<PostCreateExam>();
   const [quizObj, setQuizObj] = useState({
     question: "",
@@ -57,13 +58,23 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     part: number,
     index: number
   ) => {
-    setQuizObj({
-      ...quizObj,
-      choice: quizObj.choice.map((v, i) =>
-        String(i) === e.target.name ? e.target.value : v
-      ),
-      answer: [quizObj.choice.at(selected[index]) ?? ""],
-    });
+    if (part === 0) {
+      setQuizObj({
+        ...quizObj,
+        choice: quizObj.choice.map((v, i) =>
+          String(i) === e.target.name ? e.target.value : v
+        ),
+        answer: [quizObj.choice.at(selected[index]) ?? ""],
+      });  
+    } else {
+      setQuizObj({
+        ...quizObj,
+        choice: quizObj.choice.map((v, i) =>
+          String(i) === e.target.name ? e.target.value : v
+        ),
+        answer: [quizObj.choice.at(selectedSec[index]) ?? ""],
+      });  
+    }
     data.exam.part_list[part].item?.splice(index, 1, quizObj);
     // console.log("answer", quizObj.choice.at(selected[index]), selected[index])
     // console.log("ee", data.exam.part_list[0]);
@@ -106,7 +117,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
       const res = await createExam(data);
       if (res.status === 200 && res.data.result === "OK") {
     //     console.log('SUCCESS', res)
-    //     navigate(`/${classid}/exam`)
+        navigate(`/${classid}/exam`)
   }
       console.log("req", res);
     } catch (err: any) {
@@ -134,7 +145,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     switch (data.type) {
       case "objective": {
         return data.item?.map((obj: any, index: number) => (
-          <>
+          <div key={`kiki${index}${part}`}>
             <Typography>ข้อ {index + 1}</Typography>
             <OCTextField
               placeholder="คำถาม..."
@@ -145,8 +156,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
             <Box display="flex" gap="17px">
               <TFGroup
                 name="0"
-                selected={selected}
-                onClick={setSelected}
+                selected={part === 0 ? selected : selectedSec}
+                onClick={part === 0 ? setSelected : setSelectedSec}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -154,8 +165,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               />
               <TFGroup
                 name="1"
-                selected={selected}
-                onClick={setSelected}
+                selected={part === 0 ? selected : selectedSec}
+                onClick={part === 0 ? setSelected : setSelectedSec}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -163,8 +174,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               />
               <TFGroup
                 name="2"
-                selected={selected}
-                onClick={setSelected}
+                selected={part === 0 ? selected : selectedSec}
+                onClick={part === 0 ? setSelected : setSelectedSec}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -172,15 +183,15 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               />
               <TFGroup
                 name="3"
-                selected={selected}
-                onClick={setSelected}
+                selected={part === 0 ? selected : selectedSec}
+                onClick={part === 0 ? setSelected : setSelectedSec}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
                 index={3}
               />
             </Box>
-          </>
+          </div>
         ));
         // data.item
         // for (let i = 0; i <= 5; i++) {
@@ -238,7 +249,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
           {mappedQuestion(obj, part)}
         </Box>
       ))}
-      <OCButton label="LOG" onClick={onSubmit} />
+      <OCButton label="Submit" onClick={onSubmit} />
     </Box>
   );
 };

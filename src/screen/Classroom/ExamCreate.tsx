@@ -25,6 +25,7 @@ const ExamCreate: FC = () => {
     { label: "ข้อกา", value: "objective" },
     { label: "ข้อเขียน", value: "subjective" },
   ];
+  const [selectedChipTwo, setSelectedChipTwo] = useState('');
   const [isDisabledPartOne, setIsDisabledPartOne] = useState(true);
   const [isDisabledPartTwo, setIsDisabledPartTwo] = useState(true);
 
@@ -83,7 +84,6 @@ const ExamCreate: FC = () => {
   //   },
   // });
 
-
   const isDisabledCreateButton = () => {
     if (
       reqBody.exam.exam_name.length > 1 &&
@@ -128,14 +128,15 @@ const ExamCreate: FC = () => {
       question: 0,
       score: 0,
     };
-
+    setSelectedChipTwo(value);
     if (value !== "NO") {
       setIsDisabledPartTwo(false);
-      reqBody.exam.part_list.push(temp);
+      // reqBody.exam.part_list.push(temp);
     } else {
       setIsDisabledPartTwo(true);
-      reqBody.exam.part_list.splice(1, 1);
+      // reqBody.exam.part_list.splice(1, 1);
     }
+    console.log(reqBody.exam.part_list);
   };
 
   const onChangeInput = (
@@ -174,6 +175,7 @@ const ExamCreate: FC = () => {
               ...reqBody.exam,
               part_list: [
                 {
+                  // ...reqBody.exam.part_list,
                   ...reqBody.exam.part_list[0],
                   score: parseInt(onlyNumber),
                 },
@@ -181,6 +183,7 @@ const ExamCreate: FC = () => {
             },
           });
         }
+        console.log(reqBody.exam.part_list);
         break;
       }
 
@@ -188,6 +191,21 @@ const ExamCreate: FC = () => {
         const value = e.target.value;
         const onlyNumber = value.replace(/[^0-9]/g, "");
         setPartTwoQues(parseInt(onlyNumber));
+        // if (reqBody.exam.part_list[1]) {
+        //   setReqBody({
+        //     ...reqBody,
+        //     exam: {
+        //       ...reqBody.exam,
+        //       part_list: [
+        //         {
+        //           ...reqBody.exam.part_list[1],
+        //           question: parseInt(onlyNumber),
+        //         },
+        //       ],
+        //     },
+        //   });
+        // }
+        console.log(reqBody.exam.part_list);
         break;
       }
 
@@ -195,6 +213,21 @@ const ExamCreate: FC = () => {
         const value = e.target.value;
         const onlyNumber = value.replace(/[^0-9]/g, "");
         setPartTwoScore(parseInt(onlyNumber));
+        // if (reqBody.exam.part_list[1]) {
+        //   // reqBody.exam.part_list[1].score = v
+        //   // setReqBody({})
+        //   setReqBody({
+        //     ...reqBody,
+        //     exam: {
+        //       ...reqBody.exam,
+        //       part_list: reqBody.exam.part_list.map((v, i) => 
+        //         i === 1 ? {...v, score: parseInt(onlyNumber)} : v
+        //       ),
+        //     },
+        //   });
+        // }
+        console.log(reqBody.exam?.part_list[1]!);
+        console.log(reqBody.exam.part_list);
         break;
       }
       default: {
@@ -214,24 +247,38 @@ const ExamCreate: FC = () => {
     const objItem = {
       question: "",
       type: "",
-      choice: [""]
-    }
+      choice: [""],
+    };
     const subjItem = {
       question: "",
       type: "",
-    }
-    console.log('reqbody mapped', reqBody.exam?.part_list[index])
+    };
+    console.log("reqbody mapped", reqBody.exam?.part_list[index]);
     if (reqBody.exam?.part_list[index]) {
       if (reqBody.exam?.part_list[index].type === "objective") {
-        reqBody.exam!.part_list[index]!.item = new Array(reqBody.exam!.part_list[index]!.question).fill(objItem)
+        reqBody.exam!.part_list[index]!.item = new Array(
+          reqBody.exam!.part_list[index]!.question
+        ).fill(objItem);
       } else {
-        reqBody.exam!.part_list[index]!.item = new Array(reqBody.exam!.part_list[index]!.question).fill(subjItem)
+        reqBody.exam!.part_list[index]!.item = new Array(
+          reqBody.exam!.part_list[index]!.question
+        ).fill(subjItem);
       }
     }
-  }
-  
+  };
+
   const onSubmit = async () => {
-    // setFinalReq({
+    if (selectedChipTwo !== "NO") {
+      reqBody.exam.part_list.push({
+        type: selectedChipTwo,
+        question: partTwoQues,
+        score: partTwoScore
+      });
+    } else {
+      reqBody.exam.part_list.splice(1, 1);
+    }
+
+    // setReqBody({
     //   ...reqBody,
     //   exam: {
     //     ...reqBody.exam,
@@ -256,13 +303,14 @@ const ExamCreate: FC = () => {
     //   finalReq.exam.part_list.splice(1, 1);
     // }
 
-    mappedArr(0)
+    mappedArr(0);
     if (reqBody.exam.part_list[1]) {
-      mappedArr(1)
+      console.log("mapped");
+      mappedArr(1);
     }
     setExamStep(2);
 
-    console.log('req', reqBody)
+    console.log("req", reqBody);
     // try {
     //   const res = await createExam(reqBody!);
     //   if (res.status === 200 && res.data.result === "OK") {
@@ -336,6 +384,7 @@ const ExamCreate: FC = () => {
                   variant="outline"
                   maxWidth="100px"
                   name="p2_ques"
+                  // value={reqBody.exam?.part_list[1]?.question}
                   value={partTwoQues}
                   onChange={(e) => onChangeInput(e)}
                   disabled={isDisabledPartTwo}
@@ -349,6 +398,7 @@ const ExamCreate: FC = () => {
                   variant="outline"
                   maxWidth="100px"
                   name="p2_score"
+                  // value={reqBody.exam?.part_list[1]?.score}
                   value={partTwoScore}
                   onChange={(e) => onChangeInput(e)}
                   disabled={isDisabledPartTwo}
@@ -386,7 +436,11 @@ const ExamCreate: FC = () => {
               </Grid>
             </Grid>
             <Box className={classes.row}>
-              <OCButton variant="outline" label="Cancel" />
+              <OCButton
+                variant="outline"
+                label="Cancel"
+                onClick={() => navigate(`/${classid}/exam`)}
+              />
               <OCButton
                 label="Create"
                 onClick={onSubmit}
