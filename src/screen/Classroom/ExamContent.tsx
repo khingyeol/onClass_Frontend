@@ -16,16 +16,31 @@ import OCButton from "../../common/OCButton";
 import OCChip from "../../common/OCChip";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCountdown } from "../../common/hooks/useCountDown";
 import { PostCreateExam } from "../../services/types/postCreateExam";
-import { createExam, getExam } from "../../services/class/api_exam";
+import {
+  createExam,
+  getExam,
+  studentSubmitExam,
+} from "../../services/class/api_exam";
 import ExamCreateQuestions from "./ExamCreateQuestions";
 import { getClassDetail } from "../../store/classsdetail/selector";
 import {
-    ExamChoiceItem,
+  ExamChoiceItem,
   ExamPartList,
   GetExamResponseData,
 } from "../../services/types/getExamResponseData";
 import { appBarHeightSm, appBarHeightXs } from "../../layout/HomeLayout";
+import { gql, useSubscription } from "@apollo/client";
+
+const EXAM_TIMEOUT_SUBSCRIPTION = gql`
+  subscription Subscription($classCode: String!, $examId: String!) {
+    onExaminationTimeout(class_code: $classCode, exam_id: $examId) {
+      exam_id
+      status
+    }
+  }
+`;
 
 const ExamContent: FC = () => {
   const navigate = useNavigate();
@@ -35,17 +50,39 @@ const ExamContent: FC = () => {
   const { classid, id } = useParams();
   const [content, setContent] = useState<GetExamResponseData>();
   const [resMesg, setResMesg] = useState("");
-  const [timer, setTimer] = useState("19:00:00s");
+  const [timer, setTimer] = useState("00:00:00s");
   const [stdAnswer, setStdAnswer] = useState<any[][]>([[]]);
+  const [days, hours, minutes, seconds] = useCountdown(
+    String(content?.exam_end_date)
+  );
 
   const role = useSelector(getClassDetail).role;
+
+  const subscriptionExaminationTimeout = useSubscription(
+    EXAM_TIMEOUT_SUBSCRIPTION,
+    {
+      variables: { classCode: classid!, examId: id! },
+      onData: ({ data }) => {
+        console.log("MYLOG", data.data);
+        if (!data.loading) {
+          console.log("MYLOG: auto submit");
+          handleOnExamSubmit()
+        }
+      },
+    }
+  );
 
   const fetchGetExam = async () => {
     try {
       const res = await getExam(classid!, id!);
-      setStdAnswer(Array.from(Array(res.data.data.part_list.length), () =>  new Array(1)))
       setResMesg(res.data.message);
-      setContent(res.data.data);
+      if (res.data.result === "OK") {
+        setStdAnswer(
+          Array.from(Array(res.data.data.part_list.length), () => new Array(1))
+        );
+        setContent(res.data.data);
+      }
+      console.log(res.data.message);
     } catch (err) {
       console.log("[GetExam] ERROR", err);
     }
@@ -53,21 +90,66 @@ const ExamContent: FC = () => {
 
   const mappedChip = (data: string[]) => {
     return data.map((obj) => {
-        const temp = {
-            label: obj
-        }
-        return temp
-    })
-  }
+      const temp = {
+        label: obj,
+      };
+      return temp;
+    });
+  };
 
   const handleChipChange = (part: number, index: number, value: string) => {
-    stdAnswer[part][index] = value
-  }
+    stdAnswer[part][index] = value;
+  };
 
+  const handleOnExamSubmit = async () => {
+    // console.log("MYLOG: ANSWER", stdAnswer);
+    const data = stdAnswer.map((val, index) => {
+      const temp_val = val.map((answer) => {
+        return [answer];
+      });
+      console.log("MYLOG:", temp_val);
+      // Switch back
+      if (content?.part_list[index].question_default_index) {
+        console.log("MYLOG: TEMP", temp_val);
+        const returnBackArr = content?.part_list[
+          index
+        ]!.question_default_index!.map((key) => {
+          return temp_val[key];
+        });
+        console.log("MYLOG: returnBack", returnBackArr);
+        return {
+          part_id: String(index + 1),
+          part_type: content?.part_list[index].type ?? "",
+          answer: returnBackArr,
+        };
+      } else {
+        return {
+          part_id: String(index + 1),
+          part_type: content?.part_list[index].type ?? "",
+          answer: temp_val,
+        };
+      }
+    });
+
+    try {
+      const res = await studentSubmitExam({
+        class_code: classid ?? "",
+        exam_id: id ?? "",
+        data,
+      });
+      if (res.status === 200 && res.data.result === "OK") {
+        console.log("SUCCESS", res);
+        navigate(`/${classid}/exam`);
+      }
+      console.log("req", res);
+    } catch (err: any) {
+      //
+    }
+  };
 
   useEffect(() => {
     fetchGetExam();
-    console.log('stdAnswer', stdAnswer)
+    console.log("stdAnswer", stdAnswer);
   }, []);
 
   return (
@@ -87,7 +169,8 @@ const ExamContent: FC = () => {
       >
         {/* TIMER */}
         <Typography variant="h1" color={onClassColorTheme.error}>
-          {timer}
+          {/* {timer} */}
+          {hours}:{minutes}:{seconds}s
         </Typography>
       </AppBar>
       <Box marginTop={`${isDesktop ? appBarHeightSm : appBarHeightXs}px`}>
@@ -134,19 +217,25 @@ const ExamContent: FC = () => {
                       ? "ปรนัย (ข้อกา)"
                       : "อัตนัย (ข้อเขียน)"}
                   </Typography>
-                  {obj.item && obj.item.map((item: ExamChoiceItem, index: number) => (
-                    <Box>
+                  {obj.item &&
+                    obj.item.map((item: ExamChoiceItem, index: number) => (
+                      <Box>
                         <Typography variant="title3">
-                            {index+1}. {item.question}
+                          {index + 1}. {item.question}
                         </Typography>
-                        <OCChip data={mappedChip(item.choice!)} handleOnSelect={(value) => handleChipChange(part, index, value)} />
-                    </Box>
-                  ))}
+                        <OCChip
+                          data={mappedChip(item.choice!)}
+                          handleOnSelect={(value) =>
+                            handleChipChange(part, index, value)
+                          }
+                        />
+                      </Box>
+                    ))}
                 </Box>
               ))}
 
               {/* EXAM SUBMIT */}
-              <OCButton label="LOG" onClick={() => console.log("stdAnswer",stdAnswer)} />
+              <OCButton label="Submit" onClick={handleOnExamSubmit} />
             </Box>
           </Container>
         )}

@@ -9,12 +9,7 @@ import { getClassDetail } from "../../store/classsdetail/selector";
 import { formatDateTime, formatShortDate } from "../../utils/formatDate";
 import { ReactComponent as AddButton2 } from "../../assets/svg/icon_plus.svg";
 import { makeStyles } from "@mui/styles";
-import {
-  createExam,
-  editExam,
-  getAllExam,
-  getExam,
-} from "../../services/class/api_exam";
+import { createExam, editExam, getAllExam, getExam } from "../../services/class/api_exam";
 import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
 import {
   ExamPartList,
@@ -35,12 +30,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
 
   const { classid, id } = useParams();
   // const [content, setContent] = useState<GetExamResponseData>();
-  const [selected, setSelected] = useState(
-    Array(data.exam.part_list[0].question).fill(0)
-  );
-  const [selectedSec, setSelectedSec] = useState(
-    Array(data.exam.part_list[1].question).fill(0)
-  );
+  const [selected, setSelected] = useState(Array(data.exam.part_list[0].question).fill(0));
+  const [selectedSec, setSelectedSec] = useState(Array(data.exam.part_list[1].question).fill(0));
   const [content, setContent] = useState<PostCreateExam>();
   const [quizObj, setQuizObj] = useState({
     question: "",
@@ -67,15 +58,14 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     part: number,
     index: number
   ) => {
-    if (part === 0 && typeof content !== 'undefined') {
-      console.log(quizObj)
-      // setQuizObj({
-      //   ...quizObj,
-      //   choice: quizObj.choice.map((v, i) =>
-      //     String(i) === e.target.name ? e.target.value : v
-      //   ),
-      //   answer: [quizObj.choice.at(selected[index]) ?? ""],
-      // });
+    if (part === 0) {
+      setQuizObj({
+        ...quizObj,
+        choice: quizObj.choice.map((v, i) =>
+          String(i) === e.target.name ? e.target.value : v
+        ),
+        answer: [quizObj.choice.at(selected[index]) ?? ""],
+      });  
     } else {
       setQuizObj({
         ...quizObj,
@@ -83,11 +73,11 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
           String(i) === e.target.name ? e.target.value : v
         ),
         answer: [quizObj.choice.at(selectedSec[index]) ?? ""],
-      });
+      });  
     }
     data.exam.part_list[part].item?.splice(index, 1, quizObj);
     // console.log("answer", quizObj.choice.at(selected[index]), selected[index])
-    console.log("ee", data.exam.part_list[part]);
+    // console.log("ee", data.exam.part_list[0]);
   };
 
   const handleChangeObj = (
@@ -95,21 +85,12 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     part: number,
     index: number
   ) => {
-    if (part === 0) {
-      setQuizObj({
-        ...quizObj,
-        question: e.target.value,
-        score: String(data.exam.part_list[0].score),
-        answer: [quizObj.choice.at(selected[index]) ?? ""],
-      });
-    } else {
-      setQuizObj({
-        ...quizObj,
-        question: e.target.value,
-        score: String(data.exam.part_list[1].score),
-        answer: [quizObj.choice.at(selectedSec[index]) ?? ""],
-      });
-    }
+    setQuizObj({
+      ...quizObj,
+      question: e.target.value,
+      score: String(data.exam.part_list[part].score/data.exam.part_list[part].item!.length),
+      answer: [quizObj.choice.at(selected[index]) ?? ""],
+    });
     data.exam.part_list[part].item?.splice(index, 1, quizObj);
     // console.log("ee", data.exam.part_list[0]);
   };
@@ -128,31 +109,34 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
 
   const onSubmit = async () => {
     data.exam.part_list.map((part, index) =>
-      part.item?.map((ques, i) => {
-        if (index === 0) {
-          console.log("index", index);
-          ques.answer?.splice(0, 1, ques.choice?.at(selected[i]) ?? "");
-        } else {
-          console.log("index", index);
-          ques.answer?.splice(1, 1, ques.choice?.at(selectedSec[i]) ?? "");
-        }
-      })
+      part.item?.map((ques, index) =>
+        ques.answer?.splice(0, 1, ques.choice?.at(selected[index]) ?? "")
+      )
     );
-    console.log("SUBMIT", data.exam.part_list);
     try {
       const res = await createExam(data);
       if (res.status === 200 && res.data.result === "OK") {
-        //     console.log('SUCCESS', res)
-        navigate(`/${classid}/exam`);
-      }
+    //     console.log('SUCCESS', res)
+        navigate(`/${classid}/exam`)
+  }
       console.log("req", res);
     } catch (err: any) {
       //
     }
+
+    // try {
+    //   const res = await editExam(data);
+    //   if (res.status === 200 && res.data.result === "OK") {
+    //     console.log('SUCCESS', res)
+    //     navigate(`/${classid}/exam`)
+    //   }
+    //   console.log(data);
+    // } catch (err: any) {
+    //   //
+    // }
   };
 
   useEffect(() => {
-    setContent(data);
     // data.exam!.part_list[0]!.item!.concat(...Array(5).fill(objItem))
     console.log("req 2", data);
   }, []);
@@ -161,10 +145,9 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     switch (data.type) {
       case "objective": {
         return data.item?.map((obj: any, index: number) => (
-          <div>
+          <div key={`kiki${index}${part}`}>
             <Typography>ข้อ {index + 1}</Typography>
             <OCTextField
-              key={`que${part}${index}ee`}
               placeholder="คำถาม..."
               multiline
               name="question"
@@ -172,7 +155,6 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
             ></OCTextField>
             <Box display="flex" gap="17px">
               <TFGroup
-                key={`obj${part}${index}0`}
                 name="0"
                 selected={part === 0 ? selected : selectedSec}
                 onClick={part === 0 ? setSelected : setSelectedSec}
@@ -182,7 +164,6 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
                 index={0}
               />
               <TFGroup
-                key={`obj${part}${index}1`}
                 name="1"
                 selected={part === 0 ? selected : selectedSec}
                 onClick={part === 0 ? setSelected : setSelectedSec}
@@ -192,7 +173,6 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
                 index={1}
               />
               <TFGroup
-                key={`obj${part}${index}2`}
                 name="2"
                 selected={part === 0 ? selected : selectedSec}
                 onClick={part === 0 ? setSelected : setSelectedSec}
@@ -202,7 +182,6 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
                 index={2}
               />
               <TFGroup
-                key={`obj${part}${index}3`}
                 name="3"
                 selected={part === 0 ? selected : selectedSec}
                 onClick={part === 0 ? setSelected : setSelectedSec}
@@ -224,11 +203,10 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
       }
       case "subjective": {
         return data.item?.map((obj: any, index: number) => (
-          <div>
+          <>
             <Typography>ข้อ {index + 1}</Typography>
             <Box display="flex" alignItems="center" gap="5px">
               <OCTextField
-                key={`subj${part}${index}que`}
                 placeholder="คำถาม..."
                 multiline
                 name="question"
@@ -236,14 +214,13 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               ></OCTextField>
               <Box width="150px">
                 <OCTextField
-                  key={`subj${part}${index}score`}
                   placeholder="คะแนน"
                   name="score"
                   onChange={(e) => handleChangeSubj(e, part, index)}
                 ></OCTextField>
               </Box>
             </Box>
-          </div>
+          </>
         ));
       }
       default:
@@ -257,7 +234,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
         <Typography>{data.exam.exam_description}</Typography>
       </Box>
       {data.exam.part_list.map((obj: ExamPartList, part: number) => (
-        <Box key={`choice${part}${obj.type}`}>
+        <Box>
           <Box
             display="flex"
             alignItems="center"

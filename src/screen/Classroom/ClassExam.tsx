@@ -9,7 +9,7 @@ import { getClassDetail } from "../../store/classsdetail/selector";
 import { formatDateTime, formatShortDate } from "../../utils/formatDate";
 import { ReactComponent as AddButton2 } from "../../assets/svg/icon_plus.svg";
 import { makeStyles } from "@mui/styles";
-import { getAllExam } from "../../services/class/api_exam";
+import { getAllExam, getResultForTeacher } from "../../services/class/api_exam";
 import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
 
 const ClassExam: FC = () => {
@@ -58,8 +58,28 @@ const ClassExam: FC = () => {
   };
 
   const onClickExam = (id: string) => {
-    navigate(`/${classid}/exam/${id}`);
+    if (role === "student") {
+      navigate(`/${classid}/exam/${id}`);
+    } else {
+      onClickGetResultForTeacher(id);
+    }
   };
+
+  const onClickGetResultForTeacher = async (id: string) => {
+    try {
+      const res = await getResultForTeacher({
+        class_code: classid ?? "",
+        exam_id: id,
+      });
+      if (res.status === 200 && res.data.result === "OK") {
+        console.log("SUCCESS", res);
+        navigate(`/${classid}/grading`)
+      }
+      console.log("req", res);
+    } catch (err: any) {
+      //
+    }
+  }
 
   useEffect(() => {
     fetchGetAllExam();
@@ -100,14 +120,15 @@ const ClassExam: FC = () => {
             <AsmCard
               key={item.id}
               title={item.exam_name}
-              midText={`${formatDateTime(item.exam_start_date)} - ${formatDateTime(item.exam_end_date)}`}
+              midText={`${formatDateTime(
+                item.exam_start_date
+              )} - ${formatDateTime(item.exam_end_date)}`}
               trailText={item.status}
               trailTextColor={mappedTextColor(item.status)}
               onClick={() => onClickExam(item.id)}
             />
           ))}
         </Box>
-
       </Box>
     </>
   );

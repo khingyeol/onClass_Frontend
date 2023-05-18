@@ -26,7 +26,7 @@ import {
 } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { getUserData } from "../../store/userdata/selector";
-import { ReactComponent as ChevronLeft }  from "../../assets/svg/chevron-left.svg";
+import { ReactComponent as ChevronLeft } from "../../assets/svg/chevron-left.svg";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 interface ClassDetailProps {
@@ -212,10 +212,12 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
 
   return (
     <Box>
-      <IconButton onClick={() => navigate(-1)}>
-        <ChevronLeft />
-        Back
-      </IconButton>
+      {!isDesktop && (
+        <IconButton onClick={() => navigate(-1)}>
+          <ChevronLeft />
+          Back
+        </IconButton>
+      )}
       <ChatPopUpDialog
         open={chatOpen}
         chatName={chatName}
@@ -431,7 +433,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: "100%",
       // margin: "0px 15px 0px 10px",
     },
-
   },
   coverImg: {
     objectFit: "cover",

@@ -24,6 +24,8 @@ import { gql, useQuery } from "@apollo/client";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
 import { getTodo } from "../../services/class/api_class";
 import OCButton from "../../common/OCButton";
+import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
+import { getAllExam } from "../../services/class/api_exam";
 
 const GRADES_QUERY = gql`
   query Grades($classCode: String!) {
@@ -60,6 +62,8 @@ const GradingPage: FC = () => {
   const { classid, id } = useParams();
   const [qData, setQData] = useState([]);
   const [allAsm, setAllAsm] = useState<getAllAssignmentsResponse[]>([]);
+  const [allExam, setAllExam] = useState<GetAllExamResponseData[]>([]);
+
 
   const gridStyles = {
     fontSize: "17px",
@@ -100,6 +104,7 @@ const GradingPage: FC = () => {
       myArray2.push({
         ...temp,
         ...MappedASMscore(item.assignment),
+        ...MappedASMscore(item.exam),
       });
     });
     console.log("temp", myArray2);
@@ -153,10 +158,30 @@ const GradingPage: FC = () => {
     });
   };
 
+  const MappedEXAMname = (data: any[]) => {
+    return data.map((item) => {
+      const temp: GridColDef = {
+        editable: true,
+        flex: 1,
+        field: item.id,
+        renderHeader: (params: GridColumnHeaderParams) => (
+          <div style={{textAlign: 'center'}}>
+          <Typography>{item.exam_name}</Typography>
+          <Typography variant='h4'>({item.score} pts.)</Typography>
+          </div>
+        ),
+        // headerName: `${item.assignment_name} (${item.score})`,
+      };
+      // console.log('temp', temp)
+      return temp;
+    });
+  }
+
   const columns: GridColDef[] = [
     { field: "name", editable: false },
     // { field: "", headerName: ''}
     ...MappedASMname(allAsm),
+    ...MappedEXAMname(allExam),
     // { field: "summary", headerName: "คะแนนรวม", editable: false},
     { field: "percentage", headerName: "%", editable: false },
     // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
@@ -172,13 +197,25 @@ const GradingPage: FC = () => {
     }
   };
 
+  const fetchGetAllExam = async () => {
+    try {
+      const res = await getAllExam(classid!);
+      setAllExam(res.data.data);
+    } catch (err) {
+      console.log("[ExamAllClass] ERROR", err);
+    }
+  };
+
   const { loading, error, data } = useQuery(GRADES_QUERY, {
     variables: { classCode: classid! },
     fetchPolicy: "network-only",
   });
 
+  
+
   useEffect(() => {
     fetchGetAllAsm();
+    fetchGetAllExam();
     // if (classid && !loading && data && !error) {
     //   console.log("qq", data);
     //   setQData(data.grades);

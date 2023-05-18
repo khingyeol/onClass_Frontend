@@ -17,10 +17,12 @@ export interface GetExamResponseData {
 }
 
 export interface ExamPartList {
+    part_id: string;
     type:  string;
     score: number; // string?
     item?:  ExamChoiceItem[];
     question?: number;
+    question_default_index?: number[];
 }
 
 export interface ExamChoiceItem {

@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { server, api_exam } from "../constants";
 import httpClient from "../httpClient";
 import { PostCreateExam } from "../types/postCreateExam";
+import { PatchExamStudentSubmitRequest } from "../types/patchExamSubmitRequest";
 
 // exam/get
 export const getExam = async (class_code: string, exam_id: string) => {
@@ -30,4 +31,14 @@ export const createExam = async (values: PostCreateExam) => {
 // exam/edit
 export const editExam = async (values: PostCreateExam) => {
     return await httpClient.patch(server.EXAM_URL+api_exam.EDIT, values)
+}
+
+// exam/submit
+export const studentSubmitExam = async (values: PatchExamStudentSubmitRequest) => {
+    return await httpClient.patch(server.EXAM_URL+api_exam.STD_SUBMIT, values)
+}
+
+// exam/result/teacher
+export const getResultForTeacher = async (values: {class_code: string, exam_id: string}) => {
+    return await httpClient.patch(server.EXAM_URL+api_exam.TEACHET_GET_RESULT, values)
 }

@@ -26,7 +26,15 @@ const ExamCreate: FC = () => {
     { label: "ข้อกา", value: "objective" },
     { label: "ข้อเขียน", value: "subjective" },
   ];
-  const [selectedChipTwo, setSelectedChipTwo] = useState('');
+  const randomQuestionChipData = [
+    { label: "สุ่ม", value: "YES" },
+    { label: "ไม่สุ่ม", value: "NO" },
+  ];
+  const randomChoiceChipData = [
+    { label: "สุ่ม", value: "YES" },
+    { label: "ไม่สุ่ม", value: "NO" },
+  ];
+  const [selectedChipTwo, setSelectedChipTwo] = useState("");
   const [isDisabledPartOne, setIsDisabledPartOne] = useState(true);
   const [isDisabledPartTwo, setIsDisabledPartTwo] = useState(true);
 
@@ -41,6 +49,10 @@ const ExamCreate: FC = () => {
       exam_description: "",
       part_list: [],
       exam_start_date: "",
+      optional_setting: {
+        random_question: false,
+        random_choice: false,
+      },
       exam_end_date: "",
     },
   });
@@ -76,6 +88,7 @@ const ExamCreate: FC = () => {
   const handleChipOne = (value: string) => {
     setIsDisabledPartOne(false);
     const temp = {
+      part_id: "1",
       type: value,
       question: 0,
       score: 0,
@@ -181,7 +194,7 @@ const ExamCreate: FC = () => {
         //     ...reqBody,
         //     exam: {
         //       ...reqBody.exam,
-        //       part_list: reqBody.exam.part_list.map((v, i) => 
+        //       part_list: reqBody.exam.part_list.map((v, i) =>
         //         i === 1 ? {...v, score: parseInt(onlyNumber)} : v
         //       ),
         //     },
@@ -231,9 +244,10 @@ const ExamCreate: FC = () => {
   const onSubmit = async () => {
     if (selectedChipTwo !== "NO") {
       reqBody.exam.part_list.push({
+        part_id: "2",
         type: selectedChipTwo,
         question: partTwoQues,
-        score: partTwoScore
+        score: partTwoScore,
       });
     } else {
       reqBody.exam.part_list.splice(1, 1);
@@ -282,6 +296,36 @@ const ExamCreate: FC = () => {
     // } catch (err: any) {
     //   //
     // }
+  };
+
+  const handleRandomQuestionChipChange = (value: string) => {
+    setReqBody({
+      ...reqBody,
+      exam: {
+        ...reqBody.exam,
+        optional_setting: 
+          {
+            ...reqBody.exam.optional_setting,
+            "random_question": value === "YES" ? true : false,
+          },
+        
+      },
+    });
+  };
+
+  const handleRandomChoiceChipChange = (value: string) => {
+    setReqBody({
+      ...reqBody,
+      exam: {
+        ...reqBody.exam,
+        optional_setting: 
+          {
+            ...reqBody.exam.optional_setting,
+            "random_choice": value === "YES" ? true : false,
+          },
+        
+      },
+    });
   };
 
   return (
@@ -393,6 +437,22 @@ const ExamCreate: FC = () => {
                   type="datetime-local"
                   name="exam_end_date"
                   onChange={(e) => onChangeInput(e)}
+                />
+              </Grid>
+              <Grid item xs={12} lg={12} className={classes.row}>
+                <Typography variant="h4">สุ่มคำถาม :</Typography>
+                <OCChip
+                  data={randomQuestionChipData}
+                  selectedValue={"NO"}
+                  handleOnSelect={handleRandomQuestionChipChange}
+                />
+              </Grid>
+              <Grid item xs={12} lg={12} className={classes.row}>
+                <Typography variant="h4">สุ่มตัวเลือก :</Typography>
+                <OCChip
+                  data={randomChoiceChipData}
+                  selectedValue={"NO"}
+                  handleOnSelect={handleRandomChoiceChipChange}
                 />
               </Grid>
             </Grid>
