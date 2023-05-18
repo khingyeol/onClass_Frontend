@@ -159,6 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "5px",
   },
   contents: {
+    fontSize: "17px",
     padding: "0.5rem 0",
     wordBreak: "break-word",
     whiteSpace: "pre-line",

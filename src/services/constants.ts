@@ -59,7 +59,8 @@ export const api_exam = {
   CREATE: `/create`,
   STD_SUBMIT: `/submit`,
   SUBJ_TEACHER_SCORE: `/score/subjective`,
-  TEACHET_GET_RESULT: `/result/teacher`
+  TEACHET_GET_RESULT: `/result/teacher`,
+  EDIT: `/edit`,
 }
 
 // export const api_post = {

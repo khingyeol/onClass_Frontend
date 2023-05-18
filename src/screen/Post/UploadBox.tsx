@@ -30,6 +30,7 @@ import CloseIcon from "../../assets/svg/icon_close.svg";
 import FileIcon from "../../assets/svg/icon_clip.svg";
 import TextIcon from "../../assets/svg/icon_text.svg";
 import UrlIcon from "../../assets/svg/icon_text.svg";
+import { Link } from "react-router-dom";
 
 const UploadBox: FC = () => {
   const classes = useStyles();
@@ -110,7 +111,13 @@ const UploadBox: FC = () => {
       <>
         {files &&
           files.map((file, index) => (
-            <Preview name={file.name ?? file.file_name} type={"file"} />
+            <a
+              href={file.file_path}
+              download={file.file_name}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Preview name={file.name ?? file.file_name} type={"file"} />
+            </a>
           ))}
         {!openDialog && text && <Preview name={text} type="text" />}
         {!openDialog && url && <Preview name={url} type="text" />}
@@ -172,6 +179,21 @@ const UploadBox: FC = () => {
     }
   };
 
+  const symbolScore = () => {
+    var symbol = "";
+    const symbolLength = asmContent?.symbol_score.length ?? 0;
+    const scorePercent = Math.floor(
+      ((asmContent?.score_result ?? 0) / (asmContent?.score ?? 0)) * 100
+    );
+    for (let i = symbolLength; i > 0; i--) {
+      if (Math.floor(((i - 1) / symbolLength) * 100) <= scorePercent) {
+        symbol = asmContent?.symbol_score[i-1] ?? "";
+        break;
+      }
+    }
+    return symbol;
+  };
+
   useEffect(() => {
     fetchGetPost();
   }, []);
@@ -224,13 +246,25 @@ const UploadBox: FC = () => {
         <Box className={classes.box}>
           <Box className={classes.content}>
             <Box className={classes.title}>
-              <Typography variant="h4">Due date:</Typography>
+              {asmContent?.has_score && !asmContent.is_symbol_score && (
+                <Typography variant="h4">
+                  Score: {asmContent.score_result}/{asmContent.score}
+                </Typography>
+              )}
+              {asmContent?.has_score && asmContent.is_symbol_score && (
+                <Typography variant="h4">Score: {symbolScore()}</Typography>
+              )}
+              {asmContent?.status === "ได้รับมอบหมาย" ? (
+                <Typography variant="h4">Due date:</Typography>
+              ) : (
+                <Typography variant="h4">Status:</Typography>
+              )}
               <Typography variant="h4" color={onClassColorTheme.green}>
                 {renderRightTitle()}
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
-            {(!asmContent?.already_submit && asmContent?.can_submit) ? (
+            {!asmContent?.already_submit && asmContent?.can_submit ? (
               <>
                 {/* <FileNamePreview acceptedFiles={acceptedFiles} /> */}
                 {/* {mapFile()} */}

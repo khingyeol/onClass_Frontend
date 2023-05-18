@@ -38,6 +38,14 @@ const ClassAssignments: FC = () => {
   };
 
   const mappedTextColor = (status: string) => {
+    if (isTeacher()) {
+      const newDate = new Date(status);
+      const today = new Date();
+      if (today > newDate) {
+        return onClassColorTheme.error
+      }
+      return onClassColorTheme.green;
+    }
     switch (status) {
       case "ได้รับมอบหมาย":
         return onClassColorTheme.green;
@@ -92,7 +100,7 @@ const ClassAssignments: FC = () => {
               title={item.assignment_name}
               midText={formatShortDate(item.assignment_end_date)}
               trailText={item.status}
-              trailTextColor={mappedTextColor(item.status)}
+              trailTextColor={mappedTextColor(isTeacher() ? item.assignment_end_date : item.status)}
               onClick={() => onClickASM(item.id)}
             />
           ))}

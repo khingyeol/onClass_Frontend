@@ -17,12 +17,15 @@ import {
   GridColDef,
   GridActionsCellItem,
   GridColumns,
+  GridColumnHeaderParams,
 } from "@mui/x-data-grid";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { gql, useQuery } from "@apollo/client";
 import { getAllAssignmentsResponse } from "../../services/types/ClassModel";
 import { getTodo } from "../../services/class/api_class";
 import OCButton from "../../common/OCButton";
+import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
+import { getAllExam } from "../../services/class/api_exam";
 
 const GRADES_QUERY = gql`
   query Grades($classCode: String!) {
@@ -59,12 +62,15 @@ const GradingPage: FC = () => {
   const { classid, id } = useParams();
   const [qData, setQData] = useState([]);
   const [allAsm, setAllAsm] = useState<getAllAssignmentsResponse[]>([]);
+  const [allExam, setAllExam] = useState<GetAllExamResponseData[]>([]);
+
 
   const gridStyles = {
     fontSize: "17px",
     "& .MuiDataGrid-columnHeaders": {
-      fontSize: "18px",
+      fontSize: "20px",
       fontWeight: 900,
+      textWrap: "wrap",
     },
     "& .MuiDataGrid-footerContainer": {
       fontSize: "16px",
@@ -88,6 +94,7 @@ const GradingPage: FC = () => {
 
   const MappedData = (data: any[]) => {
     const myArray2 = new Array();
+    console.log("data", data);
 
     data.map((item, index) => {
       const temp = {
@@ -97,49 +104,105 @@ const GradingPage: FC = () => {
       myArray2.push({
         ...temp,
         ...MappedASMscore(item.assignment),
+        ...MappedASMscore(item.exam),
       });
     });
     console.log("temp", myArray2);
     return myArray2;
   };
 
+  const findPercentage = (score:number, max:number, per:number) => {
+    const summary = score
+
+    return (per/100)*max
+  }
+
   const MappedASMscore = (data: any[]) => {
+    var scoreSummary = 0;
+    var maxSummary = 0;
+    data.forEach(item => {
+      scoreSummary += findPercentage(item.score, item.max_score, item.percentage)
+      maxSummary += item.max_score
+      console.log('grade', item, scoreSummary)
+    })
+
     return data.reduce(
-      (obj, item) =>
+      (obj, item) => 
         Object.assign(obj, {
           [item.grade_id]: item.score,
-        }),
+          // summary : scoreSummary,
+          percentage: (scoreSummary / maxSummary * 100).toFixed(2),
+        })
+      ,
       {}
     );
   };
 
   const MappedASMname = (data: any[]) => {
+    console.log('name', data)
     return data.map((item) => {
-      const temp = {
+      const temp: GridColDef = {
         editable: true,
         flex: 1,
         field: item.id,
-        headerName: item.assignment_name,
+        renderHeader: (params: GridColumnHeaderParams) => (
+          <div style={{textAlign: 'center'}}>
+          <Typography>{item.assignment_name}</Typography>
+          <Typography variant='h4'>({item.score} pts.)</Typography>
+          </div>
+        ),
+        // headerName: `${item.assignment_name} (${item.score})`,
       };
       // console.log('temp', temp)
       return temp;
     });
   };
 
+  const MappedEXAMname = (data: any[]) => {
+    return data.map((item) => {
+      const temp: GridColDef = {
+        editable: true,
+        flex: 1,
+        field: item.id,
+        renderHeader: (params: GridColumnHeaderParams) => (
+          <div style={{textAlign: 'center'}}>
+          <Typography>{item.exam_name}</Typography>
+          <Typography variant='h4'>({item.score} pts.)</Typography>
+          </div>
+        ),
+        // headerName: `${item.assignment_name} (${item.score})`,
+      };
+      // console.log('temp', temp)
+      return temp;
+    });
+  }
+
   const columns: GridColDef[] = [
     { field: "name", editable: false },
     // { field: "", headerName: ''}
     ...MappedASMname(allAsm),
+    ...MappedEXAMname(allExam),
+    // { field: "summary", headerName: "คะแนนรวม", editable: false},
+    { field: "percentage", headerName: "%", editable: false },
     // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
   ];
 
   const fetchGetAllAsm = async () => {
     try {
       const res = await getTodo(classid!);
-      console.log("[assignmentAllClass] ERROR", classid);
+      console.log("[assignmentAllClass] SUCCESS", classid);
       setAllAsm(res.data.data);
     } catch (err) {
       console.log("[assignmentAllClass] ERROR");
+    }
+  };
+
+  const fetchGetAllExam = async () => {
+    try {
+      const res = await getAllExam(classid!);
+      setAllExam(res.data.data);
+    } catch (err) {
+      console.log("[ExamAllClass] ERROR", err);
     }
   };
 
@@ -148,8 +211,11 @@ const GradingPage: FC = () => {
     fetchPolicy: "network-only",
   });
 
+  
+
   useEffect(() => {
     fetchGetAllAsm();
+    fetchGetAllExam();
     // if (classid && !loading && data && !error) {
     //   console.log("qq", data);
     //   setQData(data.grades);
@@ -169,14 +235,14 @@ const GradingPage: FC = () => {
       <>
         <Box className={classes.postbox}>
           {/* Headline */}
-          {/* <Box className={classes.boxhead}>
+          <Box className={classes.boxhead}>
                   <Box className={classes.headline}>
                     <Box style={{ alignSelf: "center" }}>
                       <Typography
                         variant="title3"
                         color={onClassColorTheme.green}
                       >
-                        titleeeeee
+                        Grading | คะแนนรวม
                       </Typography>
     
                       
@@ -184,7 +250,7 @@ const GradingPage: FC = () => {
                   </Box>
                   <Typography variant="title3" color={onClassColorTheme.black}>
                   </Typography>
-                </Box> */}
+                </Box>
           {/* Content */}
           <Box className={classes.contents}>
             <DataGrid

@@ -7,7 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { makeStyles } from "@mui/styles";
 import OCIconButton from "../../common/OCIconButton";
@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getClassId } from "../../store/classsdetail/selector";
 import {
   assignmentGet,
+  assignmentScoreSubmit,
   postGet,
   postPollVote,
 } from "../../services/class/api_class";
@@ -39,8 +40,13 @@ import {
   GridActionsCellItem,
   GridColumns,
   GridRowModel,
+  GridRowId,
 } from "@mui/x-data-grid";
 import OCButton from "../../common/OCButton";
+import {
+  AssignmentScoreSubmit,
+  AssignmentScoreSubmitScoreData,
+} from "../../services/types/patchAssignmentScoreSubmit";
 
 const AsmResultScore: FC = () => {
   const classes = useStyles();
@@ -52,6 +58,8 @@ const AsmResultScore: FC = () => {
   const [asmContent, setAsmContent] = useState<AssignmentModel>();
   const { classid, id } = useParams();
   const [dataContent, setDataContent] = useState<any[]>([]);
+  const [rowId, setRowId] = useState<GridRowId | null>(null);
+  // const [toggle, setToggle] = useState
 
   const gridStyles = {
     fontSize: "17px",
@@ -79,49 +87,55 @@ const AsmResultScore: FC = () => {
     },
   };
 
-  const figmaRows = [
-    {
-      id: "12",
-      name: "John Doe",
-      status: "มอบหมายแล้ว",
-      score: "",
-      file: "",
-    },
-    {
-      id: "13",
-      name: "Jerry Hanna",
-      status: "มอบหมายแล้ว",
-      score: "",
-      file: "",
-    },
-    {
-      id: "14",
-      name: "Roxanne Mann",
-      status: "ส่งแล้ว",
-      score: "",
-      file: "",
-    },
-    {
-      id: "15",
-      name: "Martha Thompson",
-      status: "เกินกำหนด",
-      score: "",
-      file: "",
-    },
-  ];
-
   const renderStatus = (status: string) => {
     if (status === "ส่งแล้ว") {
       return <Typography color="#41B094">{status}</Typography>;
     } else if (status === "เกินกำหนด") {
+      return <Typography color="#B04141">{status}</Typography>;
+    } else if (status === "ส่งช้า") {
       return <Typography color="#B04141">{status}</Typography>;
     } else {
       return <Typography color="#000">{status}</Typography>;
     }
   };
 
-  const figmaColumns = [
-    { field: "id", editable: false, flex: 1 },
+  const mappedPrefillScore = (result: any[], item: any) => {
+    const std = result.filter((obj) => obj.student_id === item.student_id)
+    return std.length > 0 ? std[0].score : null
+  }
+
+  const MappedData = (data: any[], result: any[]) => {
+    const myArray2 = new Array();
+    data.map((item, index) => {
+      const temp = {
+        ...item,
+        id: item.student_id,
+        score: result.length > 0 ? mappedPrefillScore(result, item) : null
+      };
+      myArray2.push({
+        ...temp,
+      });
+    });
+    return myArray2;
+  };
+
+  const columns = [
+    {
+      field: "firstname",
+      headerName: "ชื่อ",
+      editable: false,
+      flex: 1,
+      renderCell: (params: any) => {
+        return (
+          <Box
+            sx={{ width: "100%", textAlign: "center", wordBreak: "break-word" }}
+          >
+            {`${params.row.firstname} ${params.row.lastname}`}
+          </Box>
+        );
+      },
+    },
+    { field: "optional_name", headerName: "ชื่ออื่นๆ", editable: false },
     {
       field: "status",
       headerName: "สถานะ",
@@ -136,99 +150,99 @@ const AsmResultScore: FC = () => {
           </Box>
         );
       },
-      // type: "actions",
-      // getActions: (params) => [<Box>{renderStatus(params.row.status)}</Box>],
     },
-    { field: "score", headerName: "คะแนน (10 pts.)", editable: true, flex: 1 },
     {
-      field: "file",
-      headerName: "file",
+      field: "score",
+      headerName: `คะแนน (${asmContent?.score} pts.)`,
+      type: "number",
+      editable: true,
+      flex: 1,
+    },
+    { field: "answer_result", headerName: "คำตอบ (text)", flex: 1 },
+    {
+      field: "url_result", headerName: "คำตอบ (url)", flex: 1,
+      renderCell: (params: any) => {
+        return (params.row.url_result && <a href={`http://${params.row.url_result}`} target="_blank" rel="noreferrer">URL</a>
+        );
+        ;
+      }
+    },
+    {
+      field: "file_result",
+      headerName: "ไฟล์",
       editable: false,
       type: "actions",
-      // valueOp
       getActions: (i: any) => [
-        <Button onClick={() => { }}>โหลด</Button>,
-        // <GridActionsCellItem label="ดู" onClick={() => {}} />
+        <Box>
+          {i.row.file_result.map((obj: any) => {
+            console.log('obj', obj)
+            return <a href={obj.file_path} download={obj.file_name}>File</a>
+          })}
+        </Box>,
       ],
     },
   ];
 
-  const MappedData = (data: any[]) => {
-    const myArray2 = new Array();
-
-    data.map((item, index) => {
-      const temp = {
-        ...item,
-        id: item.student_id,
-        // name: `${item.firstname} ${item.lastname}`,
-      };
-      myArray2.push({
-        ...temp,
-
-        // ...MappedASMscore(item.assignment),
-      });
+  const updateState = React.useCallback((key: string, value: string | number, id: number) => {
+    const newState = dataContent.map((obj) => {
+      if (obj.id === id) {
+        return { ...obj, [key]: value };
+      }
+      return obj;
     });
-    console.log("temp", myArray2);
-    return myArray2;
-  };
+    // console.log("newState", newState);
+    setDataContent(newState);
+  }, [dataContent]);
 
-  const columns = [
-    { field: "id", editable: false },
-    // {
-    //   field: "status",
-    //   headerName: "สถานะ",
-    //   editable: false,
-    //   flex: 1,
-    //   renderCell: (params: any) => {
-    //     return (
-    //       <Box
-    //         sx={{ width: "100%", textAlign: "center", wordBreak: "break-word" }}
-    //       >
-    //         {renderStatus(params.row.status)}
-    //       </Box>
-    //     );
-    //   },
-    // },
-    // { field: "score", headerName: "คะแนน (10 pts.)", editable: true, flex: 1 },
-    { field: "answer_result", headerName: 'คำตอบ (text)', flex: 1},
-    { field: "url_result", headerName: 'คำตอบ (url)', flex: 1},
-  //   { field: "file_result", headerName: 'ไฟล์',
-  //   editable: false,
-  //   type: "actions",
-  //   getActions: (i: any) => [
-  //     <Box>
-  //       {i[0].file_name}
-  //       <Button onClick={() => { }}>โหลด</Button>,
-  //     </Box>
-  //   ],
-  // },
+  const handleRowEditCommit = React.useCallback((params: GridRowModel) => {
+    setRowId(params.id);
+    dataContent.find((obj, index) => {
+      console.log(obj);
+      if (obj.id === params.id) {
+        // console.log(params);
+        updateState(params.field, params.value, params.id);
+        return true;
+      }
+    });
+  }, [dataContent, updateState]);
 
-    // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
-  ];
+  const mappedScore = async () => {
+    const testArr: AssignmentScoreSubmitScoreData[] = [];
 
-  const dataContentUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow };
-    setDataContent(
-      dataContent.map((row) => (row.id === newRow.id ? updatedRow : row))
+    Promise.all(
+      dataContent.map((item) => {
+        const temp = {
+          student_id: item.id,
+          score: item.score
+        };
+        testArr.push({
+          ...temp,
+        });
+      })
     );
-    return updatedRow;
+    // console.log('promise', testArr)
+    return testArr;
   };
 
-  const onClickSubmit = () => {
-    console.log("== onclick", dataContent);
+  const onClickSubmit = async () => {
+    let scoreDT = await mappedScore();
+    const reqBody: AssignmentScoreSubmit = {
+      class_code: classid!,
+      assignment_id: id!,
+      data: scoreDT,
+    };
+    await assignmentScoreSubmit(reqBody)
   };
 
   const fetchGetPost = async () => {
     assignmentGet(classid!, id!)
       .then((response) => {
         setAsmContent(response.data.data);
-        setDataContent(MappedData(response.data.data.assignment_student_result))
-        // if (asmContent && asmContent?.assignment_student_result) {;}
-
+        setDataContent(
+          MappedData(response.data.data.assignment_student_result, response.data.data.assignment_student_score)
+        );
       })
-      .catch((error) => {
-        // setError(true);
-      });
+      .catch((error) => { });
   };
 
   useEffect(() => {
@@ -259,16 +273,21 @@ const AsmResultScore: FC = () => {
               isRowSelectable={() => false}
               rows={dataContent}
               columns={columns}
+              getRowId={(row) => row.id}
               // columns={figmaColumns}
               autoHeight={true}
               getRowHeight={() => "auto"}
-              processRowUpdate={dataContentUpdate}
+              onCellEditCommit={handleRowEditCommit}
+              // processRowUpdate={dataContentUpdate}
               sx={{ ...gridStyles }}
             />
           </Box>
         </Box>
         <Box padding={{ xs: 1, sm: 1.5 }} />
-        {/* <OCButton label={"click"} onClick={onClickSubmit} /> */}
+        <OCButton label={"cancel"} variant="outline" onClick={() => setDataContent(
+          MappedData(asmContent?.assignment_student_result ?? [], asmContent?.assignment_student_score ?? [])
+        )} />
+        <OCButton label={"submit"} onClick={onClickSubmit} />
       </>
     </>
   );

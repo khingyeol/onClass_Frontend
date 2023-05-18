@@ -23,7 +23,9 @@ export const formatTime = (date: string) => {
     .toLocaleTimeString("th")
     .replace(/(.*)\D\d+/, "$1")}`;
 };
-
+// 20 May. 2023 12:46
 export const formatDateTime = (date: string, seperator?: string) => {
   return `${formatDate(date)} ${seperator ?? ''} ${formatTime(date)}`;
 };
+
+// 12:46 20May23

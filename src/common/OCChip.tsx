@@ -41,20 +41,21 @@ const [isSelect, setIsSelect] = useState(false);
       {data.map((item) => {
         return (
           <Chip
+            key={item.value ? item.value : item.label}
             label={item.label}
-            onClick={() => handleClick(item.value ?? item.label)}
+            onClick={() => handleClick(item.value ? item.value : item.label)}
             style={{
-               backgroundColor: (selected === item.value ?? item.label) ? `rgba(65,176,148,0.3)` : `rgba(139,139,139,0)`
+               backgroundColor: (selected === (item.value ? item.value : item.label)) ? `rgba(65,176,148,0.3)` : `rgba(139,139,139,0)`
             }}
             sx={{
                 margin: "5px 5px",
                 padding: {xs: "17px 12px", sm: "20px 15px"},
                 borderRadius: "16px",
                 fontSize: {xs: "14px", sm: "16px"},
-                fontWeight: (selected === item.value ?? item.label) ? "bold" : "regular",
+                fontWeight: (selected === (item.value ? item.value : item.label)) ? "bold" : "regular",
                 fontFamily: 'FC-Subject',
-                border: (selected === item.value ?? item.label) ? `1px solid rgba(65,176,148,1)` : `1px solid rgba(139,139,139,0.3)`,
-                color: (selected === item.value ?? item.label) ? `rgba(65,176,148, 1)` : `rgba(139,139,139,1)`
+                border: (selected === (item.value ? item.value : item.label)) ? `1px solid rgba(65,176,148,1)` : `1px solid rgba(139,139,139,0.3)`,
+                color: (selected === (item.value ? item.value : item.label)) ? `rgba(65,176,148, 1)` : `rgba(139,139,139,1)`
             }}
           />
         );

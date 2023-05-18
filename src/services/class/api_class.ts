@@ -13,6 +13,7 @@ import { PostPublishRequest } from "../types/postPostPublishRequest";
 import { LeaveClassRequest } from "../types/patchClassLeaveReqeust";
 import { ClassEditDetailsRequest } from "../types/patchClassEditDetails";
 import { ClassEditRolesRequest } from "../types/patchClassEditRoles";
+import { AssignmentScoreSubmit } from "../types/patchAssignmentScoreSubmit";
 
 // class/get/all
 export const getAllClass = async (): Promise<
@@ -65,14 +66,9 @@ export const assignmentStdSubmit = async (values: AssignmentStdSubmit) => {
 }
 
 // // class/assignment/score/submit
-// {
-//   classcode: string 
-//   assignment_id: string
-//   score_data: [{student_id: string, score: number}]
-// }
-// export const assignmentScoreSubmit = async (values) => {
-//     return await httpClient.patch(server.CLASS_URL+api_class.ASM_SCORE_SUBMIT, values);
-// }
+export const assignmentScoreSubmit = async (values: AssignmentScoreSubmit) => {
+    return await httpClient.patch(server.CLASS_URL+api_class.ASM_SCORE_SUBMIT, values);
+}
 
 // // class/assignment/comment
 export const assignmentComment = async (

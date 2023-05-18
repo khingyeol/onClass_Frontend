@@ -45,6 +45,18 @@ const AsmTeacherBox: FC = () => {
       });
   };
 
+  const mappedStatusCount = (result: any[]) => {
+    var count = 0;
+    result.forEach((item) => (item.status === "ส่งแล้ว" && count++))
+    return count;
+  }
+
+  const mappedScoreSubmit = (result: any[]) => {
+    var count = 0;
+    result.forEach((item) => (item.score !== null && count++))
+    return count;
+  }
+
   useEffect(() => {
     fetchGetPost();
   }, []);
@@ -55,7 +67,7 @@ const AsmTeacherBox: FC = () => {
         <Box className={classes.title}>
           <Typography variant="h4">ส่งแล้ว:</Typography>
           <Typography variant="h4">
-            {asmContent?.assignment_student_result?.length ?? ""}
+            {mappedStatusCount(asmContent?.assignment_student_result ?? [])}
           </Typography>
         </Box>
         <Box className={classes.title}>
@@ -65,7 +77,7 @@ const AsmTeacherBox: FC = () => {
         <Box className={classes.title}>
           <Typography variant="h4">ตรวจแล้ว:</Typography>
           <Typography variant="h4">
-            {asmContent?.assignment_student_score?.length ?? ""}
+            {mappedScoreSubmit(asmContent?.assignment_student_score ?? [])}
           </Typography>
         </Box>
         <Box className={classes.title}>

@@ -49,6 +49,8 @@ export interface AssignmentModel {
     assignment_name: string;
     assignment_description: string;
     score: number;
+    score_result?: number;
+    has_score: boolean;
     assignment_optional_file?: FileModel[];
     assignment_student_result?: any[];
     assignment_student_score?: any[];
@@ -56,6 +58,8 @@ export interface AssignmentModel {
     assignment_end_date: string;
     can_submit: boolean;
     already_submit: boolean;
+    is_symbol_score: boolean;
+    symbol_score: string[];
     submit_result?: {
       file_result?: [];
       answer_result?: string;
