@@ -1,4 +1,12 @@
-import { Box, Grid, Theme, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  Stack,
+  Theme,
+  Typography,
+  alpha,
+} from "@mui/material";
 import React, { FC, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
@@ -16,7 +24,17 @@ const AssignmentCreate: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classid } = useParams();
-  const chipData = [{ label: "ได้", value: "YES" }, { label: "ไม่ได้", value: "NO" }];
+  const chipData = [
+    { label: "ได้", value: "YES" },
+    { label: "ไม่ได้", value: "NO" },
+  ];
+
+  const symbolChipData = [
+    { label: "ใช้", value: "YES" },
+    { label: "ไม่ใช้", value: "NO" },
+  ];
+  const [isSymbolScore, setIsSymbolScore] = useState<boolean>(false);
+  const [currentSymbolScore, setCurrentSymbolScore] = useState<string>("");
 
   const [isAsmError, setIsAsmError] = useState({
     assignment_name: true,
@@ -57,8 +75,8 @@ const AssignmentCreate: FC = () => {
       } else if (value === "") {
         scoreValue = 0;
       } else if (parseFloat(value) > 100) {
-        scoreValue = 100
-      }else {
+        scoreValue = 100;
+      } else {
         scoreValue = parseFloat(value);
       }
       setContent({
@@ -77,8 +95,8 @@ const AssignmentCreate: FC = () => {
         data: {
           ...content.data,
           [e.target.name]: new Date(e.target.value).toISOString(),
-        }
-      })
+        },
+      });
       return false;
     }
 
@@ -120,16 +138,43 @@ const AssignmentCreate: FC = () => {
     return isAsmError.assignment_name || isAsmError.assignment_description;
   };
 
+  const removeSymbolFromArray = (index: number) => {
+    const symbol_arr = content.data.symbol_score;
+    symbol_arr.splice(index, 1);
+    setContent({
+      ...content,
+      data: {
+        ...content.data,
+        symbol_score: symbol_arr,
+      },
+    });
+  };
+
+  const onTappedAddSymbol = () => {
+    if (currentSymbolScore !== "") {
+      const symbol_arr = content.data.symbol_score;
+      symbol_arr.push(currentSymbolScore);
+      setCurrentSymbolScore("");
+      setContent({
+        ...content,
+        data: {
+          ...content.data,
+          symbol_score: symbol_arr,
+        },
+      });
+    }
+  };
+
   const handleChipChange = (value: string) => {
     setContent({
       ...content,
       data: {
         ...content.data,
-        "turnin_late": value === "YES" ? true : false,
+        turnin_late: value === "YES" ? true : false,
       },
     });
-  }
- 
+  };
+
   const onTappedCreate = async () => {
     try {
       const res = await createAssigment(content!);
@@ -187,7 +232,11 @@ const AssignmentCreate: FC = () => {
         <Grid container columnSpacing={1} rowSpacing="20px">
           <Grid item xs={12} lg={5} className={classes.row}>
             <Typography variant="h4">นักเรียนสามารถส่งช้า :</Typography>
-            <OCChip data={chipData} selectedValue={"NO"} handleOnSelect={handleChipChange}/>
+            <OCChip
+              data={chipData}
+              selectedValue={"NO"}
+              handleOnSelect={handleChipChange}
+            />
           </Grid>
 
           <Grid item xs={12} lg={5} className={classes.row}>
@@ -201,6 +250,62 @@ const AssignmentCreate: FC = () => {
               inputProps={{ inputMode: "numeric" }}
             />
           </Grid>
+          <Grid item xs={12} lg={5} className={classes.row}>
+            <Typography variant="h4">สัญลักษณ์แทนคะแนน :</Typography>
+            <OCChip
+              data={symbolChipData}
+              selectedValue={"NO"}
+              handleOnSelect={() => {
+                setIsSymbolScore(!isSymbolScore);
+              }}
+            />
+          </Grid>
+          {isSymbolScore && (
+            <>
+              <Grid item xs={12} lg={5} className={classes.row}>
+                <Typography variant="description">
+                  สัญลักษณ์เรียกจากน้อยไปมาก :
+                </Typography>
+                <OCTextField
+                  variant="outline"
+                  maxWidth="100px"
+                  name="symbol"
+                  value={currentSymbolScore}
+                  onChange={(e) => {
+                    setCurrentSymbolScore(e.target.value);
+                  }}
+                />
+                <OCButton label="Add" onClick={onTappedAddSymbol} />
+              </Grid>
+              {content.data.symbol_score.length > 0 && (
+                <Grid item xs={12} lg={12} className={classes.row}>
+                  <Typography variant="description" color={onClassColorTheme.error}>
+                    **คลิกเพื่อลบ
+                  </Typography>
+                  <Stack
+                    direction="row"
+                    divider={<Divider orientation="vertical" flexItem />}
+                    spacing={2}
+                    sx={{
+                      backgroundColor: onClassColorTheme.white,
+                      borderRadius: "20px",
+                      border: "1px solid",
+                      borderColor: alpha(onClassColorTheme.darkGrey, 0.3),
+                      padding: "16px",
+                    }}
+                  >
+                    {content.data.symbol_score.map((val, index) => (
+                      <OCButton
+                        label={val}
+                        variant="outline"
+                        onClick={() => removeSymbolFromArray(index)}
+                      />
+                    ))}
+                  </Stack>
+                </Grid>
+              )}
+            </>
+          )}
         </Grid>
 
         <Box className={classes.row}>

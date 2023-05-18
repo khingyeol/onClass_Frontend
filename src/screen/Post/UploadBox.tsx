@@ -68,10 +68,10 @@ const UploadBox: FC = () => {
                 type === "file"
                   ? FileIcon
                   : type === "text"
-                    ? TextIcon
-                    : type === "url"
-                      ? UrlIcon
-                      : UrlIcon
+                  ? TextIcon
+                  : type === "url"
+                  ? UrlIcon
+                  : UrlIcon
               }
               style={{
                 width: "13px",
@@ -111,7 +111,11 @@ const UploadBox: FC = () => {
       <>
         {files &&
           files.map((file, index) => (
-            <a href={file.file_path} download={file.file_name} style={{ textDecoration: 'none', color: 'black' }}>
+            <a
+              href={file.file_path}
+              download={file.file_name}
+              style={{ textDecoration: "none", color: "black" }}
+            >
               <Preview name={file.name ?? file.file_name} type={"file"} />
             </a>
           ))}
@@ -175,6 +179,21 @@ const UploadBox: FC = () => {
     }
   };
 
+  const symbolScore = () => {
+    var symbol = "";
+    const symbolLength = asmContent?.symbol_score.length ?? 0;
+    const scorePercent = Math.floor(
+      ((asmContent?.score_result ?? 0) / (asmContent?.score ?? 0)) * 100
+    );
+    for (let i = symbolLength; i > 0; i--) {
+      if (Math.floor(((i - 1) / symbolLength) * 100) <= scorePercent) {
+        symbol = asmContent?.symbol_score[i-1] ?? "";
+        break;
+      }
+    }
+    return symbol;
+  };
+
   useEffect(() => {
     fetchGetPost();
   }, []);
@@ -185,13 +204,13 @@ const UploadBox: FC = () => {
         className={classes.root}
         open={openDialog}
         onClose={handleClickDialog}
-      // PaperProps={{
-      //   style: {
-      //     borderRadius: "28px",
-      //     width: "100%",
-      //     height: "50%",
-      //   },
-      // }}
+        // PaperProps={{
+        //   style: {
+        //     borderRadius: "28px",
+        //     width: "100%",
+        //     height: "50%",
+        //   },
+        // }}
       >
         {dialogType === "text" ? (
           <Box className={classes.dialog}>
@@ -227,13 +246,25 @@ const UploadBox: FC = () => {
         <Box className={classes.box}>
           <Box className={classes.content}>
             <Box className={classes.title}>
-              <Typography variant="h4">Due date:</Typography>
+              {asmContent?.has_score && !asmContent.is_symbol_score && (
+                <Typography variant="h4">
+                  Score: {asmContent.score_result}/{asmContent.score}
+                </Typography>
+              )}
+              {asmContent?.has_score && asmContent.is_symbol_score && (
+                <Typography variant="h4">Score: {symbolScore()}</Typography>
+              )}
+              {asmContent?.status === "ได้รับมอบหมาย" ? (
+                <Typography variant="h4">Due date:</Typography>
+              ) : (
+                <Typography variant="h4">Status:</Typography>
+              )}
               <Typography variant="h4" color={onClassColorTheme.green}>
                 {renderRightTitle()}
               </Typography>
             </Box>
             {/* <Box width="100%" > */}
-            {(!asmContent?.already_submit && asmContent?.can_submit) ? (
+            {!asmContent?.already_submit && asmContent?.can_submit ? (
               <>
                 {/* <FileNamePreview acceptedFiles={acceptedFiles} /> */}
                 {/* {mapFile()} */}
@@ -300,7 +331,7 @@ const UploadBox: FC = () => {
                     }
                     height="36px"
                     cornerRadius="10px"
-                  // disabled={isDisabledBtn()}
+                    // disabled={isDisabledBtn()}
                   />
                 )}
               </>
