@@ -17,6 +17,7 @@ import {
   GridColDef,
   GridActionsCellItem,
   GridColumns,
+  GridColumnHeaderParams,
 } from "@mui/x-data-grid";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { gql, useQuery } from "@apollo/client";
@@ -63,8 +64,9 @@ const GradingPage: FC = () => {
   const gridStyles = {
     fontSize: "17px",
     "& .MuiDataGrid-columnHeaders": {
-      fontSize: "18px",
+      fontSize: "20px",
       fontWeight: 900,
+      textWrap: "wrap",
     },
     "& .MuiDataGrid-footerContainer": {
       fontSize: "16px",
@@ -88,6 +90,7 @@ const GradingPage: FC = () => {
 
   const MappedData = (data: any[]) => {
     const myArray2 = new Array();
+    console.log("data", data);
 
     data.map((item, index) => {
       const temp = {
@@ -103,23 +106,47 @@ const GradingPage: FC = () => {
     return myArray2;
   };
 
+  const findPercentage = (score:number, max:number, per:number) => {
+    const summary = score
+
+    return (per/100)*max
+  }
+
   const MappedASMscore = (data: any[]) => {
+    var scoreSummary = 0;
+    var maxSummary = 0;
+    data.forEach(item => {
+      scoreSummary += findPercentage(item.score, item.max_score, item.percentage)
+      maxSummary += item.max_score
+      console.log('grade', item, scoreSummary)
+    })
+
     return data.reduce(
-      (obj, item) =>
+      (obj, item) => 
         Object.assign(obj, {
           [item.grade_id]: item.score,
-        }),
+          // summary : scoreSummary,
+          percentage: (scoreSummary / maxSummary * 100).toFixed(2),
+        })
+      ,
       {}
     );
   };
 
   const MappedASMname = (data: any[]) => {
+    console.log('name', data)
     return data.map((item) => {
-      const temp = {
+      const temp: GridColDef = {
         editable: true,
         flex: 1,
         field: item.id,
-        headerName: item.assignment_name,
+        renderHeader: (params: GridColumnHeaderParams) => (
+          <div style={{textAlign: 'center'}}>
+          <Typography>{item.assignment_name}</Typography>
+          <Typography variant='h4'>({item.score} pts.)</Typography>
+          </div>
+        ),
+        // headerName: `${item.assignment_name} (${item.score})`,
       };
       // console.log('temp', temp)
       return temp;
@@ -130,13 +157,15 @@ const GradingPage: FC = () => {
     { field: "name", editable: false },
     // { field: "", headerName: ''}
     ...MappedASMname(allAsm),
+    // { field: "summary", headerName: "คะแนนรวม", editable: false},
+    { field: "percentage", headerName: "%", editable: false },
     // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
   ];
 
   const fetchGetAllAsm = async () => {
     try {
       const res = await getTodo(classid!);
-      console.log("[assignmentAllClass] ERROR", classid);
+      console.log("[assignmentAllClass] SUCCESS", classid);
       setAllAsm(res.data.data);
     } catch (err) {
       console.log("[assignmentAllClass] ERROR");
@@ -169,14 +198,14 @@ const GradingPage: FC = () => {
       <>
         <Box className={classes.postbox}>
           {/* Headline */}
-          {/* <Box className={classes.boxhead}>
+          <Box className={classes.boxhead}>
                   <Box className={classes.headline}>
                     <Box style={{ alignSelf: "center" }}>
                       <Typography
                         variant="title3"
                         color={onClassColorTheme.green}
                       >
-                        titleeeeee
+                        Grading | คะแนนรวม
                       </Typography>
     
                       
@@ -184,7 +213,7 @@ const GradingPage: FC = () => {
                   </Box>
                   <Typography variant="title3" color={onClassColorTheme.black}>
                   </Typography>
-                </Box> */}
+                </Box>
           {/* Content */}
           <Box className={classes.contents}>
             <DataGrid
