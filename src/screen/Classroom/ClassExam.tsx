@@ -98,6 +98,7 @@ const ClassExam: FC = () => {
           {content.length < 1 && <Typography>ไม่พบข้อสอบ</Typography>}
           {content.map((item: GetAllExamResponseData) => (
             <AsmCard
+              key={item.id}
               title={item.exam_name}
               midText={`${formatDateTime(item.exam_start_date)} - ${formatDateTime(item.exam_end_date)}`}
               trailText={item.status}

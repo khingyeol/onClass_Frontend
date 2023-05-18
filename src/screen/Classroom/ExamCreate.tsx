@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PostCreateExam } from "../../services/types/postCreateExam";
 import { createExam } from "../../services/class/api_exam";
 import ExamCreateQuestions from "./ExamCreateQuestions";
+import ExamCreateQuestionsSec from "./ExamCreateQuestionsSec";
 
 const ExamCreate: FC = () => {
   const classes = useStyles();
@@ -43,46 +44,6 @@ const ExamCreate: FC = () => {
       exam_end_date: "",
     },
   });
-
-  // const [reqBody, setReqBody] = useState<PostCreateExam>({
-  // //   class_code: classid ?? "",
-  // //   exam: {
-  // //     exam_name: "",
-  // //     exam_description: "",
-  // //     part_list: [],
-  // //     exam_start_date: "",
-  // //     exam_end_date: "",
-  // //   },
-  // // });
-
-  //   class_code: "exU7As7Wk8",
-  //   exam: {
-  //     exam_name: "ชื่อข้อสอบ",
-  //     exam_description: "A UTF8 decoder can be useful if you're doing cross-browser testing. For example, if you're writing form processing browser tests, then often you need to validate and make sure the data in the input form contains only valid characters (such as email address or a website address).",
-  //     part_list: [
-  //       {
-  //         type: "objective",
-  //         question: 5,
-  //         score: 20,
-  //         item: [
-  //           {
-  //             question: "ee",
-  //             type: "",
-  //             choice: [""]
-  //           }
-  //         ],
-  //       },
-  //       {
-  //         type: "subjective",
-  //         question: 2,
-  //         score: 20,
-  //         item: [],
-  //       },
-  //     ],
-  //     exam_start_date: "2023-05-03T03:02",
-  //     exam_end_date: "2023-06-28T03:02",
-  //   },
-  // });
 
   const isDisabledCreateButton = () => {
     if (
@@ -449,6 +410,7 @@ const ExamCreate: FC = () => {
             </Box>
           </>
         ) : examStep === 2 ? (
+          // <ExamCreateQuestionsSec data={reqBody} />
           <ExamCreateQuestions data={reqBody} />
         ) : null}
       </Box>

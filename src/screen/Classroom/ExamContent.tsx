@@ -146,6 +146,7 @@ const ExamContent: FC = () => {
               ))}
 
               {/* EXAM SUBMIT */}
+              <OCButton label="LOG" onClick={() => console.log("stdAnswer",stdAnswer)} />
             </Box>
           </Container>
         )}

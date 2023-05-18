@@ -17,6 +17,7 @@ import {
 } from "../../services/class/api_exam";
 import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
 import {
+    ExamChoiceItem,
   ExamPartList,
   GetExamResponseData,
 } from "../../services/types/getExamResponseData";
@@ -24,138 +25,75 @@ import { PostCreateExam } from "../../services/types/postCreateExam";
 import OCTextField from "../../common/OCTextfield";
 import TFGroup from "../../components/Class/TFGroup";
 
-interface ExamCreateQuestionsProps {
+interface ExamCreateQuestionsSecProps {
   data: PostCreateExam;
 }
 
-const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
+const ExamCreateQuestionsSec: FC<ExamCreateQuestionsSecProps> = (props) => {
   const classes = useStyles();
   const { data } = props;
   const navigate = useNavigate();
 
   const { classid, id } = useParams();
-  // const [content, setContent] = useState<GetExamResponseData>();
-  const [selected, setSelected] = useState(
-    Array(data.exam.part_list[0].question).fill(0)
-  );
-  const [selectedSec, setSelectedSec] = useState(
-    Array(data.exam.part_list[1].question).fill(0)
-  );
-  const [content, setContent] = useState<PostCreateExam>();
-  const [quizObj, setQuizObj] = useState({
+  const [quizObj, setQuizObj] = useState<ExamChoiceItem>({
     question: "",
     choice: ["", "", "", ""],
     answer: [""],
     score: "",
   });
-  const [quizSubj, setQuizSubj] = useState({
-    question: "",
-    score: "",
-  });
 
-  //   const fetchGetExam = async () => {
-  //     try {
-  //       const res = await getExam(classid!, id!);
-  //       setContent(res.data.data);
-  //     } catch (err) {
-  //       console.log("[GetExam] ERROR", err);
-  //     }
-  //   };
+  // const [content, setContent] = useState<GetExamResponseData>();
+  const [selected, setSelected] = useState<any[][]>([[]]);
+  //   const [selectedSec, setSelectedSec] = useState(
+  //     Array(data.exam.part_list[1].question).fill(0)
+  //   );
+  const [content, setContent] = useState<PostCreateExam>();
 
   const handleChoice = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     part: number,
     index: number
   ) => {
-    if (part === 0 && typeof content !== 'undefined') {
-      console.log(quizObj)
-      // setQuizObj({
-      //   ...quizObj,
-      //   choice: quizObj.choice.map((v, i) =>
-      //     String(i) === e.target.name ? e.target.value : v
-      //   ),
-      //   answer: [quizObj.choice.at(selected[index]) ?? ""],
-      // });
-    } else {
-      setQuizObj({
-        ...quizObj,
-        choice: quizObj.choice.map((v, i) =>
-          String(i) === e.target.name ? e.target.value : v
+    setQuizObj({
+        ...data?.exam.part_list[part].item?.at(index),
+        question: data?.exam.part_list[part].item?.at(index)?.question ?? '',
+        choice: quizObj.choice!.map((v, i) => 
+        String(i) === e.target.name ? e.target.value : v
         ),
-        answer: [quizObj.choice.at(selectedSec[index]) ?? ""],
-      });
-    }
+        answer: [quizObj.choice!.at(selected[part][index]) ?? ""],
+    })
     data.exam.part_list[part].item?.splice(index, 1, quizObj);
-    // console.log("answer", quizObj.choice.at(selected[index]), selected[index])
-    console.log("ee", data.exam.part_list[part]);
-  };
+    console.log(data)
+  }
 
   const handleChangeObj = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     part: number,
     index: number
   ) => {
-    if (part === 0) {
-      setQuizObj({
-        ...quizObj,
-        question: e.target.value,
-        score: String(data.exam.part_list[0].score),
-        answer: [quizObj.choice.at(selected[index]) ?? ""],
-      });
-    } else {
-      setQuizObj({
-        ...quizObj,
-        question: e.target.value,
-        score: String(data.exam.part_list[1].score),
-        answer: [quizObj.choice.at(selectedSec[index]) ?? ""],
-      });
-    }
-    data.exam.part_list[part].item?.splice(index, 1, quizObj);
-    // console.log("ee", data.exam.part_list[0]);
-  };
-
-  const handleChangeSubj = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    part: number,
-    index: number
-  ) => {
-    setQuizSubj({
-      ...quizSubj,
-      [e.target.name]: e.target.value,
-    });
-    data.exam.part_list[part].item?.splice(index, 1, quizSubj);
-  };
-
-  const onSubmit = async () => {
-    data.exam.part_list.map((part, index) =>
-      part.item?.map((ques, i) => {
-        if (index === 0) {
-          console.log("index", index);
-          ques.answer?.splice(0, 1, ques.choice?.at(selected[i]) ?? "");
-        } else {
-          console.log("index", index);
-          ques.answer?.splice(1, 1, ques.choice?.at(selectedSec[i]) ?? "");
-        }
-      })
-    );
-    console.log("SUBMIT", data.exam.part_list);
-    try {
-      const res = await createExam(data);
-      if (res.status === 200 && res.data.result === "OK") {
-        //     console.log('SUCCESS', res)
-        navigate(`/${classid}/exam`);
-      }
-      console.log("req", res);
-    } catch (err: any) {
-      //
-    }
-  };
-
-  useEffect(() => {
-    setContent(data);
-    // data.exam!.part_list[0]!.item!.concat(...Array(5).fill(objItem))
-    console.log("req 2", data);
-  }, []);
+    if (e.target.name === "question") {
+        setQuizObj({
+            ...data?.exam.part_list[part].item?.at(index),
+            question: e.target.value,
+        })
+        data.exam.part_list[part].item?.splice(index, 1, quizObj);
+        console.log(data)
+    } 
+    // var temp = {
+    //     question: e.target.value,
+    //     choice: content?.exam.part_list[0].item[index].choice ?? [""],
+    //     answer: [""],
+    //     score: "",    
+    // }
+    // data.exam.part_list[part].item?.splice(0, 1, {
+    //     ...data.exam.part_list[part].item[index],
+    //     question:  e.target.value
+    // })
+    // _.set(content, 'content.exam.part_list[part]!.item[index].question', e.target.value);
+//     if (content && content.exam && content.exam.part_list[part] && content.exam.part_list[part]!.item) {
+//         content!.exam!.part_list[part]!.item[index].question = e.target.value        
+//   }
+}
 
   const mappedQuestion = (data: ExamPartList, part: number) => {
     switch (data.type) {
@@ -174,8 +112,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               <TFGroup
                 key={`obj${part}${index}0`}
                 name="0"
-                selected={part === 0 ? selected : selectedSec}
-                onClick={part === 0 ? setSelected : setSelectedSec}
+                selected={selected[part]}
+                onClick={setSelected}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -184,9 +122,9 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               <TFGroup
                 key={`obj${part}${index}1`}
                 name="1"
-                selected={part === 0 ? selected : selectedSec}
-                onClick={part === 0 ? setSelected : setSelectedSec}
-                onChange={(e) => handleChoice(e, part, index)}
+                selected={selected[part]}
+                onClick={setSelected}
+                  onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
                 index={1}
@@ -194,8 +132,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               <TFGroup
                 key={`obj${part}${index}2`}
                 name="2"
-                selected={part === 0 ? selected : selectedSec}
-                onClick={part === 0 ? setSelected : setSelectedSec}
+                selected={selected[part]}
+                onClick={setSelected}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -204,8 +142,8 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
               <TFGroup
                 key={`obj${part}${index}3`}
                 name="3"
-                selected={part === 0 ? selected : selectedSec}
-                onClick={part === 0 ? setSelected : setSelectedSec}
+                selected={selected[part]}
+                onClick={setSelected}
                 onChange={(e) => handleChoice(e, part, index)}
                 part={part}
                 ques={index}
@@ -214,41 +152,46 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
             </Box>
           </div>
         ));
-        // data.item
-        // for (let i = 0; i <= 5; i++) {
-        //     console.log ("Block statement execution no." + i);
-        //     return (<Box>
-        //         {data.question}
-        //     </Box>)
-        //   }
       }
+
       case "subjective": {
-        return data.item?.map((obj: any, index: number) => (
-          <div>
-            <Typography>ข้อ {index + 1}</Typography>
-            <Box display="flex" alignItems="center" gap="5px">
-              <OCTextField
-                key={`subj${part}${index}que`}
-                placeholder="คำถาม..."
-                multiline
-                name="question"
-                onChange={(e) => handleChangeSubj(e, part, index)}
-              ></OCTextField>
-              <Box width="150px">
-                <OCTextField
-                  key={`subj${part}${index}score`}
-                  placeholder="คะแนน"
-                  name="score"
-                  onChange={(e) => handleChangeSubj(e, part, index)}
-                ></OCTextField>
-              </Box>
-            </Box>
-          </div>
-        ));
+        return <>
+        </>
       }
       default:
     }
   };
+  
+  const onSubmit = async () => {
+    if (typeof content !== 'undefined') {
+        content.exam.part_list.map((part, index) => 
+            part.item?.map((ques, i) => {
+                ques.answer?.splice(index, 1, ques.choice?.at(selected[index][i]) ?? "");
+            })
+        )
+    }
+
+    console.log("SUBMIT", data.exam.part_list);
+    // try {
+    //   const res = await createExam(data);
+    //   if (res.status === 200 && res.data.result === "OK") {
+    //     //     console.log('SUCCESS', res)
+    //     navigate(`/${classid}/exam`);
+    //   }
+    //   console.log("req", res);
+    // } catch (err: any) {
+    //   //
+    // }
+}
+
+  useEffect(() => {
+    setContent(data);
+    // if (content) {
+    setSelected(
+        Array.from(Array(data.exam.part_list.length), () => new Array(1))
+        );      
+    // }
+  }, [data, data.exam.part_list.length, selected]);
 
   return (
     <Box className={classes.postbox}>
@@ -276,8 +219,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
     </Box>
   );
 };
-
-export default ExamCreateQuestions;
+export default ExamCreateQuestionsSec;
 
 const useStyles = makeStyles((theme: Theme) => ({
   postbox: {
