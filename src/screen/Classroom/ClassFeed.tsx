@@ -6,19 +6,22 @@ import { makeStyles } from "@mui/styles";
 import { getClassDetail } from "../../store/classsdetail/selector";
 import { useSelector } from "react-redux";
 import { ClassFeedModel } from "../../services/types/getClassResponse";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ClassFeed: FC = () => {
   const classes = useStyles();
   const classDetail = useSelector(getClassDetail);
+  const navigate = useNavigate();
+  const { classid } = useParams();
 
   return (
     <>
       {/* Mobile Class Detail */}
-      <Box className={classes.classCard}>
+      <Box className={classes.classCard} onClick={() => navigate(`/${classid}/detail`)}>
         <div className={classes.coverImg}>
           <Box position="absolute" padding="1.2em">
-            <Typography variant="h2">{"Cyber Coding 2565"}</Typography>
-            <Typography variant="description">{"B02"}</Typography>
+            <Typography variant="h2">{classDetail.class_name}</Typography>
+            <Typography variant="description">{classDetail.class_section}</Typography>
           </Box>
         </div>
       </Box>

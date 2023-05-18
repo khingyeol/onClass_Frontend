@@ -26,6 +26,8 @@ import {
 } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { getUserData } from "../../store/userdata/selector";
+import { ReactComponent as ChevronLeft }  from "../../assets/svg/chevron-left.svg";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 interface ClassDetailProps {
   classDetail: GetClassResponseData;
@@ -90,6 +92,7 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   const { classDetail } = props;
+  const navigate = useNavigate();
   const [chatOpen, setChatOpen] = useState<boolean>(false);
   const [chatName, setChatName] = useState<string>("");
   const [receiverId, setReceiverId] = useState<string>("");
@@ -209,6 +212,10 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
 
   return (
     <Box>
+      <IconButton onClick={() => navigate(-1)}>
+        <ChevronLeft />
+        Back
+      </IconButton>
       <ChatPopUpDialog
         open={chatOpen}
         chatName={chatName}
@@ -295,8 +302,8 @@ const ClassDetail: FC<ClassDetailProps> = (props) => {
           >
             <Box sx={{ display: "flex" }}>
               <OCAvatar
-                width={isDesktop ? 90 : 28}
-                height={isDesktop ? 90 : 28}
+                width={90}
+                height={90}
                 sx={{
                   alignSelf: "center",
                 }}
@@ -420,6 +427,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: "306px",
       margin: "0px 15px 0px 10px",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      // margin: "0px 15px 0px 10px",
+    },
+
   },
   coverImg: {
     objectFit: "cover",

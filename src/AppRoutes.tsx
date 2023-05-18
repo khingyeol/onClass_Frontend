@@ -28,10 +28,13 @@ import GradeLayout from "./layout/GradeLayout";
 import ClassSetting from "./screen/Classroom/ClassSetting";
 import ExamCreateQuestions from "./screen/Classroom/ExamCreateQuestions";
 import ExamContent from "./screen/Classroom/ExamContent";
+import ClassDetail from "./components/Class/ClassDetail";
+import { getClassDetail } from "./store/classsdetail/selector";
 
 function AppRoutes() {
   const currentState = useSelector(getCurrentStage);
   const { classid } = useParams();
+  const classDetail = useSelector(getClassDetail);
 
   // const checkState = () => {
   //   switch (currentState) {
@@ -97,6 +100,7 @@ function AppRoutes() {
         <Route path="/:classid" element={<ClassLayout />}>
           <Route path="/:classid" element={<ClassFeed />} />
           <Route path="/:classid/assignments" element={<ClassAssignments />} />
+          <Route path="/:classid/detail" element={<ClassDetail classDetail={classDetail} />} />
           <Route path="/:classid/exam" element={<> </>} />
         </Route>
 
