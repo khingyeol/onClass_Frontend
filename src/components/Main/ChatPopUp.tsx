@@ -204,7 +204,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: onClassColorTheme.primary,
     position: "fixed",
     [theme.breakpoints.down("md")]: {
-      height: "100vh",
+      // height: "100vh",
+      height: "calc(100vh - 9%)",
       width: "calc(100% - 40px)",
       top: 0,
       left: 0,

@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Grid,
   Theme,
   Typography,
   useMediaQuery,
@@ -18,6 +19,12 @@ import {
   GridActionsCellItem,
   GridColumns,
   GridColumnHeaderParams,
+  GridToolbar,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarQuickFilter,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import { onClassColorTheme } from "../../common/theme/onClassColorTheme";
 import { gql, useQuery } from "@apollo/client";
@@ -26,6 +33,7 @@ import { getTodo } from "../../services/class/api_class";
 import OCButton from "../../common/OCButton";
 import { GetAllExamResponseData } from "../../services/types/getAllExamResponse";
 import { getAllExam } from "../../services/class/api_exam";
+import OCTextField from "../../common/OCTextfield";
 
 const GRADES_QUERY = gql`
   query Grades($classCode: String!) {
@@ -60,10 +68,16 @@ const GradingPage: FC = () => {
   const dispatch = useDispatch();
   const pathname = window.location.pathname;
   const { classid, id } = useParams();
-  const [qData, setQData] = useState([]);
+  const [qData, setQData] = useState<any[]>([]);
   const [allAsm, setAllAsm] = useState<getAllAssignmentsResponse[]>([]);
   const [allExam, setAllExam] = useState<GetAllExamResponseData[]>([]);
-
+  const [criteria, setCriteria] = useState<any[]>([])
+  const apiRef = useGridApiRef();
+  var criteriaModel = {
+    max: 0,
+    min: 0,
+    grade: "X"
+  }
 
   const gridStyles = {
     fontSize: "17px",
@@ -94,7 +108,7 @@ const GradingPage: FC = () => {
 
   const MappedData = (data: any[]) => {
     const myArray2 = new Array();
-    console.log("data", data);
+    // console.log("data", data);
 
     data.map((item, index) => {
       const temp = {
@@ -107,48 +121,51 @@ const GradingPage: FC = () => {
         ...MappedASMscore(item.exam),
       });
     });
-    console.log("temp", myArray2);
+    // console.log("temp", myArray2);
     return myArray2;
   };
 
-  const findPercentage = (score:number, max:number, per:number) => {
-    const summary = score
+  const findPercentage = (score: number, max: number, per: number) => {
+    const summary = score;
 
-    return (per/100)*max
-  }
+    return (per / 100) * max;
+  };
 
   const MappedASMscore = (data: any[]) => {
     var scoreSummary = 0;
     var maxSummary = 0;
-    data.forEach(item => {
-      scoreSummary += findPercentage(item.score, item.max_score, item.percentage)
-      maxSummary += item.max_score
-      console.log('grade', item, scoreSummary)
-    })
+    data.forEach((item) => {
+      scoreSummary += findPercentage(
+        item.score,
+        item.max_score,
+        item.percentage
+      );
+      maxSummary += item.max_score;
+      // console.log("grade", item, scoreSummary);
+    });
 
     return data.reduce(
-      (obj, item) => 
+      (obj, item) =>
         Object.assign(obj, {
           [item.grade_id]: item.score,
           // summary : scoreSummary,
-          percentage: (scoreSummary / maxSummary * 100).toFixed(2),
-        })
-      ,
+          percentage: ((scoreSummary / maxSummary) * 100).toFixed(2),
+        }),
       {}
     );
   };
 
   const MappedASMname = (data: any[]) => {
-    console.log('name', data)
+    // console.log("name", data);
     return data.map((item) => {
       const temp: GridColDef = {
         editable: true,
         flex: 1,
         field: item.id,
         renderHeader: (params: GridColumnHeaderParams) => (
-          <div style={{textAlign: 'center'}}>
-          <Typography>{item.assignment_name}</Typography>
-          <Typography variant='h4'>({item.score} pts.)</Typography>
+          <div style={{ textAlign: "center" }}>
+            <Typography>{item.assignment_name}</Typography>
+            <Typography variant="h4">({item.score} pts.)</Typography>
           </div>
         ),
         // headerName: `${item.assignment_name} (${item.score})`,
@@ -184,6 +201,7 @@ const GradingPage: FC = () => {
     ...MappedEXAMname(allExam),
     // { field: "summary", headerName: "คะแนนรวม", editable: false},
     { field: "percentage", headerName: "%", editable: false },
+    // { field: "grade", editable: false}
     // เอาจาก get class ได้มั้ง มี all asm -> ดึง id, name มาเฉยๆ
   ];
 
@@ -212,6 +230,94 @@ const GradingPage: FC = () => {
   });
 
   
+  const handleAddCriteria = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    if (e.target.name === "grade") {
+      const value = e.target.value;
+      const temp = criteria
+      temp[index] = {
+        ...temp[index],
+        grade: value
+      }
+      setCriteria(temp)
+
+    } else {
+      const value = e.target.value;
+      const onlyNumber = value.replace(/[^0-9]/g, "");
+      const temp = criteria
+      temp[index] = {
+        ...temp[index],
+        [e.target.name]: parseInt(onlyNumber)
+      }
+      setCriteria(temp)
+    }
+    console.log(criteria)
+  }
+
+  const addedCriteria = () => {
+    // criteria.push(criteriaModel)
+    setCriteria([...criteria, criteriaModel])
+    console.log(criteria)
+    // setCriteria(criteria.push(criteriaModel))
+  }
+
+  const mappedGrade = (score: number) => {
+    criteria.map((item) => {
+      console.log('[LOG] score', score)
+      console.log('[LOG] score', item)
+      if (score <= item.max && score >= item.min){
+        return `A`
+      }
+
+    })
+    return "-"
+
+  }
+
+  const onClickCal = () => {
+    // columns.push({field : "grade", editable:  false})
+    const data: any[] = qData
+    qData.map((obj: any, index) => {
+      console.log("[LOG] obj", obj.firstname ?? '')
+      const temp = {grade: mappedGrade(90)}
+      data[index] = {
+        ...data[index],
+        ...temp
+      }
+      // console.log(q,)
+      // obj.
+      // data[index]
+    })
+    setQData(data)
+    // apiRef.current.updateRows(MappedData(qData))
+    console.log('[LOG] qdata', qData)
+  }
+
+  const mappedCriteria = () => {
+    return criteria.map((item, index) => 
+       (
+        <Grid container rowGap={2}>
+        <Grid item xs={4} lg={2}>
+          <OCTextField
+          name="max"
+          onChange={(e) => handleAddCriteria(e, index)}
+          />
+        </Grid>
+        <Grid item xs={4} lg={2}>
+        <OCTextField
+          name="min"
+          onChange={(e) => handleAddCriteria(e, index)}
+          />
+        </Grid>
+        <Grid item xs={4} lg={2}>
+        <OCTextField
+        name="grade"
+          onChange={(e) => handleAddCriteria(e, index)}
+          />
+        </Grid>
+      </Grid>
+      )  
+    )
+  }
 
   useEffect(() => {
     fetchGetAllAsm();
@@ -222,13 +328,26 @@ const GradingPage: FC = () => {
     // }
   }, []);
 
-  useMemo(()=>{
-    if(data) {
-      console.log('MYLOG: ', data);
+  useMemo(() => {
+    if (data) {
+      // console.log("MYLOG: ", data);
       setQData(data.grades);
     }
-  },[data])
+  }, [data]);
 
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarQuickFilter />
+        <GridToolbarColumnsButton nonce={undefined} onResize={undefined} onResizeCapture={undefined} />
+        <GridToolbarExport
+          csvOptions={{
+            fileName: `Grading_${Date()}`,
+          }}
+        />
+      </GridToolbarContainer>
+    );
+  }
 
   return (
     <>
@@ -236,31 +355,50 @@ const GradingPage: FC = () => {
         <Box className={classes.postbox}>
           {/* Headline */}
           <Box className={classes.boxhead}>
-                  <Box className={classes.headline}>
-                    <Box style={{ alignSelf: "center" }}>
-                      <Typography
-                        variant="title3"
-                        color={onClassColorTheme.green}
-                      >
-                        Grading | คะแนนรวม
-                      </Typography>
-    
-                      
-                    </Box>
-                  </Box>
-                  <Typography variant="title3" color={onClassColorTheme.black}>
-                  </Typography>
-                </Box>
+            <Box className={classes.headline}>
+              <Box style={{ alignSelf: "center" }}>
+                <Typography variant="title3" color={onClassColorTheme.green}>
+                  Grading | คะแนนรวม
+                </Typography>
+              </Box>
+            </Box>
+            <Typography
+              variant="title3"
+              color={onClassColorTheme.black}
+            ></Typography>
+          </Box>
           {/* Content */}
           <Box className={classes.contents}>
             <DataGrid
+              // apiRef={apiRef}
               isRowSelectable={() => false}
               rows={MappedData(qData)}
               columns={columns}
               autoHeight={true}
               getRowHeight={() => "auto"}
               sx={{ ...gridStyles }}
+              components={{ Toolbar: CustomToolbar }}
             />
+          </Box>
+          <Box>
+
+            {/* <Grid container>
+              <Grid item xs={4} lg={2}>
+                <Typography variant="title3">คะแนนสูงสุด</Typography>
+              </Grid>
+              <Grid item xs={4} lg={2}>
+                <Typography variant="title3">คะแนนต่ำสุด</Typography>
+              </Grid>
+              <Grid item xs={4} lg={2}>
+                <Typography variant="title3">เกรด</Typography>
+              </Grid>
+            </Grid>
+            
+            {mappedCriteria()}
+              <OCButton variant='outline' label="เพิ่มเกณฑ์" onClick={addedCriteria} />
+              <OCButton label="ตัดเกรด" onClick={onClickCal} /> */}
+
+              {/* <OCButton variant='outline' label="add" onClick={} /> */}
           </Box>
           {/* <OCButton
             label={"log"}
