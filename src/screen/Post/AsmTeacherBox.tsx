@@ -23,11 +23,13 @@ import OCTextField from "../../common/OCTextfield";
 import { AssignmentStdSubmit } from "../../services/types/patchAssignmentStdSubmit";
 import { formatDate, formatShortDate } from "../../utils/formatDate";
 import { getClassDetail } from "../../store/classsdetail/selector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { displayDialog, hideDialog } from "../../store/dialog/action";
 
 const AsmTeacherBox: FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classid, id } = useParams();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
@@ -55,6 +57,25 @@ const AsmTeacherBox: FC = () => {
     var count = 0;
     result.forEach((item) => (item.score !== null && count++))
     return count;
+  }
+
+  const showDialogDue = () => {
+    dispatch(
+      displayDialog({
+        id: "onTappedEditASM",
+        isShow: true,
+        title: "ปิดรับงาน",
+        message: "ต้องการปิดรับงานทันทีหรือไม่?",
+        primaryLabel: "ตกลง",
+        onPrimaryAction: () => {
+          // dispatch(hideDialog());
+        },
+        secondaryLabel: "ยกเลิก",
+        onSecondaryAction: () => {
+          dispatch(hideDialog());
+        }
+      })
+    );
   }
 
   useEffect(() => {
@@ -91,7 +112,7 @@ const AsmTeacherBox: FC = () => {
       <OCButton
         label={"แก้ไขชิ้นงาน"}
         variant={"grey"}
-        //   onClick={onSubmit}
+        // onClick={() => navigate(`${currentPath}/edit`)}
         height="36px"
         cornerRadius="10px"
         //   disabled={answerResult === ""}
@@ -100,7 +121,7 @@ const AsmTeacherBox: FC = () => {
       <OCButton
         label={"ปิดรับงาน"}
         variant={"error"}
-        //   onClick={onSubmit}
+        onClick={showDialogDue}
         height="36px"
         cornerRadius="10px"
         //   disabled={answerResult === ""}
@@ -108,7 +129,7 @@ const AsmTeacherBox: FC = () => {
       />
       <OCButton  
         label={"ตรวจงาน"}
-          onClick={() => navigate(`${currentPath}/score`)}
+        onClick={() => navigate(`${currentPath}/score`)}
         height="36px"
         cornerRadius="10px"
         //   disabled={answerResult === ""}
