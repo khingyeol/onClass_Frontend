@@ -79,6 +79,15 @@ const FeedPost: FC<FeedPostProps> = (props) => {
     );
   };
 
+function linkify(text: string) {
+  var urlRegex = /((http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]))/g;
+  //var urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, function(url,b,c) {
+      var url2 = (c == 'www.') ?  'http://' +url : url;
+      return '<a href="' +url2+ '" target="_blank">' + url + '</a>';
+  }) 
+}
+
   const renderTitle = () => {
     switch (type) {
       case "post": {
@@ -153,7 +162,7 @@ const FeedPost: FC<FeedPostProps> = (props) => {
             className={classes.contents}
             sx={{ borderTop: "1px solid rgba(191, 191,191, 0.3)" }}
           >
-            {data.post_content}
+            <p dangerouslySetInnerHTML={{ __html: linkify(data.post_content) }} />
           </Box>
         )}
         {type === "poll" && (
