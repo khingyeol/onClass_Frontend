@@ -30,7 +30,7 @@ const ClassAssignments: FC = () => {
   const fetchGetAllAsm = async () => {
     try {
       const res = await getTodo(classid!);
-      console.log("[assignmentAllClass] ERROR", classid);
+      console.log("[assignmentAllClass] SUCCESS", classid);
       setContent(res.data.data);
     } catch (err) {
       console.log("[assignmentAllClass] ERROR");
