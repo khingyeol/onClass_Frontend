@@ -31,7 +31,7 @@ const ExamCreateQuestions: FC<ExamCreateQuestionsProps> = (props) => {
   const { classid, id } = useParams();
   // const [content, setContent] = useState<GetExamResponseData>();
   const [selected, setSelected] = useState(Array(data.exam.part_list[0].question).fill(0));
-  const [selectedSec, setSelectedSec] = useState(Array(data.exam.part_list[1].question).fill(0));
+  const [selectedSec, setSelectedSec] = useState(Array(data.exam?.part_list[1]?.question ?? 0).fill(0));
   const [content, setContent] = useState<PostCreateExam>();
   const [quizObj, setQuizObj] = useState({
     question: "",

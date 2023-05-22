@@ -97,6 +97,15 @@ const ExamContent: FC = () => {
     });
   };
 
+  function linkify(text: string) {
+    var urlRegex = /((http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]))/g;
+    //var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url,b,c) {
+        var url2 = (c == 'www.') ?  'http://' +url : url;
+        return '<a href="' +url2+ '" target="_blank">' + url + '</a>';
+    }) 
+  }  
+
   const handleChipChange = (part: number, index: number, value: string) => {
     stdAnswer[part][index] = value;
   };
@@ -221,7 +230,7 @@ const ExamContent: FC = () => {
                     obj.item.map((item: ExamChoiceItem, index: number) => (
                       <Box>
                         <Typography variant="title3">
-                          {index + 1}. {item.question}
+                          <p dangerouslySetInnerHTML={{ __html: linkify( `${index+1}. ${item.question}`) }} />
                         </Typography>
                         <OCChip
                           data={mappedChip(item.choice!)}

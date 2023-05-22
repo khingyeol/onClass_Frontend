@@ -28,7 +28,7 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
     class_section: "",
     class_room: "",
     class_subject: "",
-    class_thumbnail: "",
+    class_thumbnail: "61a604dcf456d7f2cb754fa7",
     firstname: "",
     lastname: "",
     optional_name: "",
