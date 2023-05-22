@@ -14,6 +14,8 @@ import { CreateClassRequest } from "../../../services/types/postClassCreateReque
 import { createClass } from "../../../services/class/api_class";
 import OCTextField from "../../../common/OCTextfield";
 import OCButton from "../../../common/OCButton";
+import { displayDialog, hideDialog } from "../../../store/dialog/action";
+import { useDispatch } from "react-redux";
 
 interface CreateClassDialogProps {
   open: boolean;
@@ -22,6 +24,7 @@ interface CreateClassDialogProps {
 const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
   const { open, onClose } = props;
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [content, setContent] = useState<CreateClassRequest>({
     class_name: "",
     class_description: "",
@@ -50,8 +53,18 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
       window.location.reload();
       console.log("success join class");
     } else if (res.status === 404) {
-      // setErrMsg("Class Code Not Found !");
-    }
+      dispatch(
+        displayDialog({
+          id: "onTappedCreateClass",
+          isShow: true,
+          title: "Create Class",
+          message: res.data.message,
+          primaryLabel: "Close",
+          onPrimaryAction: () => {
+            dispatch(hideDialog());
+          },
+        })
+      );    }
   };
 
   return (

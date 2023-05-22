@@ -221,14 +221,14 @@ const PostBox: FC = () => {
             type="square"
             onClick={handleOnPollBuilderShow}
           />
-          <OCIconButton
+          {/* <OCIconButton
             disabled={isPollBuilderShow}
             icon={IconFile}
             color={onClassColorTheme.grey}
             size={"39px"}
             type="square"
             onClick={() => {}}
-          />
+          /> */}
         </Box>
       </Box>
       {/* <TextareaAutosize

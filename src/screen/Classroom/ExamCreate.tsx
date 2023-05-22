@@ -303,12 +303,10 @@ const ExamCreate: FC = () => {
       ...reqBody,
       exam: {
         ...reqBody.exam,
-        optional_setting: 
-          {
-            ...reqBody.exam.optional_setting,
-            "random_question": value === "YES" ? true : false,
-          },
-        
+        optional_setting: {
+          ...reqBody.exam.optional_setting,
+          random_question: value === "YES" ? true : false,
+        },
       },
     });
   };
@@ -318,12 +316,10 @@ const ExamCreate: FC = () => {
       ...reqBody,
       exam: {
         ...reqBody.exam,
-        optional_setting: 
-          {
-            ...reqBody.exam.optional_setting,
-            "random_choice": value === "YES" ? true : false,
-          },
-        
+        optional_setting: {
+          ...reqBody.exam.optional_setting,
+          random_choice: value === "YES" ? true : false,
+        },
       },
     });
   };
@@ -433,11 +429,14 @@ const ExamCreate: FC = () => {
 
               <Grid item xs={12} lg={5} className={classes.row}>
                 <Typography variant="h4">วัน-เวลาจบ :</Typography>
-                <input
-                  type="datetime-local"
-                  name="exam_end_date"
-                  onChange={(e) => onChangeInput(e)}
-                />
+                <div className={classes.wrapper}>
+                  <input
+                    // style={{width: '200px'}}
+                    type="datetime-local"
+                    name="exam_end_date"
+                    onChange={(e) => onChangeInput(e)}
+                  />
+                </div>
               </Grid>
               <Grid item xs={12} lg={12} className={classes.row}>
                 <Typography variant="h4">สุ่มคำถาม :</Typography>
@@ -491,5 +490,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "10px",
+  },
+  wrapper: {
+    maxWidth: "18rem",
+    padding: "0 0.5rem",
+    marginLeft: "auto",
+    marginRight: "auto",
+    paddingTop: "4rem",
   },
 }));

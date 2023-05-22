@@ -291,9 +291,11 @@ const UploadBox: FC = () => {
                     fullWidth
                     variant="outline"
                     label={"Add Text"}
+                    fontSize={"15px"}
                     onClick={() => handleClickDialog("text")}
                     height="36px"
                     cornerRadius="10px"
+
                   />
                   <OCButton
                     fullWidth
