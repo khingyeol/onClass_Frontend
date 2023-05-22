@@ -52,7 +52,7 @@ const CreateClassDialog: FC<CreateClassDialogProps> = (props) => {
     if (res.status === 200) {
       window.location.reload();
       console.log("success join class");
-    } else if (res.status === 404) {
+    } else {
       dispatch(
         displayDialog({
           id: "onTappedCreateClass",
